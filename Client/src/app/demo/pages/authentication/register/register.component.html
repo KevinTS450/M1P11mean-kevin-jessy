@@ -21,41 +21,100 @@
             <span>or</span>
           </div>
           <h5 class="my-4 d-flex justify-content-center"> Sign Up with Email address </h5>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-                <label for="floatingInput">First Name</label>
+          <form [formGroup]="UserForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input formControlName="Username" type="text" class="form-control" id="floatingInput" placeholder="name@example.com" />
+                  <div *ngIf="UserForm.get('Username').hasError('required') && UserForm.get('Username').touched" class="text-danger">
+                    Username is required.
+                  </div>
+                  <label for="floatingInput">Username</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input formControlName="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
+                  <div *ngIf="UserForm.get('email').hasError('required') && UserForm.get('email').touched" class="text-danger">
+                    Email is required.
+                  </div>
+                  <label for="floatingInput">Email</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input
+                    formControlName="date_naissance"
+                    type="date"
+                    class="form-control"
+                    id="floatingInput"
+                    placeholder="name@example.com"
+                  />
+                  <div
+                    *ngIf="UserForm.get('date_naissance').hasError('required') && UserForm.get('date_naissance').touched"
+                    class="text-danger"
+                  >
+                    date de naissance is required.
+                  </div>
+                  <label for="floatingInput">Date de naissance</label>
+                </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-                <label for="floatingInput">Last Name</label>
+            <div class="form-floating mb-3">
+              <select formControlName="role" class="form-control">
+                <option value="" disabled selected>Select Role</option>
+
+                <option value="client">Client </option>
+                <option value="Employe">Employe </option>
+              </select>
+              <div *ngIf="UserForm.get('role').hasError('role') && UserForm.get('role').touched" class="text-danger">
+                Role is required.
               </div>
+              <label for="floatingInput"></label>
             </div>
-          </div>
-          <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-            <label for="floatingInput">Email Address / Username</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-            <label for="floatingInput">Password</label>
-          </div>
-          <div class="form-check mt-3s">
-            <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
-            <label class="form-check-label" for="customCheckc1">
-              <h5>Agree with <span>Terms & Condition.</span></h5>
-            </label>
-          </div>
-          <div class="d-grid mt-4">
-            <button type="button" class="btn btn-secondary p-2">Sign Up</button>
-          </div>
-          <hr />
-          <h5 class="d-flex justify-content-center">
-            <a [routerLink]="['/guest/login']"> Already have an account? </a>
-          </h5>
+            <div class="form-floating mb-3">
+              <input
+                formControlName="password"
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Password"
+                (input)="validatePasswords()"
+              />
+              <label for="password">Password</label>
+            </div>
+            <div *ngIf="UserForm.get('password').hasError('password') && UserForm.get('password').touched" class="text-danger">
+              password is required.
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-floating mb-3">
+              <input
+                formControlName="confirmPassword"
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                (input)="validatePasswords()"
+              />
+              <label for="confirmPassword">Confirm Password</label>
+            </div>
+            <div
+              *ngIf="UserForm.get('confirmPassword').hasError('required') && UserForm.get('confirmPassword').touched"
+              class="text-danger"
+            >
+              Confirm password is required.
+            </div>
+            <div *ngIf="isNotEquals" class="text-danger">the password is not equals</div>
+
+            <div class="d-grid mt-4">
+              <button (click)="saveForm(UserForm)" type="button" class="btn btn-secondary p-2">Sign Up</button>
+            </div>
+            <hr />
+            <h5 class="d-flex justify-content-center">
+              <a [routerLink]="['/guest/login']"> Already have an account? </a>
+            </h5>
+          </form>
         </div>
       </div>
     </div>
