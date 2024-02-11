@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
+const htmlContent = require("./HtmlMailContent");
 
-async function sendEmail(to, subject, text) {
+async function sendEmail(to, subject, code) {
   let transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -9,11 +10,13 @@ async function sendEmail(to, subject, text) {
     },
   });
 
+  let html = await htmlContent.render(to, code);
+
   let mailOptions = {
     from: "tsilavinarazafy450@gmail.com",
     to: to,
     subject: subject,
-    text: text,
+    html: html,
   };
 
   let info = await transporter.sendMail(mailOptions);

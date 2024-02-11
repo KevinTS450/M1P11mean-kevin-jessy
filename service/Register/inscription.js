@@ -11,6 +11,7 @@ async function registerUser(user) {
     const hashedPassword = await utils.CryptPass(user.password);
 
     const age = await utils.calculateAge(user.date_naissance);
+    const validation_code = await utils.generateRandomNumber();
 
     await collection.insertOne({
       username: user.username,
@@ -20,11 +21,12 @@ async function registerUser(user) {
       date_naissance: user.date_naissance,
       age: age,
       is_activate: false,
+      validation_code: validation_code,
     });
+    console.log(validation_code);
     const subject = "Bienvenu sur notre salon de beaute" + " " + user.email;
-    const text = "merci de s'inscrire";
 
-    MailSenderEmail.sendEmail(user.email, subject, text);
+    MailSenderEmail.sendEmail(user.email, subject, validation_code);
 
     console.log("User registered successfully");
   } catch (err) {

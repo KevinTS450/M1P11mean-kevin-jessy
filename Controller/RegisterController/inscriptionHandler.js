@@ -12,6 +12,7 @@ async function handleUserRegistration(req, res, next) {
       date_naissance,
       is_activate,
       age,
+      validation_code,
     } = req.body;
     const newUser = new User(
       username,
@@ -20,7 +21,8 @@ async function handleUserRegistration(req, res, next) {
       password,
       date_naissance,
       is_activate,
-      age
+      age,
+      validation_code
     );
 
     await Inscription.registerUser(newUser);
@@ -29,7 +31,7 @@ async function handleUserRegistration(req, res, next) {
       .status(200)
       .json({ message: "User registered successfully :" + newUser });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
   }
 }
 module.exports = handleUserRegistration;

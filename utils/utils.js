@@ -24,7 +24,13 @@ async function calculateAge(dateOfBirth) {
 
   return age;
 }
+
+async function generateRandomNumber() {
+  return Math.floor(Math.random() * (9000 - 1000 + 1)) + 1000;
+}
+
 module.exports = {
   CryptPass,
   calculateAge,
+  generateRandomNumber,
 };

@@ -6,7 +6,8 @@ class users {
     role,
     date_naissance,
     is_activate,
-    age
+    age,
+    validation_code
   ) {
     this.username = username;
     this.email = email;
@@ -15,6 +16,7 @@ class users {
     this.date_naissance = date_naissance;
     this.is_activate = is_activate;
     this.age = age;
+    this.validation_code = validation_code;
   }
 }
 module.exports = users;
