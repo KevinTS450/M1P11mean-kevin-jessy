@@ -1,9 +1,9 @@
 const express = require("express");
 const UserService = require("../../service/User/UserService.js");
+const AuthService = require("../../service/Auth/Auth.js");
 
 const GetUserByToken = async (req, res) => {
   try {
-    // Assuming there is a User model with findById method
     console.log("Decoded User ID in Controller:", req.user.id);
 
     const user = await UserService.getUserById(req.user.id);
@@ -34,10 +34,40 @@ const GetAllUser = async (req, res) => {
   }
 };
 
+const CheckUserExist = async (req, res) => {
+  try {
+    const email = req.query.email;
+    const isExist = await UserService.CheckUserExist(email);
+
+    if (isExist) {
+      res.status(200).json({ message: true });
+    } else {
+      res.status(200).json({ message: false });
+    }
+  } catch (error) {}
+};
+const GetUserByEmail = async (req, res) => {
+  try {
+    const email = req.query.email;
+    const User = await AuthService.getUserByEmail(email);
+
+    if (User) {
+      res.status(200).json({ User });
+    }
+  } catch (error) {}
+};
+
 async function updateUser(req, res, next) {
   try {
-    const { username, role, email, password, date_naissance, is_activate, age } =
-      req.body;
+    const {
+      username,
+      role,
+      email,
+      password,
+      date_naissance,
+      is_activate,
+      age,
+    } = req.body;
     const newUser = new User(
       username,
       email,
@@ -52,7 +82,7 @@ async function updateUser(req, res, next) {
 
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
   }
 }
 
@@ -64,11 +94,15 @@ async function deleteUser(req, res, next) {
 
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
   }
 }
 
 module.exports = {
   GetUserByToken,
   GetAllUser,
+  updateUser,
+  deleteUser,
+  CheckUserExist,
+  GetUserByEmail,
 };
