@@ -50,6 +50,7 @@
                     id="floatingInput"
                     placeholder="name@example.com"
                   />
+
                   <div
                     *ngIf="UserForm.get('date_naissance').hasError('required') && UserForm.get('date_naissance').touched"
                     class="text-danger"
@@ -67,7 +68,7 @@
                 <option value="client">Client </option>
                 <option value="Employe">Employe </option>
               </select>
-              <div *ngIf="UserForm.get('role').hasError('role') && UserForm.get('role').touched" class="text-danger">
+              <div *ngIf="UserForm.get('role').hasError('required') && UserForm.get('role').touched" class="text-danger">
                 Role is required.
               </div>
               <label for="floatingInput"></label>
@@ -83,7 +84,7 @@
               />
               <label for="password">Password</label>
             </div>
-            <div *ngIf="UserForm.get('password').hasError('password') && UserForm.get('password').touched" class="text-danger">
+            <div *ngIf="UserForm.get('password').hasError('required') && UserForm.get('password').touched" class="text-danger">
               password is required.
             </div>
 
@@ -106,7 +107,12 @@
               Confirm password is required.
             </div>
             <div *ngIf="isNotEquals" class="text-danger">the password is not equals</div>
-
+            <div *ngIf="accountCreated" class="alert alert-success alert-dismissible fade show" role="alert">
+              your account was created
+              <button type="button" (click)="onClose()" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
             <div class="d-grid mt-4">
               <button (click)="saveForm(UserForm)" type="button" class="btn btn-secondary p-2">Sign Up</button>
             </div>

@@ -16,6 +16,8 @@ import { response } from 'express';
 export default class RegisterComponent {
   UserForm: FormGroup;
   isNotEquals: boolean;
+  closed: boolean = false;
+  accountCreated: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,12 +33,17 @@ export default class RegisterComponent {
       date_naissance: ['', Validators.required]
     });
   }
+  onClose() {
+    this.closed = true;
+    this.accountCreated = false;
+  }
 
   saveForm(UserForm: FormGroup) {
     if (UserForm.valid) {
       const result = UserForm.value;
       this.service.Inscription(result).subscribe((response) => {
         console.log(response);
+        this.accountCreated = true;
       });
     } else {
       Object.keys(this.UserForm.controls).forEach((key) => {
