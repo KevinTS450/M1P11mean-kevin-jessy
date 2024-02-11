@@ -8,11 +8,15 @@ async function createRendezVous(rendezVous) {
     const collection = database.client.db("MEAN").collection("rendezVous");
 
     // Insert the rendezVous into the collection
+    console.log(rendezVous)
     await collection.insertOne({
-      employee: rendezVous.employee,
+      employee: rendezVous.employe,
       client: rendezVous.client,
       serviceAsked: rendezVous.serviceAsked,
-      start: rendezVous.start
+      start: rendezVous.start,
+      end: rendezVous.end,
+      isDone: rendezVous.isDone,
+      isConfirmed: rendezVous.isConfirmed
     });
 
     console.log("rendezVous registered successfully");
@@ -24,9 +28,9 @@ async function createRendezVous(rendezVous) {
 
 async function getRendezVousById(id) {
   try {
-    const collection = database.client.collection("rendezVous");
+    const collection = database.client.db("MEAN").collection("rendezVous");
 
-    const rendezVous = await collection.findOne({ _id: ObjectId(id) });
+    const rendezVous = await collection.findOne({ _id: new ObjectId(id) });
 
     return rendezVous;
   } catch (error) {
@@ -84,7 +88,7 @@ async function updateRendezVous(rendezVous) {
   }
 }
 
-async function deleteServiceById(idRendezVous) {
+async function deleteRendezVousById(idRendezVous) {
   try {
     // Specify the collection
     const collection = database.client.db("MEAN").collection("rendezVous");
@@ -109,5 +113,5 @@ module.exports = {
     getRendezVousById,
     GetAllRendezVous,
     updateRendezVous,
-    deleteServiceById
+    deleteRendezVousById
 };
