@@ -9,5 +9,7 @@ router.post("/inscription", handlerInscription);
 router.get("/get-user", authenticateToken, HandlerUser.GetUserByToken);
 router.post("/login", handlerLogin);
 router.get("/AllUser", HandlerUser.GetAllUser);
+router.get("/isUserExist", HandlerUser.CheckUserExist);
+router.get("/userByEmail", HandlerUser.GetUserByEmail);
 
 module.exports = router;

@@ -3,7 +3,7 @@ const utils = require("../../utils/utils");
 
 async function getUserById(id, db) {
   try {
-    const collection = db.collection("users"); // Assuming 'users' is your collection name
+    const collection = database.client.db("MEAN").collection("users");
 
     // Find the user by ID
     const user = await collection.findOne({ _id: ObjectId(id) });
@@ -15,12 +15,22 @@ async function getUserById(id, db) {
   }
 }
 
-async function GetAllUsers() {
+async function CheckUserExist(email) {
   try {
-    // Specify the collection
     const collection = database.client.db("MEAN").collection("users");
 
-    // Find all documents in the collection
+    const user = await collection.findOne({ email: email });
+    return user;
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
+
+async function GetAllUsers() {
+  try {
+    const collection = database.client.db("MEAN").collection("users");
+
     const users = await collection.find({}).toArray();
 
     return users;
@@ -32,12 +42,10 @@ async function GetAllUsers() {
 
 async function updateUser(user) {
   try {
-    // Specify the collection
     const collection = database.client.db("MEAN").collection("users");
 
-    const filter = { id: user.id }; // Use other relevant fields from user if needed
+    const filter = { id: user.id };
 
-    // Update object with changes (modify fields and values as needed)
     const updateDoc = {
       $set: {
         username: user.username,
@@ -46,11 +54,10 @@ async function updateUser(user) {
         password: user.password,
         date_naissance: user.date_naissance,
         age: utils.calculateAge(user.date_naissance),
-        is_activate: user.is_activate
-      }
+        is_activate: user.is_activate,
+      },
     };
 
-    // Update the document
     const result = await collection.updateOne(filter, updateDoc);
 
     if (result.matchedCount === 0) {
@@ -66,13 +73,10 @@ async function updateUser(user) {
 
 async function deleteUser(idUser) {
   try {
-    // Specify the collection
     const collection = database.client.db("MEAN").collection("users");
 
-    // Define the filter criteria
     const filter = { id: idUser };
 
-    // Delete the user document
     const result = await collection.deleteOne(filter);
 
     if (result.deletedCount === 0) {
@@ -86,10 +90,10 @@ async function deleteUser(idUser) {
   }
 }
 
-
 module.exports = {
   getUserById,
   GetAllUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  CheckUserExist,
 };

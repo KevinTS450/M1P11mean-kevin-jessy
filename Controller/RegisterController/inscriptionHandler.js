@@ -7,20 +7,18 @@ async function handleUserRegistration(req, res, next) {
     const {
       username,
       email,
-      role,
       password,
+      role,
       date_naissance,
-      is_activate,
       age,
       validation_code,
     } = req.body;
     const newUser = new User(
       username,
       email,
-      role,
       password,
+      role,
       date_naissance,
-      is_activate,
       age,
       validation_code
     );

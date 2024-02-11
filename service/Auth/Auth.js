@@ -2,9 +2,9 @@ const database = require("../../database.js");
 const bcrypt = require("bcrypt"); // For password hashing
 const jwt = require("jsonwebtoken");
 
-async function getUserByEmail(email, db) {
+async function getUserByEmail(email) {
   try {
-    const collection = db.collection("users");
+    const collection = database.client.db("MEAN").collection("users");
     const user = await collection.findOne({ email: email });
 
     return user;
