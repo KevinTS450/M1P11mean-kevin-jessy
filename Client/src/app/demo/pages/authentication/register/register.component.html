@@ -25,8 +25,8 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-floating mb-3">
-                  <input formControlName="Username" type="text" class="form-control" id="floatingInput" placeholder="name@example.com" />
-                  <div *ngIf="UserForm.get('Username').hasError('required') && UserForm.get('Username').touched" class="text-danger">
+                  <input formControlName="username" type="text" class="form-control" id="floatingInput" placeholder="name@example.com" />
+                  <div *ngIf="UserForm.get('username').hasError('required') && UserForm.get('username').touched" class="text-danger">
                     Username is required.
                   </div>
                   <label for="floatingInput">Username</label>

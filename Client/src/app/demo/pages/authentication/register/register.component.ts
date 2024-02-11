@@ -25,7 +25,7 @@ export default class RegisterComponent {
   ) {}
   ngOnInit(): void {
     this.UserForm = this.formBuilder.group({
-      Username: ['', Validators.required],
+      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
@@ -41,6 +41,7 @@ export default class RegisterComponent {
   saveForm(UserForm: FormGroup) {
     if (UserForm.valid) {
       const result = UserForm.value;
+      console.log(result);
       this.service.Inscription(result).subscribe((response) => {
         console.log(response);
         this.accountCreated = true;
