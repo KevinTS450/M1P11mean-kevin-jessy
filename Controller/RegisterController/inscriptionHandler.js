@@ -4,12 +4,19 @@ const User = require("../../model/Users/user");
 
 async function handleUserRegistration(req, res, next) {
   try {
-    const { username, role, email, password, date_naissance, is_activate, age } =
-      req.body;
+    const {
+      username,
+      email,
+      role,
+      password,
+      date_naissance,
+      is_activate,
+      age,
+    } = req.body;
     const newUser = new User(
       username,
-      role,
       email,
+      role,
       password,
       date_naissance,
       is_activate,
@@ -18,7 +25,9 @@ async function handleUserRegistration(req, res, next) {
 
     await Inscription.registerUser(newUser);
 
-    res.status(200).json({ message: "User registered successfully" });
+    res
+      .status(200)
+      .json({ message: "User registered successfully :" + newUser });
   } catch (error) {
     next(error); // Pass the error to the next middleware (error handler)
   }
