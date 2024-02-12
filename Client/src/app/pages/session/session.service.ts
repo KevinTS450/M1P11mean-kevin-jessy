@@ -7,7 +7,7 @@ export class SessionService {
   constructor() {}
 
   public setToken(token: string) {
-    return localStorage.setItem("accesstoken", token);
+    return localStorage.setItem("accessToken", token);
   }
 
   public getToken() {

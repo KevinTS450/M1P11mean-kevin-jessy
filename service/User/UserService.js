@@ -1,12 +1,15 @@
 const database = require("../../database.js");
 const utils = require("../../utils/utils");
-
-async function getUserById(id, db) {
+const mongoose = require("mongoose");
+async function getUserById(id) {
   try {
     const collection = database.client.db("MEAN").collection("users");
 
     // Find the user by ID
-    const user = await collection.findOne({ _id: ObjectId(id) });
+    const user = await collection.findOne({
+      _id: new mongoose.Types.ObjectId(id),
+    });
+    console.log("User in service :", user);
 
     return user;
   } catch (error) {
