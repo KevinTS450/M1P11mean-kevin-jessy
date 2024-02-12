@@ -11,5 +11,6 @@ router.post("/login", handlerLogin);
 router.get("/AllUser", HandlerUser.GetAllUser);
 router.get("/isUserExist", HandlerUser.CheckUserExist);
 router.get("/userByEmail", HandlerUser.GetUserByEmail);
+router.patch("/activateAccount", HandlerUser.ActivateAccount);
 
 module.exports = router;

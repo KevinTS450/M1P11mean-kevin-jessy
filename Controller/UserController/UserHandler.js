@@ -98,6 +98,24 @@ async function deleteUser(req, res, next) {
   }
 }
 
+async function ActivateAccount(req, res) {
+  try {
+    const email = req.query.email;
+    const activationResult = await AuthService.ActivateAccount(email);
+    return res
+      .status(200)
+      .json({
+        message: "Account activated successfully",
+        result: activationResult,
+      });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: "An error occurred while activating the account" });
+  }
+}
+
 module.exports = {
   GetUserByToken,
   GetAllUser,
@@ -105,4 +123,5 @@ module.exports = {
   deleteUser,
   CheckUserExist,
   GetUserByEmail,
+  ActivateAccount,
 };

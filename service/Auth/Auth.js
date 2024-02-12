@@ -26,4 +26,17 @@ const handleAuthentication = async (email, password) => {
     email: user.email,
   };
 };
-module.exports = { getUserByEmail, handleAuthentication };
+async function ActivateAccount(email) {
+  try {
+    const collection = database.client.db("MEAN").collection("users");
+    const result = await collection.updateOne(
+      { email: email },
+      { $set: { is_activate: true } }
+    );
+
+    return result.modifiedCount; // Return the number of documents updated
+  } catch (error) {
+    console.error(error);
+  }
+}
+module.exports = { getUserByEmail, handleAuthentication, ActivateAccount };
