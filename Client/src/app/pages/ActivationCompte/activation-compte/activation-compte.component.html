@@ -54,7 +54,7 @@
               Code non identique
             </div>
 
-            <div class="text-center">
+            <div *ngIf="!success_code" class="text-center">
               <button
                 (click)="Listencode(Code_form)"
                 type="button"

@@ -1,19 +1,18 @@
 const jwt = require("jsonwebtoken");
-const secretKey = "defaultSecret"; // Replace with your actual secret key
+const secretKey = "defaultSecret";
 
 const authenticateToken = (req, res, next) => {
   const token = req.header("Authorization");
 
   try {
     const decoded = jwt.verify(token, secretKey);
-    console.log("Decoded token:", decoded);
+    console.log("Decoded token:", decoded.id);
 
-    // Access user properties directly from the decoded payload
     req.user = {
       id: decoded.id,
       email: decoded.email,
     };
-    console.log(req.user);
+    console.log("Decoded User ID in Controller:", req.user.id);
 
     next();
   } catch (error) {
@@ -21,4 +20,5 @@ const authenticateToken = (req, res, next) => {
     return res.status(403).json({ message: "Forbidden - Invalid token" });
   }
 };
+
 module.exports = authenticateToken;
