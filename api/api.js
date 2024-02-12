@@ -15,6 +15,7 @@ router.post("/login", handlerLogin);
 router.get("/AllUser", HandlerUser.GetAllUser);
 router.get("/isUserExist", HandlerUser.CheckUserExist);
 router.get("/userByEmail", HandlerUser.GetUserByEmail);
+router.patch("/activateAccount", HandlerUser.ActivateAccount);
 
 router.post("/mobileMoney/create", mobileMoneyController.createMobileMoney);
 router.get("/mobileMoney/findAll", mobileMoneyController.GetAllMobileMoney);
