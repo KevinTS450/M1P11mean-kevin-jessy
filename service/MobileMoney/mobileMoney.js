@@ -1,4 +1,4 @@
-const database = require("../database");
+const database = require("../../database");
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 

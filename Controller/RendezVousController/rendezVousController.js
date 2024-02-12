@@ -1,6 +1,6 @@
 const express = require("express");
-const RendezVousService = require("../service/rendezVous.service");
-const RendezVous = require('../model/rendezVous.model')
+const RendezVousService = require("../../service/RendezVous/rendezVous");
+const RendezVous = require('../../model/RendezVous/rendezVous');
 
 async function createRendezVous(req, res, next) {
   try {

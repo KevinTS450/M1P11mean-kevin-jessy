@@ -1,4 +1,4 @@
-const database = require("../database.js");
+const database = require("../../database");
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 
@@ -64,7 +64,7 @@ async function updateRendezVous(rendezVous) {
     // Update object with changes (modify fields and values as needed)
     const updateRendezVous = {
         $set: {
-            employee: rendezVous.employee,
+            employee: rendezVous.employe,
             client: rendezVous.client,
             serviceAsked: rendezVous.serviceAsked,
             start: rendezVous.start,

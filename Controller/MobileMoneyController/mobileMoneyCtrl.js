@@ -1,6 +1,6 @@
 const express = require("express");
-const MobileMoneyService = require("../service/mobileMoney.service");
-const MobileMoney = require('../model/mobileMoney.model')
+const MobileMoneyService = require("../../service/MobileMoney/mobileMoney");
+const MobileMoney = require('../../model/MobileMoney/mobileMoney');
 
 async function createMobileMoney(req, res, next) {
   try {
