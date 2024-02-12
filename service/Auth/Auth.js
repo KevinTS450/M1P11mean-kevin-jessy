@@ -1,6 +1,7 @@
 const database = require("../../database.js");
 const bcrypt = require("bcrypt"); // For password hashing
 const jwt = require("jsonwebtoken");
+const utils = require("../../utils/utils.js");
 
 async function getUserByEmail(email) {
   try {
@@ -39,4 +40,24 @@ async function ActivateAccount(email) {
     console.error(error);
   }
 }
-module.exports = { getUserByEmail, handleAuthentication, ActivateAccount };
+
+async function GenNewCode(email) {
+  try {
+    const collection = database.client.db("MEAN").collection("users");
+    const newCode = utils.generateRandomNumber();
+    const result = await collection.updateOne(
+      { email: email },
+      { $set: { validation_code: newCode } }
+    );
+
+    return result.modifiedCount;
+  } catch (error) {
+    console.error(error);
+  }
+}
+module.exports = {
+  getUserByEmail,
+  handleAuthentication,
+  ActivateAccount,
+  GenNewCode,
+};
