@@ -1,0 +1,249 @@
+<div class="header bg-gradient-danger py-7 py-lg-8">
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Welcome!</h1>
+          <p class="text-lead text-light">
+            Use these awesome forms to login or create new account in your
+            project for free.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="separator separator-bottom separator-skew zindex-100">
+    <svg
+      x="0"
+      y="0"
+      viewBox="0 0 2560 100"
+      preserveAspectRatio="none"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container mt--8 pb-5">
+  <!-- Table -->
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card bg-secondary shadow border-0">
+        <div class="card-header bg-transparent pb-5">
+          <div class="text-muted text-center mt-2 mb-4">
+            <small>Sign up with</small>
+          </div>
+          <div class="text-center">
+            <a href="javascript:void(0)" class="btn btn-neutral btn-icon mr-4">
+              <span class="btn-inner--icon"
+                ><img src="assets/img/icons/common/github.svg"
+              /></span>
+              <span class="btn-inner--text">Github</span>
+            </a>
+            <a href="javascript:void(0)" class="btn btn-neutral btn-icon">
+              <span class="btn-inner--icon"
+                ><img src="assets/img/icons/common/google.svg"
+              /></span>
+              <span class="btn-inner--text">Google</span>
+            </a>
+          </div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <div class="text-center text-muted mb-4">
+            <small>Or sign up with credentials</small>
+          </div>
+          <form [formGroup]="UserForm" role="form">
+            <div class="form-group">
+              <div class="input-group input-group-alternative mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-hat-3"></i
+                  ></span>
+                </div>
+                <input
+                  formControlName="username"
+                  class="form-control"
+                  placeholder="username"
+                  type="text"
+                />
+              </div>
+              <div
+                *ngIf="
+                  UserForm.get('username').invalid &&
+                  (UserForm.get('username').dirty ||
+                    UserForm.get('username').touched)
+                "
+                class="alert alert-danger"
+                role="alert"
+              >
+                Username is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group input-group-alternative mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-hat-3"></i
+                  ></span>
+                </div>
+                <input
+                  formControlName="date_naissance"
+                  class="form-control"
+                  placeholder="Date de naissance"
+                  type="date"
+                />
+              </div>
+              <div
+                *ngIf="
+                  UserForm.get('date_naissance').invalid &&
+                  (UserForm.get('date_naissance').dirty ||
+                    UserForm.get('date_naissance').touched)
+                "
+                class="alert alert-danger"
+                role="alert"
+              >
+                date_naissance is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group input-group-alternative mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-email-83"></i
+                  ></span>
+                </div>
+                <input
+                  formControlName="email"
+                  class="form-control"
+                  placeholder="Email"
+                  type="email"
+                />
+              </div>
+              <div
+                *ngIf="
+                  UserForm.get('email').invalid &&
+                  (UserForm.get('email').dirty || UserForm.get('email').touched)
+                "
+                class="alert alert-danger"
+                role="alert"
+              >
+                Email is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-lock-circle-open"></i
+                  ></span>
+                </div>
+                <select formControlName="role" class="form-control">
+                  <option disabled selected>choose a role</option>
+                  <option value="client">Client</option>
+                  <option value="employe">Employer</option>
+                </select>
+              </div>
+              <div
+                *ngIf="
+                  UserForm.get('role').invalid &&
+                  (UserForm.get('role').dirty || UserForm.get('role').touched)
+                "
+                class="alert alert-danger"
+                role="alert"
+              >
+                Role is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group input-group-alternative mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-email-83"></i
+                  ></span>
+                </div>
+                <input
+                  formControlName="password"
+                  class="form-control"
+                  placeholder="Password"
+                  type="password"
+                  (input)="validatePasswords()"
+                />
+              </div>
+              <div
+                *ngIf="
+                  UserForm.get('password').invalid &&
+                  (UserForm.get('password').dirty ||
+                    UserForm.get('password').touched)
+                "
+                class="alert alert-danger"
+                role="alert"
+              >
+                Password is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group input-group-alternative mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-email-83"></i
+                  ></span>
+                </div>
+                <input
+                  formControlName="confirmPassword"
+                  class="form-control"
+                  placeholder="Confirm Password"
+                  type="password"
+                  (input)="validatePasswords()"
+                />
+              </div>
+              <div
+                *ngIf="
+                  UserForm.get('confirmPassword').invalid &&
+                  (UserForm.get('confirmPassword').dirty ||
+                    UserForm.get('confirmPassword').touched)
+                "
+                class="alert alert-danger"
+                role="alert"
+              >
+                Confirm Password is required.
+              </div>
+            </div>
+
+            <div *ngIf="isNotEquals" class="alert alert-danger" role="alert">
+              les mot de passe ne sont pas identique
+            </div>
+            <div
+              *ngIf="accountCreated"
+              class="alert alert-success alert-dismissible fade show"
+              role="alert"
+            >
+              <span class="alert-inner--icon"
+                ><i class="ni ni-like-2"></i
+              ></span>
+              Votre compte a etait creer
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="text-center">
+              <button
+                (click)="saveForm(UserForm)"
+                type="button"
+                class="btn btn-primary mt-4"
+              >
+                Create account
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
