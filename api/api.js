@@ -38,5 +38,6 @@ router.delete(
 router.get("/isUserExist", HandlerUser.CheckUserExist);
 router.get("/userByEmail", HandlerUser.GetUserByEmail);
 router.patch("/activateAccount", HandlerUser.ActivateAccount);
+router.patch("/user/newCode", HandlerUser.GenNewCode);
 
 module.exports = router;
