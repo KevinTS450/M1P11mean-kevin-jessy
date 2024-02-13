@@ -41,7 +41,6 @@ export class ActivationCompteComponent implements OnInit {
     try {
       this.AuthService.GetUserByEmail(this.email).subscribe(
         (responseUser: any) => {
-          console.log(responseUser);
           this.code_query = responseUser.User.validation_code;
         }
       );
@@ -53,10 +52,12 @@ export class ActivationCompteComponent implements OnInit {
   Listencode(Code_form: FormGroup) {
     if (this.code_query === Code_form.value.code) {
       this.AuthService.ActivateAccount(this.email).subscribe((response) => {
-        console.log(response);
         this.success_code = true;
+        this.error_code = false;
       });
     } else {
+      this.success_code = false;
+
       this.error_code = true;
     }
   }

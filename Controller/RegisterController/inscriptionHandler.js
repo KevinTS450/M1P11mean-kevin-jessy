@@ -1,33 +1,51 @@
 const express = require("express");
 const Inscription = require("../../service/Register/inscription.js");
 const User = require("../../model/Users/user");
-
 async function handleUserRegistration(req, res, next) {
   try {
     const {
-      username,
+      name,
+      last_name,
       email,
       password,
       role,
       date_naissance,
+      is_activate,
       age,
       validation_code,
+      image,
     } = req.body;
+
+    if (
+      !name ||
+      !last_name ||
+      !email ||
+      !password ||
+      !role ||
+      !date_naissance
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
     const newUser = new User(
-      username,
+      name,
+      last_name,
       email,
       password,
       role,
       date_naissance,
+      is_activate,
       age,
-      validation_code
+      validation_code,
+      image
     );
+    console.log("body :", newUser);
 
-    await Inscription.registerUser(newUser);
+    const userRegister = await Inscription.registerUser(newUser);
 
     res
-      .status(200)
-      .json({ message: "User registered successfully :" + newUser });
+      .status(201)
+      .json({ message: "User registered successfully", user: userRegister });
   } catch (error) {
     next(error);
   }
