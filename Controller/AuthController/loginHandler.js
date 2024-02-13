@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const loginService = require("../../service/Auth/Auth");
 
-const loginUser = async (req, res) => {
+async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
 
@@ -22,6 +22,15 @@ const loginUser = async (req, res) => {
     console.error("Error during login:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-};
+}
+async function Logout(req, res) {
+  try {
+    const token = req.header("Authorization");
+    await loginService.logout(token);
+    return res.status(200).json({ message: "user disconnected" });
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-module.exports = loginUser;
+module.exports = { loginUser, Logout };

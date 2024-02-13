@@ -7,7 +7,7 @@ async function getUserById(id) {
 
     // Find the user by ID
     const user = await collection.findOne({
-      _id: new mongoose.Types.ObjectId(id),
+      id: id,
     });
     console.log("User in service :", user);
 

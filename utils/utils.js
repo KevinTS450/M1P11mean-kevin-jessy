@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+const NodeCache = require("node-cache");
+const tokenCache = new NodeCache();
 
 async function CryptPass(pass) {
   const hash = await bcrypt.hash(pass, 10);
@@ -29,8 +31,18 @@ async function generateRandomNumber() {
   return Math.floor(Math.random() * (9000 - 1000 + 1)) + 1000;
 }
 
+function addToBlacklist(token) {
+  tokenCache.set(token, true);
+}
+
+function isTokenBlacklisted(token) {
+  return tokenCache.has(token);
+}
+
 module.exports = {
   CryptPass,
   calculateAge,
   generateRandomNumber,
+  isTokenBlacklisted,
+  addToBlacklist,
 };
