@@ -9,6 +9,7 @@ import {
   FormBuilder,
 } from "@angular/forms";
 import { RegisterService } from "src/app/Service/RegisterService/register.service";
+import { UploadService } from "src/app/Service/UploadService/upload.service";
 @Component({
   selector: "app-register",
   templateUrl: "./register.component.html",
@@ -19,19 +20,23 @@ export class RegisterComponent implements OnInit {
   isNotEquals: boolean;
   closed: boolean = false;
   accountCreated: boolean = false;
+  file_query: File;
 
   constructor(
     private formBuilder: FormBuilder,
-    private service: RegisterService
+    private service: RegisterService,
+    private upload: UploadService
   ) {}
   ngOnInit(): void {
     this.UserForm = this.formBuilder.group({
-      username: ["", Validators.required],
+      name: ["", Validators.required],
+      last_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       password: ["", Validators.required],
       confirmPassword: ["", Validators.required],
       role: ["", Validators.required],
       date_naissance: ["", Validators.required],
+      image: [""],
     });
   }
   onClose() {
@@ -39,14 +44,39 @@ export class RegisterComponent implements OnInit {
     this.accountCreated = false;
   }
 
-  saveForm(UserForm: FormGroup) {
+  public onFileSelected(event) {
+    const file: File = event.target.files[0];
+
+    this.file_query = file;
+  }
+
+  public saveForm(UserForm: FormGroup) {
     if (UserForm.valid) {
       const result = UserForm.value;
-      console.log(result);
-      this.service.Inscription(result).subscribe((response) => {
-        console.log(response);
-        this.accountCreated = true;
-      });
+      if (this.file_query) {
+        this.upload.UploadImg(this.file_query).subscribe(
+          (response: any) => {
+            console.log("Image uploaded successfully:", response);
+            result.image = this.file_query.name;
+
+            this.service.Inscription(result).subscribe((response) => {
+              console.log(response);
+              console.log(result.image);
+              this.accountCreated = true;
+              // UserForm.reset();
+            });
+          },
+          (error) => {
+            console.error("Error uploading image:", error);
+          }
+        );
+      } else {
+        this.service.Inscription(result).subscribe((response) => {
+          console.log(response);
+          this.accountCreated = true;
+          UserForm.reset();
+        });
+      }
     } else {
       Object.keys(this.UserForm.controls).forEach((key) => {
         const control = this.UserForm.get(key);

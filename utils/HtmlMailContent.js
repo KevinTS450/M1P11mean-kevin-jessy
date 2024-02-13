@@ -1,4 +1,4 @@
-async function render(username, code) {
+async function render(name, code) {
   const emailTemplate = `
 <html>
   <head>
@@ -352,7 +352,7 @@ async function render(username, code) {
                     <tr>
                       <td>
                         <br>
-                        <p>Bonjour ${username}</p>
+                        <p>Bonjour ${name}</p>
                         <p> voici votre code d'activation du compte :<h4 style="color: #3498db">${code}</h4> ou cliquez sur ce lien pour aller directement sur la page d'activation du compte </p>
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>

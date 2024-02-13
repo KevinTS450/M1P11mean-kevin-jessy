@@ -1,15 +1,18 @@
 class users {
   constructor(
-    username,
+    name,
+    last_name,
     email,
     password,
     role,
     date_naissance,
     is_activate,
     age,
-    validation_code
+    validation_code,
+    image
   ) {
-    this.username = username;
+    this.name = name;
+    this.last_name = last_name;
     this.email = email;
     this.password = password;
     this.role = role;
@@ -17,6 +20,7 @@ class users {
     this.is_activate = is_activate;
     this.age = age;
     this.validation_code = validation_code;
+    this.image = image;
   }
 }
 module.exports = users;

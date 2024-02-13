@@ -12,19 +12,19 @@ async function registerUser(user) {
 
     const age = await utils.calculateAge(user.date_naissance);
     const validation_code = await utils.generateRandomNumber();
-
     await collection.insertOne({
-      username: user.username,
+      name: user.name,
+      last_name: user.last_name,
       email: user.email,
       password: hashedPassword,
       role: user.role,
-
       date_naissance: user.date_naissance,
       age: age,
       is_activate: false,
       validation_code: validation_code,
+      image: user.image,
     });
-    console.log(validation_code);
+    console.log(user.image);
     const subject = "Bienvenu sur notre salon de beaute" + " " + user.email;
 
     MailSenderEmail.sendEmail(user.email, subject, validation_code);

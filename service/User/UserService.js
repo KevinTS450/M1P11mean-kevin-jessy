@@ -1,6 +1,5 @@
 const database = require("../../database.js");
 const utils = require("../../utils/utils");
-const mongoose = require("mongoose");
 async function getUserById(id) {
   try {
     const collection = database.client.db("MEAN").collection("users");
