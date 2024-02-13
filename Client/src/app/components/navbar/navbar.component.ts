@@ -7,8 +7,9 @@ import {
 } from "@angular/common";
 import { Router } from "@angular/router";
 import { UserService } from "src/app/Service/UserService/user.service";
-import { response } from "express";
-
+import { User } from "src/app/Model/User/user";
+import { AuthService } from "src/app/Service/AuthService/auth.service";
+import { SessionService } from "src/app/pages/session/session.service";
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -18,19 +19,38 @@ export class NavbarComponent implements OnInit {
   public focus;
   public listTitles: any[];
   public location: Location;
+  userProfile: User = new User();
+
   constructor(
     location: Location,
     private element: ElementRef,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private AuthService: AuthService,
+    private session: SessionService,
+    private route: Router
   ) {
     this.location = location;
   }
 
   public GetUserProfile() {
     try {
-      this.userService.GetUserByToken().subscribe((response) => {
+      this.userService.GetUserByToken().subscribe((response: any) => {
         console.log(response);
+        this.userProfile = response.user;
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public deconnecteUser() {
+    try {
+      console.log("ato");
+      this.AuthService.Logout().subscribe((response) => {
+        console.log(response);
+        this.session.removeToken();
+        this.route.navigate(["login"]);
       });
     } catch (error) {
       console.error(error);

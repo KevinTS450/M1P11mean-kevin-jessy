@@ -7,9 +7,11 @@ const HandlerUser = require("../Controller/UserController/UserHandler");
 const mobileMoneyController = require("../Controller/MobileMoneyController/mobileMoneyCtrl.js");
 const rendezVousController = require("../Controller/RendezVousController/rendezVousController.js");
 
+//USER
 router.post("/user/inscription", handlerInscription);
 router.get("/user/get-user", authenticateToken, HandlerUser.GetUserByToken);
-router.post("/user/login", handlerLogin);
+router.post("/user/login", handlerLogin.loginUser);
+router.post("/user/logout", handlerLogin.Logout);
 router.get("/AllUser", HandlerUser.GetAllUser);
 
 router.post("/mobileMoney/create", mobileMoneyController.createMobileMoney);

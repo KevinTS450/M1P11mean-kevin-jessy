@@ -1,5 +1,5 @@
 const database = require("../../database.js");
-const bcrypt = require("bcrypt"); // For password hashing
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const utils = require("../../utils/utils.js");
 
@@ -13,6 +13,11 @@ async function getUserByEmail(email) {
     console.error("Error during database query:", error);
     throw error;
   }
+}
+
+async function logout(token) {
+  utils.addToBlacklist(token);
+  return { message: "Logged out successfully" };
 }
 
 const handleAuthentication = async (email, password) => {
@@ -55,9 +60,11 @@ async function GenNewCode(email) {
     console.error(error);
   }
 }
+
 module.exports = {
   getUserByEmail,
   handleAuthentication,
   ActivateAccount,
   GenNewCode,
+  logout,
 };
