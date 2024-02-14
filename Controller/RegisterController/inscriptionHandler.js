@@ -41,11 +41,9 @@ async function handleUserRegistration(req, res, next) {
     );
     console.log("body :", newUser);
 
-    const userRegister = await Inscription.registerUser(newUser);
+    await Inscription.registerUser(newUser);
 
-    res
-      .status(201)
-      .json({ message: "User registered successfully", user: userRegister });
+    res.status(200).json({ user: newUser });
   } catch (error) {
     next(error);
   }

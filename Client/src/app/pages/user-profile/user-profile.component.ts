@@ -8,6 +8,8 @@ import {
   FormControl,
   FormBuilder,
 } from "@angular/forms";
+import { PointageService } from "src/app/Service/PointageService/pointage.service";
+import { Pointage } from "src/app/Model/pointage/pointage";
 
 @Component({
   selector: "app-user-profile",
@@ -17,7 +19,8 @@ import {
 export class UserProfileComponent implements OnInit {
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private pointage: PointageService
   ) {}
   UserForm: FormGroup;
 
@@ -28,6 +31,7 @@ export class UserProfileComponent implements OnInit {
   initialLastName: string;
   users_updated: boolean = false;
   users: User = new User();
+  pointageDisplay: Pointage = new Pointage();
 
   ngOnInit() {
     this.GetUser();
@@ -75,6 +79,18 @@ export class UserProfileComponent implements OnInit {
         console.log(this.UserQuery.image);
         this.initialName = this.UserQuery.name;
         this.initialLastName = this.UserQuery.last_name;
+        this.GetPointageEmp(response.user._id);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public GetPointageEmp(id: string) {
+    try {
+      this.pointage.GetPointageEmp(id).subscribe((response: any) => {
+        console.log(response);
+        this.pointageDisplay = response.pointage;
       });
     } catch (error) {
       console.error(error);

@@ -1,11 +1,9 @@
-const express = require("express");
 const MobileMoneyService = require("../../service/MobileMoney/mobileMoney");
-const MobileMoney = require('../../model/MobileMoney/mobileMoney');
+const MobileMoney = require("../../model/MobileMoney/mobileMoney");
 
 async function createMobileMoney(req, res, next) {
   try {
-    const { user, operateurNom, monnaie } =
-      req.body;
+    const { user, operateurNom, monnaie } = req.body;
     const newMobileMoney = new MobileMoney(
       { idUs: user.idUser, nomUs: user.nom },
       operateurNom,
@@ -25,7 +23,9 @@ const GetMobileMoneyById = async (req, res) => {
     // Assuming there is a MobileMoney model with findById method
     console.log("Decoded MobileMoney ID in Controller:", req.params.id);
 
-    const mobileMoney = await MobileMoneyService.getMobileMoneyById(req.params.id);
+    const mobileMoney = await MobileMoneyService.getMobileMoneyById(
+      req.params.id
+    );
     console.log("MobileMoney Details:", mobileMoney);
 
     if (!mobileMoney) {
@@ -55,14 +55,13 @@ const GetAllMobileMoney = async (req, res) => {
 
 async function updateMobileMoney(req, res, next) {
   try {
-    const { user, operateurNom, monnaie } =
-      req.body;
+    const { user, operateurNom, monnaie } = req.body;
     const newMobileMoney = new MobileMoney(
       { idUs: user.idUser, nomUs: user.nom },
       operateurNom,
       monnaie
     );
-    
+
     await MobileMoneyService.updateMobileMoney(newMobileMoney);
 
     res.status(200).json({ message: "MobileMoney registered successfully" });
@@ -88,5 +87,5 @@ module.exports = {
   GetMobileMoneyById,
   GetAllMobileMoney,
   updateMobileMoney,
-  deleteMobileMoney
+  deleteMobileMoney,
 };
