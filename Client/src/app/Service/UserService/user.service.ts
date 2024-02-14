@@ -22,4 +22,7 @@ export class UserService {
       headers: headers,
     });
   }
+  public UpdateProfile(data: User): Observable<string[]> {
+    return this.http.put<string[]>(`${this.baseUrl}/update`, data);
+  }
 }
