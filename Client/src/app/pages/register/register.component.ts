@@ -21,6 +21,7 @@ export class RegisterComponent implements OnInit {
   closed: boolean = false;
   accountCreated: boolean = false;
   file_query: File;
+  account_exist: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,23 +60,47 @@ export class RegisterComponent implements OnInit {
             console.log("Image uploaded successfully:", response);
             result.image = this.file_query.name;
 
-            this.service.Inscription(result).subscribe((response) => {
-              console.log(response);
-              console.log(result.image);
-              this.accountCreated = true;
-              // UserForm.reset();
-            });
+            this.service.Inscription(result).subscribe(
+              (response) => {
+                console.log(response);
+                console.log(result.image);
+                this.accountCreated = true;
+                this.account_exist = false;
+
+                UserForm.reset();
+              },
+              (error) => {
+                this.account_exist = true;
+                this.accountCreated = false;
+                UserForm.reset();
+
+                console.error(
+                  "Account creation error or email dupicated:",
+                  error
+                );
+              }
+            );
           },
           (error) => {
             console.error("Error uploading image:", error);
           }
         );
       } else {
-        this.service.Inscription(result).subscribe((response) => {
-          console.log(response);
-          this.accountCreated = true;
-          UserForm.reset();
-        });
+        this.service.Inscription(result).subscribe(
+          (response) => {
+            console.log(response);
+            this.accountCreated = true;
+            this.account_exist = false;
+            UserForm.reset();
+          },
+          (error) => {
+            this.account_exist = true;
+            this.accountCreated = false;
+            UserForm.reset();
+
+            console.error("Account creation error or email dupicated:", error);
+          }
+        );
       }
     } else {
       Object.keys(this.UserForm.controls).forEach((key) => {

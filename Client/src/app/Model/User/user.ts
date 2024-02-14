@@ -6,4 +6,5 @@ export class User {
   date_naissance: string;
   is_activate: string;
   age: string;
+  image: string;
 }

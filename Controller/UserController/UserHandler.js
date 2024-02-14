@@ -1,12 +1,13 @@
 const express = require("express");
 const UserService = require("../../service/User/UserService.js");
 const AuthService = require("../../service/Auth/Auth.js");
+const User = require("../../model/Users/user");
 
 const GetUserByToken = async (req, res) => {
   try {
     console.log("Decoded User ID in Controller:", req.user.id);
 
-    const user = await UserService.getUserById(req.user.id);
+    const user = await AuthService.getUserByEmail(req.user.email);
     console.log("User Details:", user);
 
     if (!user) {
@@ -59,24 +60,8 @@ const GetUserByEmail = async (req, res) => {
 
 async function updateUser(req, res, next) {
   try {
-    const {
-      username,
-      role,
-      email,
-      password,
-      date_naissance,
-      is_activate,
-      age,
-    } = req.body;
-    const newUser = new User(
-      username,
-      email,
-      password,
-      role,
-      date_naissance,
-      is_activate,
-      age
-    );
+    const { name, last_name } = req.body;
+    const newUser = new User(name, last_name);
 
     await UserService.updateUser(newUser);
 

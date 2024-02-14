@@ -16,7 +16,6 @@ async function loginUser(req, res) {
       "defaultSecret",
       { expiresIn }
     );
-
     res.json({ accessToken, expiresIn });
   } catch (error) {
     console.error("Error during login:", error);

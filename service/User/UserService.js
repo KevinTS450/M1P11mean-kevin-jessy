@@ -50,13 +50,8 @@ async function updateUser(user) {
 
     const updateDoc = {
       $set: {
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        password: user.password,
-        date_naissance: user.date_naissance,
-        age: utils.calculateAge(user.date_naissance),
-        is_activate: user.is_activate,
+        name: user.name,
+        last_name: user.last_name,
       },
     };
 
