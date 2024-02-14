@@ -13,7 +13,7 @@ export class UserService {
   constructor(private http: HttpClient, private session: SessionService) {}
   public GetUserByToken(): Observable<User> {
     const headers = new HttpHeaders({
-      Authorization: `${this.session.getToken()}`,
+      Authorization: ` ${this.session.getToken()}`,
       "Content-Type": "application/json",
       Accept: "application/json",
     });

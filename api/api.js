@@ -8,6 +8,8 @@ const mobileMoneyController = require("../Controller/MobileMoneyController/mobil
 const rendezVousController = require("../Controller/RendezVousController/rendezVousController.js");
 const UploadController = require("../Controller/UploadController/UploadController.js");
 const ThumbnailsController = require("../Controller/ThumbnailsController/thumbnailsController.js");
+const PointageController = require("../Controller/PointageController/pointageController.js");
+
 //USER
 router.post("/user/inscription", handlerInscription);
 router.get("/user/get-user", authenticateToken, HandlerUser.GetUserByToken);
@@ -31,6 +33,14 @@ router.put(
 router.delete(
   "/mobileMoney/deleteById/:id",
   mobileMoneyController.deleteMobileMoney
+);
+
+//pointage
+router.post("/pointage/createPointage", PointageController.createPointage);
+router.get("/pointage/empPointage", PointageController.GetEmpPointageHandler);
+router.put(
+  "/pointage/updatePointage",
+  PointageController.updatePointageHandler
 );
 
 router.post("/rendezVous/create", rendezVousController.createRendezVous);

@@ -5,9 +5,9 @@ const User = require("../../model/Users/user");
 
 const GetUserByToken = async (req, res) => {
   try {
-    console.log("Decoded User ID in Controller:", req.user.id);
+    console.log("Decoded User ID in Controller:", req.user._id);
 
-    const user = await AuthService.getUserByEmail(req.user.email);
+    const user = await UserService.getUserById(req.user._id);
     console.log("User Details:", user);
 
     if (!user) {

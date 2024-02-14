@@ -28,8 +28,6 @@ async function registerUser(user) {
     const subject = "Bienvenu sur notre salon de beaute" + " " + user.email;
 
     MailSenderEmail.sendEmail(user.email, subject, validation_code);
-
-    console.log("User registered successfully");
   } catch (err) {
     console.error("Error during user registration:", err);
     throw err;

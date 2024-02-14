@@ -1,14 +1,17 @@
 const database = require("../../database.js");
 const utils = require("../../utils/utils");
+const { ObjectId } = require("mongodb");
+
 async function getUserById(id) {
   try {
     const collection = database.client.db("MEAN").collection("users");
+    console.log("Id user :", id);
 
-    // Find the user by ID
+    const objectId = new ObjectId(id);
+
     const user = await collection.findOne({
-      id: id,
+      _id: objectId,
     });
-    console.log("User in service :", user);
 
     return user;
   } catch (error) {
