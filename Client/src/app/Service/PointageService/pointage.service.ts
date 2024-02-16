@@ -17,4 +17,7 @@ export class PointageService {
   public GetPointageEmp(id: string): Observable<Pointage> {
     return this.http.get<Pointage>(`${this.baseUrl}` + `/empPointage?id=${id}`);
   }
+  public UpdatePointageForEmp(data: {}): Observable<string[]> {
+    return this.http.put<string[]>(`${this.baseUrl}/updatePointage`, data);
+  }
 }
