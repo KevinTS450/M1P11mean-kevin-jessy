@@ -56,6 +56,11 @@
 
             <div class="h5 mt-4">
               <i class="ni business_briefcase-24 mr-2"></i>{{ UserQuery.role }}
+              <i
+                *ngIf="UserQuery.role === 'employe'"
+                class="ni business_briefcase-24 mr-2"
+              ></i
+              >Heure de travail :{{ TotalHeure }} Heure
             </div>
 
             <hr class="my-4" />
@@ -149,40 +154,56 @@
               </div>
             </div>
             <hr class="my-4" />
-            Pointage -->
             <h6 class="heading-small text-muted mb-4">Horaire de travail</h6>
             <div *ngIf="UserQuery.role === 'employe'" class="pl-lg-4">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-address"
-                      >Heure de debut</label
-                    >
-                    <input
-                      id="input-city"
-                      class="form-control form-control-alternative"
-                      value="{{ pointageDisplay.start_time }}"
-                      type="text"
-                    />
+              <form [formGroup]="PointageForm">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-city"
+                        >Heure debut</label
+                      >
+                      <input
+                        type="text"
+                        id="input-city"
+                        formControlName="start_time"
+                        class="form-control form-control-alternative"
+                        placeholder="City"
+                        value="{{ pointageDisplay.start_time }}"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-4">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-city"
-                      >Heure fin</label
-                    >
-                    <input
-                      type="text"
-                      id="input-city"
-                      class="form-control form-control-alternative"
-                      placeholder="City"
-                      value="{{ pointageDisplay.end_time }}"
-                    />
+                <div class="row">
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-city"
+                        >Heure fin</label
+                      >
+                      <input
+                        type="text"
+                        id="input-city"
+                        class="form-control form-control-alternative"
+                        placeholder="City"
+                        formControlName="end_time"
+                        value="{{ pointageDisplay.end_time }}"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+                <a (click)="updatePointage(PointageForm)" class="btn btn-info"
+                  >Modifier l'horaire</a
+                >
+                <br />
+                <br />
+                <div
+                  *ngIf="PointageUpdated"
+                  class="alert alert-success"
+                  role="alert"
+                >
+                  Heure de travail modifier.
+                </div>
+              </form>
             </div>
             <!-- <hr class="my-4" />
              Description -->
