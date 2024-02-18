@@ -9,6 +9,7 @@ const rendezVousController = require("../Controller/RendezVousController/rendezV
 const UploadController = require("../Controller/UploadController/UploadController.js");
 const ThumbnailsController = require("../Controller/ThumbnailsController/thumbnailsController.js");
 const PointageController = require("../Controller/PointageController/pointageController.js");
+const ServiceController = require("../controller/ServiceTypeController/serviceController.js");
 
 //USER
 router.post("/user/inscription", handlerInscription);
@@ -19,6 +20,11 @@ router.get("/AllUser", HandlerUser.GetAllUser);
 router.post("/upload", UploadController.uploadImage);
 router.get("/path", ThumbnailsController.getImagePaths);
 router.put("/user/update", HandlerUser.updateUser);
+router.get("/user/isUserExist", HandlerUser.CheckUserExist);
+router.get("/user/userByEmail", HandlerUser.GetUserByEmail);
+router.patch("/user/activateAccount", HandlerUser.ActivateAccount);
+router.patch("/user/newCode", HandlerUser.GenNewCode);
+router.get("/user/isManagerExist", HandlerUser.CheckManagerExist);
 
 router.post("/mobileMoney/create", mobileMoneyController.createMobileMoney);
 router.get("/mobileMoney/findAll", mobileMoneyController.GetAllMobileMoney);
@@ -43,6 +49,13 @@ router.put(
   PointageController.updatePointageHandler
 );
 
+//service
+router.post("/service/create", ServiceController.createServiceController);
+router.get("/service/list", ServiceController.ListSerivceController);
+router.put("/service/update", ServiceController.UpdateServiceController);
+router.delete("/service/delete", ServiceController.DeleteServiceController);
+router.get("/service/getById", ServiceController.GetServiceByIdController);
+
 router.post("/rendezVous/create", rendezVousController.createRendezVous);
 router.get("/rendezVous/findAll", rendezVousController.GetAllRendezVous);
 router.get("/rendezVous/findById/:id", rendezVousController.GetRendezVousById);
@@ -51,9 +64,5 @@ router.delete(
   "/rendezVous/deleteById/:id",
   rendezVousController.deleteRendezVous
 );
-router.get("/user/isUserExist", HandlerUser.CheckUserExist);
-router.get("/user/userByEmail", HandlerUser.GetUserByEmail);
-router.patch("/user/activateAccount", HandlerUser.ActivateAccount);
-router.patch("/user/newCode", HandlerUser.GenNewCode);
 
 module.exports = router;

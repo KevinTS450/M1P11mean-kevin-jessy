@@ -1,16 +1,19 @@
-const express = require("express");
 const RendezVousService = require("../../service/RendezVous/rendezVous");
-const RendezVous = require('../../model/RendezVous/rendezVous');
+const RendezVous = require("../../model/RendezVous/rendezVous");
 
 async function createRendezVous(req, res, next) {
   try {
     const { employee, client, serviceAsked, start, end, isDone, isConfirmed } =
       req.body;
-      console.log(req.body)
+    console.log(req.body);
     const newRendezVous = new RendezVous(
       { idEmp: employee.idEmployee, nomEmp: employee.nomEmployee },
       { idCli: client.idClient, nomCli: client.nomClient },
-      { idServ: serviceAsked.idService, nomServ: serviceAsked.nom, prixServ: serviceAsked.prix },
+      {
+        idServ: serviceAsked.idService,
+        nomServ: serviceAsked.nom,
+        prixServ: serviceAsked.prix,
+      },
       start,
       end,
       isDone,
@@ -63,15 +66,19 @@ async function updateRendezVous(req, res, next) {
     const { employee, client, serviceAsked, start, end, isDone, isConfirmed } =
       req.body;
     const newRendezVous = new RendezVous(
-        { idEmp: employee.idEmployee, nomEmp: employee.nomEmployee },
-        { idCli: client.idClient, nomCli: client.nomClient },
-        { idServ: serviceAsked.idService, nomServ: serviceAsked.nom, prixServ: serviceAsked.prix },
-        start,
-        end,
-        isDone,
-        isConfirmed
+      { idEmp: employee.idEmployee, nomEmp: employee.nomEmployee },
+      { idCli: client.idClient, nomCli: client.nomClient },
+      {
+        idServ: serviceAsked.idService,
+        nomServ: serviceAsked.nom,
+        prixServ: serviceAsked.prix,
+      },
+      start,
+      end,
+      isDone,
+      isConfirmed
     );
-    
+
     await RendezVousService.updateRendezVous(newRendezVous);
 
     res.status(200).json({ message: "RendezVous registered successfully" });
@@ -97,5 +104,5 @@ module.exports = {
   GetRendezVousById,
   GetAllRendezVous,
   updateRendezVous,
-  deleteRendezVous
+  deleteRendezVous,
 };

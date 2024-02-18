@@ -13,6 +13,9 @@ import { MapsComponent } from "../../pages/maps/maps.component";
 import { UserProfileComponent } from "../../pages/user-profile/user-profile.component";
 import { TablesComponent } from "../../pages/tables/tables.component";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { ServiceTypeComponent } from "src/app/pages/ServiceType/service-type/service-type.component";
+import { AjouterServiceComponent } from "src/app/pages/ServiceType/AjouterService/ajouter-service/ajouter-service.component";
+import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
 // import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
@@ -31,6 +34,9 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
     TablesComponent,
     IconsComponent,
     MapsComponent,
+    ServiceTypeComponent,
+    AjouterServiceComponent,
+    ModifierServiceComponent,
   ],
 })
 export class AdminLayoutModule {}

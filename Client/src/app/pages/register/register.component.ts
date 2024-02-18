@@ -131,7 +131,7 @@ export class RegisterComponent implements OnInit {
       console.log(response);
     });
   }
-  validatePasswords() {
+  public validatePasswords() {
     const password = this.UserForm.get("password").value;
     const confirmPassword = this.UserForm.get("confirmPassword").value;
 
