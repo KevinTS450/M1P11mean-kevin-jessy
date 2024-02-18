@@ -154,7 +154,12 @@
               </div>
             </div>
             <hr class="my-4" />
-            <h6 class="heading-small text-muted mb-4">Horaire de travail</h6>
+            <h6
+              *ngIf="UserQuery.role === 'employe'"
+              class="heading-small text-muted mb-4"
+            >
+              Horaire de travail
+            </h6>
             <div *ngIf="UserQuery.role === 'employe'" class="pl-lg-4">
               <form [formGroup]="PointageForm">
                 <div class="row">
