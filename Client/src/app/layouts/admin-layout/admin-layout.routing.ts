@@ -8,6 +8,8 @@ import { TablesComponent } from "../../pages/tables/tables.component";
 import { ServiceTypeComponent } from "../../pages/ServiceType/service-type/service-type.component";
 import { AjouterServiceComponent } from "src/app/pages/ServiceType/AjouterService/ajouter-service/ajouter-service.component";
 import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
+import { PriseRendezVousComponent } from "src/app/pages/RendezVous/PriseRendezVous/prise-rendez-vous/prise-rendez-vous.component";
+import { AjoutMobileMoneyComponent } from "src/app/pages/MobileMoney/AjouterMobileMoney/ajout-mobile-money/ajout-mobile-money.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "dashboard", component: DashboardComponent },
@@ -18,4 +20,6 @@ export const AdminLayoutRoutes: Routes = [
   { path: "serviceType", component: ServiceTypeComponent },
   { path: "AjoutService", component: AjouterServiceComponent },
   { path: "ModifierService/:id", component: ModifierServiceComponent },
+  { path: "priseRendezVous", component: PriseRendezVousComponent },
+  { path: "ajoutMobileMoney", component: AjoutMobileMoneyComponent },
 ];

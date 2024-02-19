@@ -8,7 +8,7 @@ async function createRendezVous(rendezVous) {
 
     console.log(rendezVous);
     await collection.insertOne({
-      employee: rendezVous.employe,
+      employe: rendezVous.employe,
       client: rendezVous.client,
       serviceAsked: rendezVous.serviceAsked,
       start: rendezVous.start,
@@ -36,7 +36,33 @@ async function getRendezVousById(id) {
     throw error;
   }
 }
+async function checkRendezVousInInterval(startStr, endStr, employeId) {
+  try {
+    const pointageCollection = database.client
+      .db("MEAN")
+      .collection("pointage");
 
+    const startTimeParts = startStr.split(":").map(Number);
+    const endTimeParts = endStr.split(":").map(Number);
+
+    // Extract hours and minutes
+    const startHour = startTimeParts[0];
+    const startMinute = startTimeParts[1];
+    const endHour = endTimeParts[0];
+    const endMinute = endTimeParts[1];
+
+    const isEmployeeFree = await pointageCollection.findOne({
+      idEmp: employeId,
+      start_time: { $lte: startStr },
+      end_time: { $gte: endStr },
+    });
+
+    return isEmployeeFree ? isEmployeeFree : null;
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
 async function GetAllRendezVous() {
   try {
     const collection = database.client.db("MEAN").collection("rendezVous");
@@ -108,4 +134,5 @@ module.exports = {
   GetAllRendezVous,
   updateRendezVous,
   deleteRendezVousById,
+  checkRendezVousInInterval,
 };

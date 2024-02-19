@@ -5,7 +5,10 @@ const database = require("./database.js");
 const apiRouter = require("./api/api.js");
 const path = require("path");
 
-function setupServer() {
+// Require your socket.io setup module
+const socketIOSetup = require("./socketio.js");
+
+async function setupServer() {
   const app = express();
 
   const corsOptions = {
@@ -16,7 +19,7 @@ function setupServer() {
   app.use(cors(corsOptions));
   app.use(bodyParser.json());
   app.use(
-    "uploads",
+    "/uploads",
     express.static(path.join(__dirname, "..", "..", "uploads"))
   );
 
@@ -29,9 +32,7 @@ function setupServer() {
 
   app.use((err, req, res, next) => {
     console.error("An error occurred:", err);
-
     console.error(err.stack);
-
     res.status(500).json({
       error: "Internal Server Error",
       message: err.message,
@@ -39,21 +40,24 @@ function setupServer() {
     });
   });
 
-  return new Promise((resolve, reject) => {
-    database
-      .connect()
-      .then(() => {
-        const PORT = 5000;
-        const server = app.listen(PORT, () => {
-          console.log(`Server running on port ${PORT}`);
-          resolve(server);
-        });
-      })
-      .catch((error) => {
-        console.error("Failed to start the server:", error);
-        reject(error);
+  try {
+    await database.connect();
+
+    // Initialize Socket.IO and pass the Express server instance
+    const server = await new Promise((resolve, reject) => {
+      const httpServer = app.listen(5000, () => {
+        console.log(`Server running on port 5000`);
+        resolve(httpServer);
       });
-  });
+    });
+
+    const io = socketIOSetup.init(server);
+
+    return server;
+  } catch (error) {
+    console.error("Failed to start the server:", error);
+    throw error;
+  }
 }
 
 module.exports = setupServer;
