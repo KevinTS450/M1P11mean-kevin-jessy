@@ -17,6 +17,8 @@ import { ServiceTypeComponent } from "src/app/pages/ServiceType/service-type/ser
 import { AjouterServiceComponent } from "src/app/pages/ServiceType/AjouterService/ajouter-service/ajouter-service.component";
 import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
 // import { ToastrModule } from 'ngx-toastr';
+import { PriseRendezVousComponent } from "src/app/pages/RendezVous/PriseRendezVous/prise-rendez-vous/prise-rendez-vous.component";
+import { AjoutMobileMoneyComponent } from "src/app/pages/MobileMoney/AjouterMobileMoney/ajout-mobile-money/ajout-mobile-money.component";
 
 @NgModule({
   imports: [
@@ -37,6 +39,8 @@ import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierServ
     ServiceTypeComponent,
     AjouterServiceComponent,
     ModifierServiceComponent,
+    PriseRendezVousComponent,
+    AjoutMobileMoneyComponent,
   ],
 })
 export class AdminLayoutModule {}

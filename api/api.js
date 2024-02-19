@@ -40,11 +40,12 @@ router.delete(
   "/mobileMoney/deleteById/:id",
   mobileMoneyController.deleteMobileMoney
 );
+router.put("/mobileMoneu/recharge");
 
 //pointage
 router.post("/pointage/createPointage", PointageController.createPointage);
 router.get("/pointage/empPointage", PointageController.GetEmpPointageHandler);
-router.put(
+router.post(
   "/pointage/updatePointage",
   PointageController.updatePointageHandler
 );
@@ -63,6 +64,10 @@ router.put("/rendezVous/updateById/:id", rendezVousController.updateRendezVous);
 router.delete(
   "/rendezVous/deleteById/:id",
   rendezVousController.deleteRendezVous
+);
+router.get(
+  "/rendezVous/intervalTime",
+  rendezVousController.checkRendezVousAtIntervallOfTimeController
 );
 
 module.exports = router;

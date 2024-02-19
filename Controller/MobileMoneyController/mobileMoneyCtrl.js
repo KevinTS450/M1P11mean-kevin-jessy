@@ -5,7 +5,7 @@ async function createMobileMoney(req, res, next) {
   try {
     const { user, operateurNom, monnaie } = req.body;
     const newMobileMoney = new MobileMoney(
-      { idUs: user.idUser, nomUs: user.nom },
+      { idUser: user.idUser, nomUser: user.nomUser, emailUser: user.emailUser },
       operateurNom,
       monnaie
     );
@@ -14,13 +14,12 @@ async function createMobileMoney(req, res, next) {
 
     res.status(200).json({ message: "MobileMoney registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
   }
 }
 
 const GetMobileMoneyById = async (req, res) => {
   try {
-    // Assuming there is a MobileMoney model with findById method
     console.log("Decoded MobileMoney ID in Controller:", req.params.id);
 
     const mobileMoney = await MobileMoneyService.getMobileMoneyById(
@@ -57,7 +56,7 @@ async function updateMobileMoney(req, res, next) {
   try {
     const { user, operateurNom, monnaie } = req.body;
     const newMobileMoney = new MobileMoney(
-      { idUs: user.idUser, nomUs: user.nom },
+      { idUser: user.idUser, nomUser: user.nom },
       operateurNom,
       monnaie
     );
@@ -66,7 +65,23 @@ async function updateMobileMoney(req, res, next) {
 
     res.status(200).json({ message: "MobileMoney registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
+  }
+}
+async function RechargeMobileMoneyControlleur(req, res, next) {
+  try {
+    const { user, operateurNom, monnaie } = req.body;
+    const newMobileMoney = new MobileMoney(
+      { idUser: user.idUser, nomUser: user.nom },
+      operateurNom,
+      monnaie
+    );
+
+    await MobileMoneyService.RechargeMobileMoney(newMobileMoney);
+
+    res.status(200).json({ message: "MobileMoney registered successfully" });
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -78,7 +93,7 @@ async function deleteMobileMoney(req, res, next) {
 
     res.status(200).json({ message: "MobileMoney registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
   }
 }
 
@@ -88,4 +103,5 @@ module.exports = {
   GetAllMobileMoney,
   updateMobileMoney,
   deleteMobileMoney,
+  RechargeMobileMoneyControlleur,
 };

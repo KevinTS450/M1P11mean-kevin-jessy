@@ -22,7 +22,10 @@ export class UserService {
       headers: headers,
     });
   }
-  public UpdateProfile(data: User): Observable<string[]> {
-    return this.http.put<string[]>(`${this.baseUrl}/update`, data);
+  public UpdateProfile(data: User, email: string): Observable<string[]> {
+    return this.http.put<string[]>(
+      `${this.baseUrl}/update?email=${email}`,
+      data
+    );
   }
 }
