@@ -125,8 +125,13 @@
         <a (click)="ToUpdate(service_query._id)" class="btn btn-primary"
           >Modifier</a
         >
-        <a href="#" class="btn btn-danger">Supprimer</a>
+        <a (click)="RemoveService(service_query._id)" class="btn btn-danger"
+          >Supprimer</a
+        >
       </div>
     </div>
+  </div>
+  <div *ngIf="serviceDeleted" class="alert alert-danger" role="alert">
+    Service deleted.
   </div>
 </div>

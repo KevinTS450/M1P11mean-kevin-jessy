@@ -23,6 +23,7 @@ export class ServiceTypeComponent implements OnInit {
 
   userProfile: User = new User();
   service: ServieType[];
+  serviceDeleted: boolean = false;
   public ToUpdate(id: string) {
     return this.router.navigate(["ModifierService", id]);
   }
@@ -30,6 +31,18 @@ export class ServiceTypeComponent implements OnInit {
   public toAddService() {
     try {
       return this.router.navigate(["AjoutService"]);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public RemoveService(id: string) {
+    try {
+      this.serviceTypeService.DeleteService(id).subscribe((response) => {
+        console.log(response);
+        this.getService();
+        this.serviceDeleted = true;
+      });
     } catch (error) {
       console.error(error);
     }

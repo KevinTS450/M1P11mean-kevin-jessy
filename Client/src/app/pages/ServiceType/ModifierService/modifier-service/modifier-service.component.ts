@@ -88,6 +88,7 @@ export class ModifierServiceComponent implements OnInit {
             });
         });
       } else {
+        newService.image = this.initialImage;
         this.serviceTypeService
           .UpdateService(newService)
           .subscribe((response: any) => {
