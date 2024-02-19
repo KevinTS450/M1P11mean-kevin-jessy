@@ -12,6 +12,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app.routing";
 import { ComponentsModule } from "./components/components.module";
+import { RendezVousComponent } from './pages/rendez-vous/rendez-vous.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import { ComponentsModule } from "./components/components.module";
     AppRoutingModule,
     HttpClientModule,
   ],
-  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
+  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent, RendezVousComponent],
   providers: [],
   bootstrap: [AppComponent],
 })
