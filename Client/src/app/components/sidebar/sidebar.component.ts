@@ -43,7 +43,7 @@ export const ROUTES: RouteInfo[] = [
     title: "service",
     icon: "ni-book-bookmark text-red",
     class: "",
-    hidden: userProfileNotClient,
+    hidden: userProfileEmp,
   },
   {
     path: "/priseRendezVous",
@@ -58,6 +58,13 @@ export const ROUTES: RouteInfo[] = [
     icon: "ni-money-coins text-green",
     class: "",
     hidden: userProfileClient,
+  },
+  {
+    path: "/personnel",
+    title: "Personnel",
+    icon: "ni-badge text-green",
+    class: "",
+    hidden: userProfileManger,
   },
 ];
 
@@ -102,9 +109,13 @@ export class SidebarComponent implements OnInit {
 function userProfileExists() {
   return !!this.UserProfile;
 }
-function userProfileNotClient(userProfile: User): boolean {
+function userProfileEmp(userProfile: User): boolean {
   console.log(userProfile);
-  return userProfile.role !== "client";
+  return userProfile.role === "employe";
+}
+function userProfileManger(userProfile: User): boolean {
+  console.log(userProfile);
+  return userProfile.role === "manager";
 }
 function userProfileClient(userProfile: User): boolean {
   console.log(userProfile);

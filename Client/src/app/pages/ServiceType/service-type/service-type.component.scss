@@ -1,0 +1,10 @@
+.service-container {
+  display: flex;
+  flex-wrap: nowrap; /* Ensures items don't wrap to next line */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+.card-wrapper {
+  flex: 0 0 auto; /* Ensure flex items don't grow or shrink */
+  margin-right: 10px; /* Adjust as needed */
+}
