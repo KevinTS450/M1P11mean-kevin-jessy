@@ -12,6 +12,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app.routing";
 import { ComponentsModule } from "./components/components.module";
+import { ModifierServiceComponent } from "./pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
 import { RendezVousComponent } from './pages/rendez-vous/rendez-vous.component';
 
 @NgModule({

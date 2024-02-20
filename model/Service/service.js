@@ -1,10 +1,10 @@
 class service {
-    constructor(nom, prix, dure_minute, commission) {
-      this.nom = nom;
-      this.prix = prix;
-      this.dure_minute = dure_minute;
-      this.commission = commission;
-    }
+  constructor(nom, prix, durre, commission, image) {
+    this.nom = nom;
+    this.prix = prix;
+    this.durre = durre;
+    this.commission = commission;
+    this.image = image;
   }
-  module.exports = service;
-  
+}
+module.exports = service;

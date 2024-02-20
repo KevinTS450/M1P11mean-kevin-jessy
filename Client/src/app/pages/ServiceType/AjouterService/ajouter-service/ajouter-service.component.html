@@ -1,0 +1,184 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello {{ userProfile.name }}</h1>
+        <p class="text-white mt-0 mb-5">Ajouter des service.</p>
+        <a (click)="toListService()" style="width: 200px" class="btn btn-info"
+          >Listes des service</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col-xl-8 order-xl-1">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Ajout service</h3>
+            </div>
+            <div class="col-4 text-right">
+              <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="ServiceForm">
+            <h6 class="heading-small text-muted mb-4">Service information</h6>
+            <div class="pl-lg-4">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username"
+                      >Nom</label
+                    >
+                    <input
+                      type="text"
+                      id="input-username"
+                      class="form-control form-control-alternative"
+                      placeholder="Username"
+                      formControlName="nom"
+                    />
+                  </div>
+                  <div
+                    *ngIf="
+                      ServiceForm.get('nom').invalid &&
+                      (ServiceForm.get('nom').dirty ||
+                        ServiceForm.get('nom').touched)
+                    "
+                    class="alert alert-danger"
+                    role="alert"
+                  >
+                    Name is required.
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username"
+                      >Prix</label
+                    >
+                    <input
+                      type="number"
+                      id="input-username"
+                      class="form-control form-control-alternative"
+                      placeholder="prix"
+                      formControlName="prix"
+                    />
+                  </div>
+                  <div
+                    *ngIf="
+                      ServiceForm.get('prix').invalid &&
+                      (ServiceForm.get('prix').dirty ||
+                        ServiceForm.get('prix').touched)
+                    "
+                    class="alert alert-danger"
+                    role="alert"
+                  >
+                    Price is required.
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-email"
+                      >durree</label
+                    >
+                    <input
+                      type="time"
+                      id="input-email"
+                      formControlName="durre"
+                      class="form-control form-control-alternative"
+                    />
+                  </div>
+                  <div
+                    *ngIf="
+                      ServiceForm.get('durre').invalid &&
+                      (ServiceForm.get('durre').dirty ||
+                        ServiceForm.get('durre').touched)
+                    "
+                    class="alert alert-danger"
+                    role="alert"
+                  >
+                    duration is required.
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-email"
+                      >Commission</label
+                    >
+                    <input
+                      type="number"
+                      id="input-email"
+                      class="form-control form-control-alternative"
+                      formControlName="commission"
+                    />
+                  </div>
+                  <div
+                    *ngIf="
+                      ServiceForm.get('commission').invalid &&
+                      (ServiceForm.get('commission').dirty ||
+                        ServiceForm.get('commission').touched)
+                    "
+                    class="alert alert-danger"
+                    role="alert"
+                  >
+                    Commission is required.
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-email"
+                    >Image</label
+                  >
+                  <input
+                    type="file"
+                    id="input-email"
+                    class="form-control form-control-alternative"
+                    formControlName="image"
+                    (change)="onFileSelected($event)"
+                  />
+                </div>
+                <div
+                  *ngIf="
+                    ServiceForm.get('image').invalid &&
+                    (ServiceForm.get('image').dirty ||
+                      ServiceForm.get('image').touched)
+                  "
+                  class="alert alert-danger"
+                  role="alert"
+                >
+                  Image is required.
+                </div>
+              </div>
+              <a (click)="AddServie(ServiceForm)" class="btn btn-info"
+                >Ajouter</a
+              >
+              <br />
+              <br />
+              <div
+                *ngIf="serviceCreated"
+                class="alert alert-success"
+                role="alert"
+              >
+                Service ajouter.
+              </div>
+            </div>
+            <hr class="my-4" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

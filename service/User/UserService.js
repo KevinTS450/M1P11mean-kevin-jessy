@@ -31,6 +31,17 @@ async function CheckUserExist(email) {
     throw error;
   }
 }
+async function CheckManagerExist(role) {
+  try {
+    const collection = database.client.db("MEAN").collection("users");
+
+    const user = await collection.findOne({ role: role });
+    return user;
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
 
 async function GetAllUsers() {
   try {
@@ -96,4 +107,5 @@ module.exports = {
   updateUser,
   deleteUser,
   CheckUserExist,
+  CheckManagerExist,
 };

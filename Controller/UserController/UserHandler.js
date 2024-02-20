@@ -47,6 +47,19 @@ const CheckUserExist = async (req, res) => {
     }
   } catch (error) {}
 };
+
+const CheckManagerExist = async (req, res) => {
+  try {
+    const role = req.query.role;
+    const isExist = await UserService.CheckManagerExist(role);
+
+    if (isExist) {
+      res.status(200).json({ message: true });
+    } else {
+      res.status(200).json({ message: false });
+    }
+  } catch (error) {}
+};
 const GetUserByEmail = async (req, res) => {
   try {
     const email = req.query.email;
@@ -120,4 +133,5 @@ module.exports = {
   GetUserByEmail,
   ActivateAccount,
   GenNewCode,
+  CheckManagerExist,
 };
