@@ -46,16 +46,15 @@
                   </div>
                 </div>
                 <div class="text-center">
-                  <h3>
-                    RABENARIVO Jessy Owen<span class="font-weight-light">, 24 ans</span>
-                  </h3>
-      
                   <div class="h5 mt-4">
-                    <i class="ni business_briefcase-24 mr-2"></i>user Role
-                    <i
-                      class="ni business_briefcase-24 mr-2"
-                    ></i
-                    >Heure de travail :23 Heure
+                    <h3>
+                      {{ UserQuery.last_name }}{{" "}}{{ UserQuery.name}}<span class="font-weight-light">, {{ UserQuery.age }} ans</span>
+                    </h3>
+                  </div>
+                  <div class="h5 mt-4">
+                    <h3>
+                      {{ UserQuery.role }}
+                    </h3>
                   </div>
       
                   <hr class="my-4" />
@@ -71,99 +70,160 @@
                             <h3 class="mb-0">Rendez-vous</h3>
                         </div>
                         <div class="col-4 text-right">
-                            <a href="#!" class="btn btn-sm btn-primary">Nouveau</a>
+                          <button *ngIf="page == 'liste_rendez_vous'" (click)="page = 'creating_rendez_vous'" class="btn btn-sm btn-primary">Nouveau</button>
+                          <button *ngIf="page == 'creating_rendez_vous'" (click)="page = 'liste_rendez_vous'" class="btn btn-sm btn-primary">Liste rendez-vous</button>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="col">
-                        <div class="card shadow">
-                            <div class="card-header border-0">
-                                <h3 class="mb-0">Liste rendez-vous</h3>
+                  <div *ngIf="page == 'liste_rendez_vous'" class="col">
+                      <div class="card shadow">
+                          <div class="card-header border-0">
+                              <h3 class="mb-0">Liste rendez-vous</h3>
+                          </div>
+                          <div class="table-responsive">
+                            <table class="table align-items-center table-flush">
+                                <thead class="thead-light">
+                                    <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Service</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let rdv of listeRendezVous">
+                                  <tr>
+                                    <th scope="row">
+                                        <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <span class="mb-0 text-sm">{{ rdv.start }}</span>
+                                        </div>
+                                        </div>
+                                    </th>
+                                    <td>
+                                      {{rdv.serviceAsked.nom}}
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-dot mr-4" *ngIf="!rdv.isConfirmed && !rdv.isDone">
+                                          <i class="bg-warning"></i> en attente
+                                        </span>
+                                        <span class="badge badge-dot mr-4" *ngIf="rdv.isConfirmed && !rdv.isDone">
+                                          <i class="bg-danger"></i> confirmé
+                                        </span>
+                                        <span class="badge badge-dot mr-4" *ngIf="rdv.isConfirmed && rdv.isDone">
+                                          <i class="bg-success"></i> Terminé
+                                        </span>
+                                    </td>
+                                    <td class="text-right" *ngIf="!rdvisConfirmed && !rdvisDOne">
+                                        <button class="btn btn-sm btn-success">Confirmer</button>
+                                        <button class="btn btn-sm btn-danger">Annuler</button>
+                                    </td>
+                                  </tr>                            
+                                </tbody>
+                            </table>
+                          </div>
+                          <div class="card-footer py-4">
+                              <nav aria-label="...">
+                                  <ul class="pagination justify-content-end mb-0">
+                                      <li class="page-item disabled">
+                                      <a class="page-link" href="javascript:void(0)" tabindex="-1">
+                                          <i class="fas fa-angle-left"></i>
+                                          <span class="sr-only">Previous</span>
+                                      </a>
+                                      </li>
+                                      <li class="page-item active">
+                                      <a class="page-link" href="javascript:void(0)">1</a>
+                                      </li>
+                                      <li class="page-item">
+                                      <a class="page-link" href="javascript:void(0)">2 <span class="sr-only">(current)</span></a>
+                                      </li>
+                                      <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
+                                      <li class="page-item">
+                                      <a class="page-link" href="javascript:void(0)">
+                                          <i class="fas fa-angle-right"></i>
+                                          <span class="sr-only">Next</span>
+                                      </a>
+                                      </li>
+                                  </ul>
+                              </nav>
+                          </div>
+                      </div>
+                  </div>
+                  <div *ngIf="page == 'creating_rendez_vous'" class="col">
+                    <div class="card shadow">
+                      <div class="card-header border-0">
+                        <h3 class="mb-0">Création rendez-vous</h3>
+                      </div>
+                      <div class="pl-lg-4">
+                        <div class="row">
+                          <div class="col-lg-6">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-username"
+                                >Choississez le service</label
+                              >
+                              <select class="form-control form-control-alternative" name="service" id="">
+                                <option value="" *ngFor="let service of serviceList">
+                                  {{service.nom}}
+                                </option>
+                              </select>
+                              <!-- <input
+                                type="text"
+                                class="form-control form-control-alternative"
+                                placeholder="Username"
+                                value="{{ UserQuery.name }}"
+                              /> -->
                             </div>
-                            <div class="table-responsive">
-                                <table class="table align-items-center table-flush">
-                                    <thead class="thead-light">
-                                        <tr>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Service</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">
-                                                <div class="media align-items-center">
-                                                <div class="media-body">
-                                                    <span class="mb-0 text-sm">Date</span>
-                                                </div>
-                                                </div>
-                                            </th>
-                                            <td>
-                                                nom Service
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-dot mr-4">
-                                                <i class="bg-warning"></i> en attente
-                                                </span>
-                                            </td>
-                                            <td class="text-right">
-                                                <button class="btn btn-sm btn-success">Confirmer</button>
-                                                <button class="btn btn-sm btn-danger">Annuler</button>
-                                            </td>
-                                        </tr>  
-                                        <tr>
-                                            <th scope="row">
-                                                <div class="media align-items-center">
-                                                <div class="media-body">
-                                                    <span class="mb-0 text-sm">Date</span>
-                                                </div>
-                                                </div>
-                                            </th>
-                                            <td>
-                                                nom Service
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-dot mr-4">
-                                                <i class="bg-warning"></i> en attente
-                                                </span>
-                                            </td>
-                                            <td class="text-right">
-                                                <button class="btn btn-sm btn-success">Confirmer</button>
-                                                <button class="btn btn-sm btn-danger">Annuler</button>
-                                            </td>
-                                        </tr>                              
-                                    </tbody>
-                                </table>
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-username"
+                                >Username</label
+                              >
+                              <input
+                                type="text"
+                                class="form-control form-control-alternative"
+                                placeholder="Username"
+                                value="{{ UserQuery.last_name }}"
+                              />
                             </div>
-                            <div class="card-footer py-4">
-                                <nav aria-label="...">
-                                    <ul class="pagination justify-content-end mb-0">
-                                        <li class="page-item disabled">
-                                        <a class="page-link" href="javascript:void(0)" tabindex="-1">
-                                            <i class="fas fa-angle-left"></i>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
-                                        </li>
-                                        <li class="page-item active">
-                                        <a class="page-link" href="javascript:void(0)">1</a>
-                                        </li>
-                                        <li class="page-item">
-                                        <a class="page-link" href="javascript:void(0)">2 <span class="sr-only">(current)</span></a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
-                                        <li class="page-item">
-                                        <a class="page-link" href="javascript:void(0)">
-                                            <i class="fas fa-angle-right"></i>
-                                            <span class="sr-only">Next</span>
-                                        </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-email"
+                                >Email address</label
+                              >
+                              <input
+                                type="email"
+                                class="form-control form-control-alternative"
+                                value="{{ UserQuery.email }}"
+                                readonly
+                              />
                             </div>
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-email"
+                                >Date de naissance</label
+                              >
+                              <input
+                                type="date"
+                                class="form-control form-control-alternative"
+                                value="{{ UserQuery.date_naissance }}"
+                                readonly
+                              />
+                            </div>
+                          </div>
                         </div>
+                        <a class="btn btn-info"
+                          >Edit profile</a
+                        >
+                        <br />
+                        <br />
+                        <div
+                          class="alert alert-success"
+                          role="alert"
+                        >
+                          Profile updated.
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
             </div>
         </div>

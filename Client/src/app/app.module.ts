@@ -14,6 +14,7 @@ import { AppRoutingModule } from "./app.routing";
 import { ComponentsModule } from "./components/components.module";
 import { ModifierServiceComponent } from "./pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
 import { RendezVousComponent } from './pages/rendez-vous/rendez-vous.component';
+import { TestPageComponent } from './pages/testPage/test-page/test-page.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,7 @@ import { RendezVousComponent } from './pages/rendez-vous/rendez-vous.component';
     AppRoutingModule,
     HttpClientModule,
   ],
-  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent, RendezVousComponent],
+  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent, RendezVousComponent, TestPageComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

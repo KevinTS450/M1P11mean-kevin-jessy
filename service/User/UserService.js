@@ -101,6 +101,22 @@ async function deleteUser(idUser) {
   }
 }
 
+async function getUsersByRole(role) {
+  try {
+    const collection = database.client.db("MEAN").collection("users");
+    console.log("Role user :", role);
+
+    const users = await collection.find({
+      role: role,
+    }).toArray();
+
+    return users;
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   getUserById,
   GetAllUsers,
@@ -108,4 +124,5 @@ module.exports = {
   deleteUser,
   CheckUserExist,
   CheckManagerExist,
+  getUsersByRole
 };

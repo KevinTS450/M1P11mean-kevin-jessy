@@ -56,6 +56,7 @@ router.put("/service/update", ServiceController.UpdateServiceController);
 router.delete("/service/delete", ServiceController.DeleteServiceController);
 router.get("/service/getById", ServiceController.GetServiceByIdController);
 
+// RendezVous
 router.post("/rendezVous/create", rendezVousController.createRendezVous);
 router.get("/rendezVous/findAll", rendezVousController.GetAllRendezVous);
 router.get("/rendezVous/findById/:id", rendezVousController.GetRendezVousById);
@@ -64,5 +65,6 @@ router.delete(
   "/rendezVous/deleteById/:id",
   rendezVousController.deleteRendezVous
 );
+
 
 module.exports = router;

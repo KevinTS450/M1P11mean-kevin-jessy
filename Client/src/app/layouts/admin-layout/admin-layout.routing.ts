@@ -9,6 +9,7 @@ import { AjouterServiceComponent } from "src/app/pages/ServiceType/AjouterServic
 import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
 import { RendezVousComponent } from 'src/app/pages/rendez-vous/rendez-vous.component';
+import { TestPageComponent } from "src/app/pages/testPage/test-page/test-page.component";
 
 export const AdminLayoutRoutes: Routes = [
     { path: "dashboard", component: DashboardComponent },
@@ -19,5 +20,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: "serviceType", component: ServiceTypeComponent },
     { path: "AjoutService", component: AjouterServiceComponent },
     { path: "ModifierService/:id", component: ModifierServiceComponent },
-    { path: 'RendezVous',     component: RendezVousComponent }
+    { path: 'RendezVous',     component: RendezVousComponent },
+    { path: 'testPage',     component: TestPageComponent }
 ];
