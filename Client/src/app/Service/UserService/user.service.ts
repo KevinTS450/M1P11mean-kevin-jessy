@@ -28,4 +28,8 @@ export class UserService {
       data
     );
   }
+
+  public ListUser(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.baseUrl}/AllUser`);
+  }
 }

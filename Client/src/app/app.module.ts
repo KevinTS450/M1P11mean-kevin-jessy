@@ -12,6 +12,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app.routing";
 import { ComponentsModule } from "./components/components.module";
+import { PersonnelComponent } from "./pages/Personnel/personnel/personnel.component";
 
 @NgModule({
   imports: [

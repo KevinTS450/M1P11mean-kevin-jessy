@@ -16,7 +16,7 @@ router.post("/user/inscription", handlerInscription);
 router.get("/user/get-user", authenticateToken, HandlerUser.GetUserByToken);
 router.post("/user/login", handlerLogin.loginUser);
 router.post("/user/logout", handlerLogin.Logout);
-router.get("/AllUser", HandlerUser.GetAllUser);
+router.get("/user/AllUser", HandlerUser.GetAllUser);
 router.post("/upload", UploadController.uploadImage);
 router.get("/path", ThumbnailsController.getImagePaths);
 router.put("/user/update", HandlerUser.updateUser);
