@@ -40,7 +40,7 @@ export class ModifierServiceComponent implements OnInit {
   id: string;
   initialNom: string;
   initialPrix: number;
-  initialDurre: string;
+  initialDurre: number;
   initialCommission: number;
   initialImage: string;
 
@@ -55,18 +55,21 @@ export class ModifierServiceComponent implements OnInit {
   }
   public updateService(ServiceForm: FormGroup) {
     const result = ServiceForm.value;
+    const newId = result.id;
     const newNom = result.nom;
     const newPrix = result.prix;
     const newDurre = result.durre;
     const newCom = result.commission;
 
     if (
+      newId !== this.id ||
       newNom !== this.initialNom ||
       newPrix !== this.initialPrix ||
       newDurre !== this.initialDurre ||
       newCom !== this.initialCommission
     ) {
       const newService: ServieType = {
+        _id: newId !== "" ? newId : this.id,
         nom: newNom !== "" ? newNom : this.initialNom,
         prix: newPrix !== "" ? newPrix : this.initialPrix,
         durre: newDurre !== "" ? newDurre : this.initialDurre,

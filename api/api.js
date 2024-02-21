@@ -62,6 +62,7 @@ router.post("/rendezVous/create", rendezVousController.createRendezVous);
 router.get("/rendezVous/findAll", rendezVousController.GetAllRendezVous);
 router.get("/rendezVous/findById/:id", rendezVousController.GetRendezVousById);
 router.put("/rendezVous/updateById/:id", rendezVousController.updateRendezVous);
+router.get("/rendezVous/findByRoleAndId/:role/:id/:nom_user", rendezVousController.getRendezVousByRoleAndId);
 router.delete(
   "/rendezVous/deleteById/:id",
   rendezVousController.deleteRendezVous

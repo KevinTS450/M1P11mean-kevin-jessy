@@ -87,23 +87,27 @@
                                     <tr>
                                     <th scope="col">Date</th>
                                     <th scope="col">Service</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col">Employé</th>
+                                    <!-- <th scope="col">Status</th> -->
                                     <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody *ngFor="let rdv of listeRendezVous">
                                   <tr>
                                     <th scope="row">
-                                        <div class="media align-items-center">
+                                      <div class="media align-items-center">
                                         <div class="media-body">
-                                            <span class="mb-0 text-sm">{{ rdv.start }}</span>
+                                          <span class="mb-0 text-sm">{{ rdv.start }}</span>
                                         </div>
-                                        </div>
+                                      </div>
                                     </th>
                                     <td>
-                                      {{rdv.serviceAsked.nom}}
+                                      <button class="btn btn-link">{{rdv.serviceAsked.nom}}</button>
                                     </td>
                                     <td>
+                                      {{rdv.employee.nomEmployee}}
+                                    </td>
+                                    <!-- <td>
                                         <span class="badge badge-dot mr-4" *ngIf="!rdv.isConfirmed && !rdv.isDone">
                                           <i class="bg-warning"></i> en attente
                                         </span>
@@ -113,10 +117,15 @@
                                         <span class="badge badge-dot mr-4" *ngIf="rdv.isConfirmed && rdv.isDone">
                                           <i class="bg-success"></i> Terminé
                                         </span>
-                                    </td>
+                                    </td> -->
                                     <td class="text-right" *ngIf="!rdvisConfirmed && !rdvisDOne">
+                                      <div *ngIf="UserQuery.role == 'employe'">
                                         <button class="btn btn-sm btn-success">Confirmer</button>
+                                        <button class="btn btn-sm btn-danger">Rejeter</button>
+                                      </div>
+                                      <div>
                                         <button class="btn btn-sm btn-danger">Annuler</button>
+                                      </div>                                       
                                     </td>
                                   </tr>                            
                                 </tbody>
@@ -158,69 +167,63 @@
                         <div class="row">
                           <div class="col-lg-6">
                             <div class="form-group">
-                              <label class="form-control-label" for="input-username"
-                                >Choississez le service</label
+                              <label class="form-control-label" for="input-username">
+                                Choississez le service
+                              </label>
+                              <select 
+                                *ngIf="serviceList"
+                                class="form-control form-control-alternative" 
+                                name="service" 
+                                id=""
+                                [(ngModel)]="serviceSelected"
+                                (change)="setServiceSelected()"
                               >
-                              <select class="form-control form-control-alternative" name="service" id="">
-                                <option value="" *ngFor="let service of serviceList">
+                                <option 
+                                  *ngFor="let service of serviceList"
+                                  [ngValue]="service"
+                                  class="form-control form-control-alternative"
+                                >
                                   {{service.nom}}
                                 </option>
                               </select>
-                              <!-- <input
-                                type="text"
-                                class="form-control form-control-alternative"
-                                placeholder="Username"
-                                value="{{ UserQuery.name }}"
-                              /> -->
                             </div>
                             <div class="form-group">
                               <label class="form-control-label" for="input-username"
-                                >Username</label
+                                >Choississez la date et l'heure de rendez-vous</label
                               >
                               <input
-                                type="text"
+                                type="datetime-local"
                                 class="form-control form-control-alternative"
-                                placeholder="Username"
-                                value="{{ UserQuery.last_name }}"
-                              />
-                            </div>
+                                [(ngModel)]="newRendezVous.start"
+                              >
+                            </div>                           
                           </div>
                           <div class="col-lg-6">
                             <div class="form-group">
-                              <label class="form-control-label" for="input-email"
-                                >Email address</label
+                              <label class="form-control-label" for="input-username"
+                                >Choississez l'employé</label
                               >
-                              <input
-                                type="email"
-                                class="form-control form-control-alternative"
-                                value="{{ UserQuery.email }}"
-                                readonly
-                              />
-                            </div>
-                            <div class="form-group">
-                              <label class="form-control-label" for="input-email"
-                                >Date de naissance</label
+                              <select 
+                                class="form-control form-control-alternative" 
+                                name="service" 
+                                id=""
+                                [(ngModel)]="employeSelected"
+                                (change)="setEmployeSelected()"
                               >
-                              <input
-                                type="date"
-                                class="form-control form-control-alternative"
-                                value="{{ UserQuery.date_naissance }}"
-                                readonly
-                              />
-                            </div>
+                                <option 
+                                  *ngFor="let employe of listEmploye"
+                                  [ngValue]="employe"
+                                  class="form-control form-control-alternative"
+                                >
+                                  {{employe.name}}{{" "}}{{employe.last_name}}
+                                </option>
+                              </select>
+                            </div> 
                           </div>
                         </div>
-                        <a class="btn btn-info"
-                          >Edit profile</a
+                        <a class="btn btn-info" (click)="createRDV()"
+                          >Créer rendez-vous</a
                         >
-                        <br />
-                        <br />
-                        <div
-                          class="alert alert-success"
-                          role="alert"
-                        >
-                          Profile updated.
-                        </div>
                       </div>
                     </div>
                   </div>

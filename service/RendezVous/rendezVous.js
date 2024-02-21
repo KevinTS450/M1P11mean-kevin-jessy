@@ -102,10 +102,44 @@ async function deleteRendezVousById(idRendezVous) {
   }
 }
 
+async function getRendezVousByRoleAndIdAndNom_user(role, id, nameUser) {
+  try {
+    if(role == "client") {
+
+      const collection = database.client.db("MEAN").collection("rendezVous");
+      console.log("Role user :", role , " and Id :", id);
+
+      const users = await collection.find({
+        client: { idClient: id, nomClient: nameUser }
+      }).toArray();
+
+      console.log(users);
+
+      return users;
+
+    } else if(role == "employe") {
+
+      const collection = database.client.db("MEAN").collection("rendezVous");
+      console.log("Role user :", role , " and Id :", id);
+
+      const users = await collection.find({
+        employee: { idEmployee: id, nomEmployee: nameUser }
+      }).toArray();
+
+      return users;
+
+    }   
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   createRendezVous,
   getRendezVousById,
   GetAllRendezVous,
   updateRendezVous,
   deleteRendezVousById,
+  getRendezVousByRoleAndIdAndNom_user
 };

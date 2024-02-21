@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/Model/User/user';
 import { RendezVous } from 'src/app/Model/rendez-vous';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { RendezVous } from 'src/app/Model/rendez-vous';
 })
 export class RendezVousService {
 
-  projetUrl = 'http://localhost:5000/api/RendezVous/';
+  projetUrl = 'http://localhost:5000/api/rendezVous/';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -16,13 +17,17 @@ export class RendezVousService {
     return this.httpClient.get<RendezVous[]>(`${this.projetUrl}`+`findAll`);
   }
 
+  public findByUser(user:User): Observable<RendezVous[]>{
+    return this.httpClient.get<RendezVous[]>(`${this.projetUrl}`+`findByRoleAndId`+`/${user.role}`+`/${user._id}`+`/${user.name}`);
+  }
+
   // public getBacklogById(id: number): Observable<any>{
   //   return this.httpClient.get<Backlog>(`${this.projetUrl}`+`detail`+`/${id}`, this.HttpOptions);
   // }
 
-  // public create(evenementProjet: Backlog,userId:string): Observable<any>{
-  //   return this.httpClient.post(`${this.projetUrl}`+`save`+`/${userId}`, evenementProjet, this.HttpOptions);
-  // }
+  public create(rendezVous:RendezVous): Observable<any>{
+    return this.httpClient.post(`${this.projetUrl}`+`create`, rendezVous);
+  }
 
   // public update(id: number, evenementProjet: Backlog,user:string): Observable<any>{
   //   return this.httpClient.put(`${this.projetUrl}`+`update`+`/${id}`+`/${user}`, evenementProjet, this.HttpOptions);

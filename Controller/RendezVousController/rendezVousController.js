@@ -95,7 +95,25 @@ async function deleteRendezVous(req, res, next) {
 
     res.status(200).json({ message: "RendezVous registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
+  }
+}
+
+async function getRendezVousByRoleAndId(req, res, next) {
+  try {
+    console.log("Decoded RendezVous ID in Controller:", req.params.id);
+
+    const rendezVous = await RendezVousService.getRendezVousByRoleAndIdAndNom_user(req.params.role, req.params.id, req.params.nom_user);
+    console.log("RendezVous Details:", rendezVous);
+
+    if (!rendezVous) {
+      return res.status(404).json({ message: "RendezVous not found" });
+    }
+
+    res.json({ rendezVous });
+  } catch (error) {
+    console.error(error);
+    +res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -105,4 +123,5 @@ module.exports = {
   GetAllRendezVous,
   updateRendezVous,
   deleteRendezVous,
+  getRendezVousByRoleAndId
 };

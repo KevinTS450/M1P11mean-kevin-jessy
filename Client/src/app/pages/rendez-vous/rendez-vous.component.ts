@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/Model/User/user';
 import { RendezVous } from 'src/app/Model/rendez-vous';
@@ -14,27 +15,32 @@ import { RendezVousService } from 'src/app/Service/rendezVous/rendez-vous.servic
 export class RendezVousComponent implements OnInit {
 
   listeRendezVous:RendezVous[];
-  newRendezVous:RendezVous;
+  newRendezVous:RendezVous = new RendezVous();
 
   UserQuery: User = new User();
+  listEmploye:User[];
+  employeSelected:User = new User();
 
   page = "liste_rendez_vous";
 
   serviceList:ServieType[];
+  serviceSelected:ServieType = new ServieType();
 
   constructor(private rendezVousService:RendezVousService, private userService:UserService, private serviceTypeService:ServiceTypeService) { }
 
   ngOnInit(): void {
-    this.getAllRendezVous();
-    this.GetUser();
-    this.getServices();
+    this.userService.GetUserByToken().subscribe((response: any) => {
+      this.UserQuery = response.user;this.getAllRendezVous();
+      this.getServices();
+      this.getEmployee();
+    });   
   }
 
   getAllRendezVous() {
-    this.rendezVousService.list()
+    this.rendezVousService.findByUser(this.UserQuery)
       .subscribe((response: any) => {
         console.log(response);
-        this.listeRendezVous = response.AllRendezVous;
+        this.listeRendezVous = response.rendezVous;
         console.log(this.listeRendezVous);
       });
   }
@@ -43,6 +49,8 @@ export class RendezVousComponent implements OnInit {
     this.serviceTypeService.ListService()
       .subscribe((response: any) => {
         this.serviceList = response.service;
+        this.serviceSelected = this.serviceList[0];
+        this.newRendezVous.serviceAsked = { idService: this.serviceSelected._id, nom: this.serviceSelected.nom, prix: this.serviceSelected.prix};
       });
   }
 
@@ -50,9 +58,69 @@ export class RendezVousComponent implements OnInit {
     try {
       this.userService.GetUserByToken().subscribe((response: any) => {
         this.UserQuery = response.user;
+        console.log(this.UserQuery);
       });
     } catch (error) {
       console.error(error);
     }
+  }
+
+  getEmployee() {
+    this.userService.findByRole('employe').subscribe((response: any) => {
+      this.listEmploye = response.Users;
+      this.employeSelected = this.listEmploye[0];
+      this.newRendezVous.employee = { idEmployee: this.employeSelected._id, nomEmployee: this.employeSelected.name };
+      this.newRendezVous.employee.idEmployee = this.employeSelected._id;
+      this.newRendezVous.employee.nomEmployee = this.employeSelected.name;
+    })
+  }
+
+  setServiceSelected() {
+    this.newRendezVous.serviceAsked = { idService: this.serviceSelected._id, nom: this.serviceSelected.nom, prix: this.serviceSelected.prix };
+  }
+
+  setEmployeSelected() {
+    this.newRendezVous.employee = { idEmployee: this.employeSelected._id, nomEmployee: this.employeSelected.name };
+  }
+
+  addEndTimeRDV(start:string):string {
+    const dateDebut:Date = new Date(this.newRendezVous.start);
+
+    const date = dateDebut.getDate();
+    const month = dateDebut.getMonth() + 1;
+    const year = dateDebut.getFullYear();
+    const hours = dateDebut.getHours();
+    const minutes = dateDebut.getMinutes();
+
+    const timeToAddInMinutes = this.serviceSelected.durre; 
+    const newMinutes = (minutes + timeToAddInMinutes) % 60;
+    const newHours = Math.floor((minutes + timeToAddInMinutes) / 60);
+
+    const newDate = new Date(year, month - 1, date, hours + newHours, newMinutes);
+
+    const formattedDate = newDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    
+    const formattedTime = newDate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    
+    return formatDate(newDate.getTime().toString(), 'yyyy-MM-dd HH:mm', 'en-US')
+  }
+
+  createRDV() {
+    this.newRendezVous.end = this.addEndTimeRDV(this.newRendezVous.start);
+    this.newRendezVous.client = { idClient: this.UserQuery._id, nomClient: this.UserQuery.name };
+    this.newRendezVous.start = formatDate(new Date(this.newRendezVous.start).toString(), 'yyyy-MM-dd HH:mm', 'en-US');
+    this.newRendezVous.isConfirmed = false;
+    this.newRendezVous.isDone = false;
+    this.rendezVousService.create(this.newRendezVous).subscribe((response:any) => {
+      this.page = "liste_rendez_vous";
+      this.getAllRendezVous();
+    })
   }
 }
