@@ -5,6 +5,12 @@
 }
 
 .card-wrapper {
-  flex: 0 0 auto; /* Ensure flex items don't grow or shrink */
-  margin-right: 10px; /* Adjust as needed */
+  display: flex; /* Make the wrapper a flex container */
+  gap: 10px; /* Adjust spacing between cards */
+}
+.delete-icon-wrapper {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999; /* Ensure the delete icon appears above other content */
 }

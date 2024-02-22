@@ -1,9 +1,19 @@
 class preference {
-    constructor({idEmp, nomEmp}, [{ idCli, nomCli, rangCli, compteurCli } ], [{ idServ, nomServ, prixServ ,rang: rangSer, compteur: compteurServ }]) {
-        this.employe = { idEmployee: idEmp, nomEmployee: nomEmp };
-        this.client = [{ idClient: idCli, nomClient: nomCli, rang: rangCli, compteur: compteurCli }];
-        this.service = [{ idService: idServ, nom: nomServ, prix: prixServ ,rang: rangSer, compteur: compteurServ }];
-    }
+  constructor(
+    { idEmploye, nomEmploye },
+    { idClient, nomClient },
+    { idServ, nomServ, prixServ, commSer },
+    type
+  ) {
+    this.employe = { idEmploye, nomEmploye };
+    this.client = { idClient, nomClient };
+    this.service = {
+      idServ,
+      nomServ,
+      prixServ,
+      commSer,
+    };
+    this.type = type;
+  }
 }
 module.exports = preference;
-  

@@ -10,6 +10,7 @@ const UploadController = require("../Controller/UploadController/UploadControlle
 const ThumbnailsController = require("../Controller/ThumbnailsController/thumbnailsController.js");
 const PointageController = require("../Controller/PointageController/pointageController.js");
 const ServiceController = require("../controller/ServiceTypeController/serviceController.js");
+const PreferenceController = require("../controller/preferenceController/preferenceController.js");
 
 //USER
 router.post("/user/inscription", handlerInscription);
@@ -69,5 +70,13 @@ router.get(
   "/rendezVous/intervalTime",
   rendezVousController.checkRendezVousAtIntervallOfTimeController
 );
+
+//preference
+router.post("/preference/add", PreferenceController.AddPreferenceController);
+router.get(
+  "/preference/checkIfItExist",
+  PreferenceController.CheckPreferenceController
+);
+router.get("/preference/count", PreferenceController.CountPreference);
 
 module.exports = router;

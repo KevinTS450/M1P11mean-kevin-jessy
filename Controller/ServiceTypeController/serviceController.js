@@ -1,5 +1,6 @@
 const ServiceTypeService = require("../../service/ServiceType/service");
 const Service = require("../../model/Service/service");
+const socketIo = require("../../socketio");
 
 async function createServiceController(req, res, next) {
   try {
@@ -66,6 +67,12 @@ async function DeleteServiceController(req, res, next) {
     const id = req.query;
 
     await ServiceTypeService.deleteService(id);
+    const list = await ServiceTypeService.ListService();
+    const io = socketIo.getIO();
+    io.emit("serviceDeleted", {
+      event: "serviceDeleted",
+      service: list,
+    });
     res.status(200).json({ message: "service deleted" });
   } catch (error) {
     next(error);

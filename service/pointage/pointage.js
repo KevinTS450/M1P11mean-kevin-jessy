@@ -29,7 +29,7 @@ async function GetEmpPointage(id) {
     return pointage;
   } catch (error) {
     console.error("Error while retrieving pointage:", error);
-    throw error; // Re-throw the error to handle it in the calling function if needed
+    throw error;
   }
 }
 

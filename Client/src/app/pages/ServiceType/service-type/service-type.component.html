@@ -14,10 +14,18 @@
     <div class="row">
       <div class="col-lg-7 col-md-10">
         <h1 class="display-2 text-white">Hello {{ userProfile.name }}</h1>
-        <p class="text-white mt-0 mb-5">
+        <p *ngIf="userProfile.role === 'employe'" class="text-white mt-0 mb-5">
           Voici la gestion des services . ajoutez , modifier et supprimer.
         </p>
-        <a (click)="toAddService()" class="btn btn-info">Ajouter un service</a>
+        <p *ngIf="userProfile.role === 'client'" class="text-white mt-0 mb-5">
+          Voici la liste de nos services.
+        </p>
+        <a
+          *ngIf="userProfile.role === 'employe'"
+          (click)="toAddService()"
+          class="btn btn-info"
+          >Ajouter un service</a
+        >
       </div>
     </div>
   </div>
@@ -110,28 +118,64 @@
   <br />
   <br />
   <div class="service-container">
-    <div *ngFor="let service_query of service" class="card-wrapper">
-      <div class="card" style="width: 18rem">
-        <img
-          class="card-img-top"
-          src="assets/uploads/{{ service_query.image }}"
-          width="200"
-          height="200"
-          alt="Card image cap"
-        />
+    <div #cardWrapper class="card-wrapper">
+      <div *ngFor="let service_query of service" class="card-wrapper" cdkDrag>
+        <div class="card" style="width: 18rem">
+          <img
+            class="card-img-top"
+            src="assets/uploads/{{ service_query.image }}"
+            width="200"
+            height="200"
+            alt="Card image cap"
+          />
 
-        <div class="card-body">
-          <h5 class="card-title">{{ service_query.nom }}</h5>
-          <p class="card-text">prix service : {{ service_query.prix }}</p>
-          <p class="card-text">durree : {{ service_query.durre }}</p>
-          <p class="card-text">commission : {{ service_query.commission }}</p>
-          <a (click)="ToUpdate(service_query._id)" class="btn btn-primary"
-            >Modifier</a
-          >
-          <a (click)="RemoveService(service_query._id)" class="btn btn-danger"
-            >Supprimer</a
-          >
+          <div class="card-body">
+            <h5 class="card-title">{{ service_query.nom }}</h5>
+            <p class="card-text">prix service : {{ service_query.prix }}</p>
+            <p class="card-text">durree : {{ service_query.durre }}</p>
+            <p class="card-text">commission : {{ service_query.commission }}</p>
+            <a
+              *ngIf="userProfile.role === 'employe'"
+              (click)="ToUpdate(service_query._id)"
+              class="btn btn-primary"
+              >Modifier</a
+            >
+            <a
+              *ngIf="userProfile.role === 'employe'"
+              class="btn btn-danger"
+              (click)="RemoveService(service_query._id)"
+            >
+              Supprimer
+            </a>
+            <a
+              (click)="
+                AddServiceToFavorite(
+                  service_query._id,
+                  service_query.nom,
+                  service_query.prix,
+                  service_query.commission
+                )
+              "
+              *ngIf="
+                userProfile.role !== 'employe' && userProfile.role !== 'manager'
+              "
+              class="btn btn-success"
+            >
+              <i class="ni ni-favourite-28"></i>
+              Add to favorites
+            </a>
+          </div>
         </div>
+      </div>
+      <div
+        #deleteIconWrapper
+        class="delete-icon-wrapper"
+        cdkDropList
+        (cdkDropListDropped)="onDeleteIconDrop($event)"
+      >
+        <a *ngIf="isDragging" class="btn btn-danger">
+          <i class="ni ni-fat-remove text-red"></i> Supprimer
+        </a>
       </div>
     </div>
   </div>

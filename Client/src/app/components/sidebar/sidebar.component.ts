@@ -43,7 +43,7 @@ export const ROUTES: RouteInfo[] = [
     title: "service",
     icon: "ni-book-bookmark text-red",
     class: "",
-    hidden: userProfileEmp,
+    hidden: userProfileClientEmp,
   },
   {
     path: "/priseRendezVous",
@@ -120,4 +120,8 @@ function userProfileManger(userProfile: User): boolean {
 function userProfileClient(userProfile: User): boolean {
   console.log(userProfile);
   return userProfile.role === "client";
+}
+function userProfileClientEmp(userProfile: User): boolean {
+  console.log(userProfile);
+  return userProfile.role === "client" || userProfile.role === "employe";
 }
