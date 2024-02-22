@@ -25,9 +25,12 @@ router.get("/user/userByEmail", HandlerUser.GetUserByEmail);
 router.patch("/user/activateAccount", HandlerUser.ActivateAccount);
 router.patch("/user/newCode", HandlerUser.GenNewCode);
 router.get("/user/isManagerExist", HandlerUser.CheckManagerExist);
+router.get("/user/findByRole/:role", HandlerUser.getUsersByRole);
 
+//pointage
 router.post("/mobileMoney/create", mobileMoneyController.createMobileMoney);
 router.get("/mobileMoney/findAll", mobileMoneyController.GetAllMobileMoney);
+router.get("/mobilemoney/findByUser/:id/:nom", mobileMoneyController.GetMobileMoneyByUser);
 router.get(
   "/mobileMoney/findById/:id",
   mobileMoneyController.GetMobileMoneyById
@@ -57,10 +60,12 @@ router.put("/service/update", ServiceController.UpdateServiceController);
 router.delete("/service/delete", ServiceController.DeleteServiceController);
 router.get("/service/getById", ServiceController.GetServiceByIdController);
 
+// RendezVous
 router.post("/rendezVous/create", rendezVousController.createRendezVous);
 router.get("/rendezVous/findAll", rendezVousController.GetAllRendezVous);
 router.get("/rendezVous/findById/:id", rendezVousController.GetRendezVousById);
-router.put("/rendezVous/updateById/:id", rendezVousController.updateRendezVous);
+router.put("/rendezVous/update", rendezVousController.updateRendezVous);
+router.get("/rendezVous/findByRoleAndId/:role/:id/:nom_user", rendezVousController.getRendezVousByRoleAndId);
 router.delete(
   "/rendezVous/deleteById/:id",
   rendezVousController.deleteRendezVous
@@ -69,5 +74,6 @@ router.get(
   "/rendezVous/intervalTime",
   rendezVousController.checkRendezVousAtIntervallOfTimeController
 );
+
 
 module.exports = router;

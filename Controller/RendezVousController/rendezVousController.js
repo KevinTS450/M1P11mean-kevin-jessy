@@ -3,8 +3,8 @@ const RendezVous = require("../../model/RendezVous/rendezVous");
 
 async function createRendezVous(req, res, next) {
   try {
-    const { employe, client, serviceAsked, start, end, isDone, isConfirmed } =
-      req.body;
+    
+    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } = req.body;
     console.log(req.body);
     const newRendezVous = new RendezVous(
       { idEmp: employe.idEmp, nomEmp: employe.nomEmp },
@@ -17,7 +17,8 @@ async function createRendezVous(req, res, next) {
       start,
       end,
       isDone,
-      isConfirmed
+      isConfirmed,
+      status
     );
 
     await RendezVousService.createRendezVous(newRendezVous);
@@ -81,7 +82,7 @@ const GetAllRendezVous = async (req, res) => {
 
 async function updateRendezVous(req, res, next) {
   try {
-    const { employee, client, serviceAsked, start, end, isDone, isConfirmed } =
+    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } =
       req.body;
     const newRendezVous = new RendezVous(
       { idEmp: employee.idEmployee, nomEmp: employee.nomEmployee },
@@ -94,7 +95,8 @@ async function updateRendezVous(req, res, next) {
       start,
       end,
       isDone,
-      isConfirmed
+      isConfirmed,
+      status
     );
 
     await RendezVousService.updateRendezVous(newRendezVous);
@@ -117,11 +119,30 @@ async function deleteRendezVous(req, res, next) {
   }
 }
 
+async function getRendezVousByRoleAndId(req, res, next) {
+  try {
+    console.log("Decoded RendezVous ID in Controller:", req.params.id);
+
+    const rendezVous = await RendezVousService.getRendezVousByRoleAndIdAndNom_user(req.params.role, req.params.id, req.params.nom_user);
+    console.log("RendezVous Details:", rendezVous);
+
+    if (!rendezVous) {
+      return res.status(404).json({ message: "RendezVous not found" });
+    }
+
+    res.json({ rendezVous });
+  } catch (error) {
+    console.error(error);
+    +res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   createRendezVous,
   GetRendezVousById,
   GetAllRendezVous,
   updateRendezVous,
   deleteRendezVous,
-  checkRendezVousAtIntervallOfTimeController,
+  getRendezVousByRoleAndId,
+  checkRendezVousAtIntervallOfTimeController
 };

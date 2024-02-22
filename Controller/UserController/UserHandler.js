@@ -128,6 +128,17 @@ async function GenNewCode(req, res) {
   }
 }
 
+async function getUsersByRole(req, res) {
+  try {
+    const role = req.params.role;
+    const Users = await UserService.getUsersByRole(role);
+
+    if (Users) {
+      res.status(200).json({ Users });
+    }
+  } catch (error) {}
+}
+
 module.exports = {
   GetUserByToken,
   GetAllUser,
@@ -138,4 +149,5 @@ module.exports = {
   ActivateAccount,
   GenNewCode,
   CheckManagerExist,
+  getUsersByRole
 };

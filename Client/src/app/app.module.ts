@@ -8,10 +8,14 @@ import { AppComponent } from "./app.component";
 import { AdminLayoutComponent } from "./layouts/admin-layout/admin-layout.component";
 import { AuthLayoutComponent } from "./layouts/auth-layout/auth-layout.component";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule, NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app.routing";
 import { ComponentsModule } from "./components/components.module";
+import { ModifierServiceComponent } from "./pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
+import { RendezVousComponent } from './pages/rendez-vous/rendez-vous.component';
+import { TestPageComponent } from './pages/testPage/test-page/test-page.component';
+import { SoldeComponent } from './pages/solde/solde.component';
 import { PersonnelComponent } from "./pages/Personnel/personnel/personnel.component";
 
 @NgModule({
@@ -24,8 +28,9 @@ import { PersonnelComponent } from "./pages/Personnel/personnel/personnel.compon
     RouterModule,
     AppRoutingModule,
     HttpClientModule,
+    NgbPopoverModule
   ],
-  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
+  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent, RendezVousComponent, TestPageComponent, SoldeComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

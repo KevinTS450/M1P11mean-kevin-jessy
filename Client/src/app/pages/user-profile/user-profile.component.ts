@@ -31,6 +31,7 @@ export class UserProfileComponent implements OnInit {
   UserQuery: User = new User();
   path: string;
   pathDeformed: string;
+  initialid:string;
   initialName: string;
   initialLastName: string;
   TotalHeure: string;
@@ -100,6 +101,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   public EditProfil(UserForm: FormGroup) {
+    const newid = UserForm.value._id;
     const newName = UserForm.value.name;
     const newLastName = UserForm.value.last_name;
 
@@ -108,6 +110,7 @@ export class UserProfileComponent implements OnInit {
       (newName !== "" || newLastName !== "")
     ) {
       const updatedUser: User = {
+        _id: newid !== "" ? newid : this.initialid,
         name: newName !== "" ? newName : this.initialName,
         last_name: newLastName !== "" ? newLastName : this.initialLastName,
         email: "",
@@ -143,6 +146,7 @@ export class UserProfileComponent implements OnInit {
     try {
       this.userService.GetUserByToken().subscribe((response: any) => {
         this.UserQuery = response.user;
+        this.initialid = this.UserQuery._id;
         this.initialName = this.UserQuery.name;
         this.initialLastName = this.UserQuery.last_name;
         this.id_user = response.user._id;
