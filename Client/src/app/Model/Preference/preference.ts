@@ -3,4 +3,5 @@ export class Preference {
   client: {};
   service: {};
   type: string;
+  idEmp: string;
 }
