@@ -13,6 +13,8 @@ async function AddPreferenceController(req, res, next) {
         nomServ: service.nomServ,
         prixServ: service.prixServ,
         commSer: service.commSer,
+        durreServ: service.durreServ,
+        imageServ: service.imageServ,
       },
       type,
       idEmp
@@ -68,8 +70,39 @@ async function CountPreference(req, res, next) {
   }
 }
 
+async function GetPreferenceController(req, res, next) {
+  try {
+    const { type, clientId } = req.query;
+    const preference = await PreferenceService.GetPreference(type, clientId);
+    return res.json({ preference: preference });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+async function RemovePreferenceController(req, res, next) {
+  try {
+    const { type, clientId } = req.query;
+    const preference = await PreferenceService.removePreference(type, clientId);
+    const getPrefNow = await PreferenceService.GetPreference(type, clientId);
+
+    const socket = socketIo.getIO();
+    socket.emit("removeFav", {
+      event: "removeFav",
+      preference: getPrefNow,
+    });
+
+    return res.json({ message: "preference removed", preference: preference });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
 module.exports = {
   AddPreferenceController,
   CheckPreferenceController,
   CountPreference,
+  GetPreferenceController,
+  RemovePreferenceController,
 };

@@ -82,11 +82,20 @@ router.get(
   rendezVousController.checkRendezVousAtIntervallOfTimeController
 );
 
+//preference
 router.post("/preference/add", PreferenceController.AddPreferenceController);
 router.get(
   "/preference/checkIfItExist",
   PreferenceController.CheckPreferenceController
 );
 router.get("/preference/count", PreferenceController.CountPreference);
+router.get(
+  "/preference/getPreference",
+  PreferenceController.GetPreferenceController
+);
+router.delete(
+  "/preference/remove",
+  PreferenceController.RemovePreferenceController
+);
 
 module.exports = router;

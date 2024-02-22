@@ -6,6 +6,7 @@ import {
   FormBuilder,
   ReactiveFormsModule,
 } from "@angular/forms";
+
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/Service/AuthService/auth.service";
 import { SessionService } from "../session/session.service";
@@ -33,7 +34,14 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  Login(Auth_form: FormGroup) {
+  public showSpiner() {
+    try {
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public Login(Auth_form: FormGroup) {
     if (Auth_form.valid) {
       const result = Auth_form.value;
       this.service.CheckUser(result.email).subscribe((responseEmail: any) => {

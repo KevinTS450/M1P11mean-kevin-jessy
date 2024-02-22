@@ -2,7 +2,7 @@ class preference {
   constructor(
     { idEmploye, nomEmploye },
     { idClient, nomClient },
-    { idServ, nomServ, prixServ, commSer },
+    { idServ, nomServ, prixServ, commSer, durreServ, imageServ },
     type,
     idEmp
   ) {
@@ -13,6 +13,8 @@ class preference {
       nomServ,
       prixServ,
       commSer,
+      durreServ,
+      imageServ,
     };
     this.type = type;
     this.idEmp = idEmp;

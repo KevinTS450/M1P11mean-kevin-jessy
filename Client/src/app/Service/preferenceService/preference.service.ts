@@ -32,4 +32,22 @@ export class PreferenceService {
       `${this.baseUrl}/checkIfItExist?type=${type}&clientId=${clientId}&idService=${serviceId}`
     );
   }
+
+  public GetPreference(
+    type: string,
+    clientId: string
+  ): Observable<Preference[]> {
+    return this.http.get<Preference[]>(
+      `${this.baseUrl}/getPreference?type=${type}&clientId=${clientId}`
+    );
+  }
+
+  public RemovePreference(
+    type: string,
+    clientId: string
+  ): Observable<Preference> {
+    return this.http.delete<Preference>(
+      `${this.baseUrl}/remove?type=${type}&clientId=${clientId}`
+    );
+  }
 }

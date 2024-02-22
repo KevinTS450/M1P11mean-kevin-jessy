@@ -16,6 +16,7 @@ import { Router } from "@angular/router";
 import { Preference } from "src/app/Model/Preference/preference";
 import { PreferenceService } from "src/app/Service/preferenceService/preference.service";
 import { SocketService } from "src/app/socket/socket.service";
+import { response } from "express";
 @Component({
   selector: "app-service-type",
   templateUrl: "./service-type.component.html",
@@ -49,7 +50,12 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
     this.getService();
     this.AutoRefreh();
   }
+  List_preference_query: Preference[];
+
+  list_service: boolean = true;
+  list_preference: boolean = false;
   id_user: string;
+  removed_favoris: boolean = false;
   pref_exist: boolean = false;
   pref_added: boolean = false;
   userProfile: User = new User();
@@ -87,6 +93,19 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
         this.userProfile = response.user;
         this.id_user = response.user._id;
         this.countNotif();
+        this.GetPreference(this.id_user);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  public getUserRefresh(data: any) {
+    try {
+      this.userService.GetUserByToken().subscribe((data: any) => {
+        this.userProfile = data.user;
+        this.id_user = data.user._id;
+        this.countNotif();
+        this.GetPreference(this.id_user);
       });
     } catch (error) {
       console.error(error);
@@ -118,6 +137,10 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
         console.log("Web socket Notif updated event received:", data);
         this.getUser();
       });
+      this.socketService.on("removeFav", (data) => {
+        console.log("Web socket Notif removed event received:", data);
+        this.getUserRefresh(data);
+      });
     } catch (error) {
       console.error(error);
     }
@@ -127,7 +150,9 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
     id: string,
     nom: string,
     prix: string,
-    commission: string
+    commission: string,
+    durre: string,
+    image: string
   ) {
     try {
       const clientData: {} = {
@@ -139,6 +164,8 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
         nomServ: nom,
         prixServ: prix,
         commSer: commission,
+        durreServ: durre,
+        imageServ: image,
       };
       const empData: {} = {
         idEmploye: "not specified",
@@ -166,8 +193,68 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
           .subscribe((response) => {
             console.log(response);
             this.pref_added = true;
+            this.removed_favoris = false;
           });
       }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  public isServiceAddedToFavorites(serviceId: string): boolean {
+    if (this.List_preference_query && this.List_preference_query.length > 0) {
+      return this.List_preference_query.some(
+        (preference: Preference) =>
+          preference.service && preference.service.idServ === serviceId
+      );
+    } else {
+      return false;
+    }
+  }
+
+  public BackListService() {
+    try {
+      this.list_preference = false;
+      this.list_service = true;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public removePreference(clientId: string) {
+    try {
+      const type = "service";
+      this.preferenceService
+        .RemovePreference(type, clientId)
+        .subscribe((response) => {
+          console.log(response);
+          this.removed_favoris = true;
+          this.pref_added = false;
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public GetPreference(clientId: string) {
+    try {
+      console.log("ato");
+      const type = "service";
+      this.preferenceService
+        .GetPreference(type, clientId)
+        .subscribe((response: any) => {
+          console.log(response);
+          this.List_preference_query = response.preference;
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public changeStatePreference() {
+    try {
+      this.list_preference = true;
+      this.list_service = false;
+      this.GetPreference(this.id_user);
     } catch (error) {
       console.error(error);
     }
