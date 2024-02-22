@@ -3,7 +3,7 @@ const RendezVous = require("../../model/RendezVous/rendezVous");
 
 async function createRendezVous(req, res, next) {
   try {
-    const { employee, client, serviceAsked, start, end, isDone, isConfirmed } =
+    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } =
       req.body;
     console.log(req.body);
     const newRendezVous = new RendezVous(
@@ -17,7 +17,8 @@ async function createRendezVous(req, res, next) {
       start,
       end,
       isDone,
-      isConfirmed
+      isConfirmed,
+      status
     );
 
     await RendezVousService.createRendezVous(newRendezVous);
@@ -63,7 +64,7 @@ const GetAllRendezVous = async (req, res) => {
 
 async function updateRendezVous(req, res, next) {
   try {
-    const { employee, client, serviceAsked, start, end, isDone, isConfirmed } =
+    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } =
       req.body;
     const newRendezVous = new RendezVous(
       { idEmp: employee.idEmployee, nomEmp: employee.nomEmployee },
@@ -76,7 +77,8 @@ async function updateRendezVous(req, res, next) {
       start,
       end,
       isDone,
-      isConfirmed
+      isConfirmed,
+      status
     );
 
     await RendezVousService.updateRendezVous(newRendezVous);

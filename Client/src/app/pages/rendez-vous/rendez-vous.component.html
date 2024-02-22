@@ -118,13 +118,32 @@
                                           <i class="bg-success"></i> Terminé
                                         </span>
                                     </td> -->
-                                    <td class="text-right" *ngIf="!rdvisConfirmed && !rdvisDOne">
+                                    <td class="text-center">
                                       <div *ngIf="UserQuery.role == 'employe'">
                                         <button class="btn btn-sm btn-success">Confirmer</button>
                                         <button class="btn btn-sm btn-danger">Rejeter</button>
                                       </div>
-                                      <div>
-                                        <button class="btn btn-sm btn-danger">Annuler</button>
+                                      <div *ngIf="UserQuery.role == 'client'">
+                                        <div *ngIf="rdv.status == 'en attente'">                                         
+                                          <button (click)="setRendezVousToAnnuler(rdv)" class="btn btn-sm btn-danger">Annuler</button>
+                                        </div>
+                                        <div *ngIf="rdv.status == 'confirmer'">                                          
+                                          <button 
+                                            class="btn btn-sm btn-success"
+                                            [ngbPopover]="popContent"
+                                            [popoverTitle]="popTitle"
+                                            [ngbPopoverTemplate]="popContent"
+                                            triggers="manual"
+                                            [autoClose]="false"
+                                            #p1="ngbPopover"
+                                            (click)="toggleWithGreeting(p1)"
+                                          >
+                                            Payer
+                                          </button>
+                                        </div>
+                                        <div *ngIf="rdv.status == 'annuler'">                                         
+                                          <button class="btn btn-sm btn-outline-danger" disabled>RDV annulé</button>
+                                        </div>
                                       </div>                                       
                                     </td>
                                   </tr>                            
@@ -232,3 +251,15 @@
         </div>
     </div>
 </div>
+
+<ng-template #popContent let-greeting="greetings">
+  <div style="display: flex; align-items: center;" style="width: 400px;">
+    <label for="Operateur">Suite à votre paiment, votre compte sera diminué de <b style="color: rgb(233, 58, 58);">14€ </b>.</label>
+    <label for="Operateur">Voulez-vous continuer?
+      <button class="btn btn-sm btn-success">Ok</button>
+      <button class="btn btn-sm btn-danger">Annuler</button>
+    </label>
+  </div>
+</ng-template>
+
+<ng-template #popTitle let-language="language">Paiement</ng-template>

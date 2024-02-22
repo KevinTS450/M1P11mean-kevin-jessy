@@ -15,6 +15,7 @@ async function createRendezVous(rendezVous) {
       end: rendezVous.end,
       isDone: rendezVous.isDone,
       isConfirmed: rendezVous.isConfirmed,
+      status: rendezVous.status
     });
 
     console.log("rendezVous registered successfully");
@@ -64,7 +65,8 @@ async function updateRendezVous(rendezVous) {
         start: rendezVous.start,
         end: rendezVous.end,
         isDone: rendezVous.isDone,
-        isConfirmed: rendezVous.isDone,
+        isConfirmed: rendezVous.isConfirmed,
+        status: rendezVous.status
       },
     };
 

@@ -29,7 +29,7 @@ export class RendezVousService {
     return this.httpClient.post(`${this.projetUrl}`+`create`, rendezVous);
   }
 
-  // public update(id: number, evenementProjet: Backlog,user:string): Observable<any>{
-  //   return this.httpClient.put(`${this.projetUrl}`+`update`+`/${id}`+`/${user}`, evenementProjet, this.HttpOptions);
-  // }
+  public update(rendezVous:RendezVous): Observable<any>{
+    return this.httpClient.put(`${this.projetUrl}`+`update`, rendezVous);
+  }
 }

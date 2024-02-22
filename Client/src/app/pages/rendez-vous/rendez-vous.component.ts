@@ -113,6 +113,7 @@ export class RendezVousComponent implements OnInit {
   }
 
   createRDV() {
+    this.newRendezVous.status = "en attente";
     this.newRendezVous.end = this.addEndTimeRDV(this.newRendezVous.start);
     this.newRendezVous.client = { idClient: this.UserQuery._id, nomClient: this.UserQuery.name };
     this.newRendezVous.start = formatDate(new Date(this.newRendezVous.start).toString(), 'yyyy-MM-dd HH:mm', 'en-US');
@@ -122,5 +123,24 @@ export class RendezVousComponent implements OnInit {
       this.page = "liste_rendez_vous";
       this.getAllRendezVous();
     })
+  }
+
+  updateRendezVous(rendezVous:RendezVous) {
+    this.rendezVousService.update(rendezVous).subscribe((response:any) => {
+      console.log(response);
+    })
+  }
+
+  setRendezVousToAnnuler(rendezVous:RendezVous) {
+    rendezVous.status = "annuler";
+    this.updateRendezVous(rendezVous);
+  }
+
+  toggleWithGreeting(popover) {
+    if (popover.isOpen()) {
+      popover.close();
+    } else {
+      popover.open();
+    }
   }
 }

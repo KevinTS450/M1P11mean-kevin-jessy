@@ -17,4 +17,12 @@ export class TestPageComponent implements OnInit {
   openModal(content:any, size:string) {
     this.modalService.open(content, { size: size, backdrop: 'static' });
   }
+
+  toggleWithGreeting(popover, greetings: string[], language: string) {
+    if (popover.isOpen()) {
+      popover.close();
+    } else {
+      popover.open({greetings: greetings, language});
+    }
+  }
 }

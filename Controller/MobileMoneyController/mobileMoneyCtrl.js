@@ -39,6 +39,26 @@ const GetMobileMoneyById = async (req, res) => {
   }
 };
 
+const GetMobileMoneyByUser = async (req, res) => {
+  try {
+
+    const mobileMoney = await MobileMoneyService.getMobileMoneyByUser(
+      req.params.id,
+      req.params.nom
+    );
+    console.log("MobileMoney Details:", mobileMoney);
+
+    if (!mobileMoney) {
+      return res.status(404).json({ message: "MobileMoney not found" });
+    }
+
+    res.json({ mobileMoney });
+  } catch (error) {
+    console.error(error);
+    +res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const GetAllMobileMoney = async (req, res) => {
   try {
     const AllMobileMoney = await MobileMoneyService.GetAllMobileMoney();
@@ -85,6 +105,7 @@ async function deleteMobileMoney(req, res, next) {
 module.exports = {
   createMobileMoney,
   GetMobileMoneyById,
+  GetMobileMoneyByUser,
   GetAllMobileMoney,
   updateMobileMoney,
   deleteMobileMoney,

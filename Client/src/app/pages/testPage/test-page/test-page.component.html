@@ -51,4 +51,22 @@
 	</div>
 </ng-template>
 
-<button class="btn btn-success" (click)="openModal(content, 'lg')">Open modal</button>
+<ng-template #popContent let-greeting="greetings" style="width:800px; max-width: 100%;">
+    <div> <!-- Définissez la largeur du contenu du popover -->
+        Welcomeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    </div>
+</ng-template>
+
+<!-- <ng-template #popTitle let-language="language"  style="max-width: 100%;">
+        Paiement
+    </div>
+</ng-template> -->
+
+<button
+    type="button" class="btn btn-outline-secondary mr-2"
+    [ngbPopover]="popContent" 
+    triggers="manual" #p1="ngbPopover" (click)="toggleWithGreeting(p1, ['Bonjour','no'], 'French')"
+>
+    French
+</button>
+

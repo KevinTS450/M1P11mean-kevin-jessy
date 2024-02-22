@@ -17,4 +17,5 @@ export class RendezVous {
   end: string;
   isDone: boolean;
   isConfirmed: boolean;
+  status:string;
 }
