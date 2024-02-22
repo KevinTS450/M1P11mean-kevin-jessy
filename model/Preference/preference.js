@@ -3,7 +3,8 @@ class preference {
     { idEmploye, nomEmploye },
     { idClient, nomClient },
     { idServ, nomServ, prixServ, commSer },
-    type
+    type,
+    idEmp
   ) {
     this.employe = { idEmploye, nomEmploye };
     this.client = { idClient, nomClient };
@@ -14,6 +15,7 @@ class preference {
       commSer,
     };
     this.type = type;
+    this.idEmp = idEmp;
   }
 }
 module.exports = preference;

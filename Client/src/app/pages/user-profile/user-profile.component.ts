@@ -31,7 +31,7 @@ export class UserProfileComponent implements OnInit {
   UserQuery: User = new User();
   path: string;
   pathDeformed: string;
-  initialid:string;
+  initialid: string;
   initialName: string;
   initialLastName: string;
   TotalHeure: string;
@@ -62,7 +62,7 @@ export class UserProfileComponent implements OnInit {
     try {
       this.socketService.on("userUpdated", (data) => {
         console.log("Web socket User updated event received:", data);
-        this.GetUser();
+        this.GetUserForRefresh(data);
       });
       this.socketService.on("pointageUpdated", (data) => {
         console.log("Web socket pointage updated event received:", data);
@@ -153,6 +153,23 @@ export class UserProfileComponent implements OnInit {
         this.email = response.user.email;
         if (this.UserQuery.role === "employe") {
           this.GetPointageEmp(response.user._id);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  public GetUserForRefresh(data: any) {
+    try {
+      this.userService.GetUserByToken().subscribe((data: any) => {
+        this.UserQuery = data.user;
+        this.initialid = this.UserQuery._id;
+        this.initialName = this.UserQuery.name;
+        this.initialLastName = this.UserQuery.last_name;
+        this.id_user = data.user._id;
+        this.email = data.user.email;
+        if (this.UserQuery.role === "employe") {
+          this.GetPointageEmp(data.user._id);
         }
       });
     } catch (error) {

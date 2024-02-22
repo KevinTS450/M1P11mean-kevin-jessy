@@ -50,10 +50,13 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
     this.AutoRefreh();
   }
   id_user: string;
+  pref_exist: boolean = false;
+  pref_added: boolean = false;
   userProfile: User = new User();
   service: ServieType[];
   isDragging: boolean = false;
   serviceDeleted: boolean = false;
+  notif: number;
   public ToUpdate(id: string) {
     return this.router.navigate(["ModifierService", id]);
   }
@@ -83,7 +86,22 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
         console.log(response);
         this.userProfile = response.user;
         this.id_user = response.user._id;
+        this.countNotif();
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public countNotif() {
+    try {
+      const type = "service";
+      console.log(this.id_user);
+      this.preferenceService
+        .GetCountPreference(type, this.id_user)
+        .subscribe((response: any) => {
+          this.notif = response.count;
+        });
     } catch (error) {
       console.error(error);
     }
@@ -93,14 +111,19 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
     try {
       this.socketService.on("serviceDeleted", (data) => {
         console.log("Web socket servicer deleted event received:", data);
+
         this.getService();
+      });
+      this.socketService.on("countFavService", (data) => {
+        console.log("Web socket Notif updated event received:", data);
+        this.getUser();
       });
     } catch (error) {
       console.error(error);
     }
   }
 
-  public AddServiceToFavorite(
+  public async AddServiceToFavorite(
     id: string,
     nom: string,
     prix: string,
@@ -127,10 +150,24 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
         client: clientData,
         service: serviceData,
         type: "service",
+        idEmp: this.id_user,
       };
-      this.preferenceService.AddPreference(preference).subscribe((response) => {
-        console.log(response);
-      });
+      const isPrefExist = await this.checkPreferenceExist(
+        preference.type,
+        this.id_user,
+        id
+      );
+      console.log(isPrefExist);
+      if (isPrefExist) {
+        this.pref_exist = true;
+      } else {
+        this.preferenceService
+          .AddPreference(preference)
+          .subscribe((response) => {
+            console.log(response);
+            this.pref_added = true;
+          });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -144,6 +181,22 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  public async checkPreferenceExist(
+    type: string,
+    clientId: string,
+    serviceId: string
+  ): Promise<boolean> {
+    try {
+      const response: any = await this.preferenceService
+        .CheckIfItExist(type, clientId, serviceId)
+        .toPromise();
+      return response.exists === true ? true : false;
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   }
   onDeleteIconDrop(event: CdkDragDrop<any[]>) {
