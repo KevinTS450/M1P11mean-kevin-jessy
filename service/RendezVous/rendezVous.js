@@ -8,7 +8,7 @@ async function createRendezVous(rendezVous) {
 
     console.log(rendezVous);
     await collection.insertOne({
-      employe: rendezVous.employe,
+      employee: rendezVous.employee,
       client: rendezVous.client,
       serviceAsked: rendezVous.serviceAsked,
       start: rendezVous.start,

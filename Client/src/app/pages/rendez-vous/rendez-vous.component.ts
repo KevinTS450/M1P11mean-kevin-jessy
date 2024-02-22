@@ -119,9 +119,11 @@ export class RendezVousComponent implements OnInit {
     this.newRendezVous.start = formatDate(new Date(this.newRendezVous.start).toString(), 'yyyy-MM-dd HH:mm', 'en-US');
     this.newRendezVous.isConfirmed = false;
     this.newRendezVous.isDone = false;
+    console.log(this.newRendezVous);
     this.rendezVousService.create(this.newRendezVous).subscribe((response:any) => {
       this.page = "liste_rendez_vous";
       this.getAllRendezVous();
+      this.newRendezVous = new RendezVous();
     })
   }
 
