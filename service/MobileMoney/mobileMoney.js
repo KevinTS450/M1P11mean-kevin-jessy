@@ -19,6 +19,21 @@ async function createMobileMoney(mobileMoney) {
   }
 }
 
+async function getMobileMoneyByUser(userId, nomUser) {
+  try {
+    const collection = database.client.db("MEAN").collection("mobileMoney");
+
+    const mobileMoney = await collection.find({
+      user: { idUser: userId, nom: nomUser}
+    }).toArray();
+
+    return mobileMoney;
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
+
 async function getMobileMoneyById(id) {
   try {
     const collection = database.client.db("MEAN").collection("mobileMoney");
@@ -123,6 +138,7 @@ async function deleteMobileMoneyById(idMobileMoney) {
 module.exports = {
   createMobileMoney,
   getMobileMoneyById,
+  getMobileMoneyByUser,
   GetAllMobileMoney,
   updateMobileMoney,
   deleteMobileMoneyById,

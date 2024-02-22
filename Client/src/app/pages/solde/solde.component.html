@@ -1,0 +1,76 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello username</h1>
+        <p class="text-white mt-0 mb-5">
+          This is your profile page. You can see the progress you've made with
+          your work and manage your projects or assigned tasks
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xl-8 order-xl-1">
+    <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h3 class="mb-0">Solde</h3>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+        
+            <div class="card-body">
+                <p >Votre solde est de : <b style="color: rgb(233, 58, 58);">14€ </b>.</p>
+                <div *ngIf="isRecharging">
+                    <div style="display: flex; align-items: center;">
+                        
+                    <label for="input">Entrer le montant à charger : </label>
+                    <input type="number" class="form-control form-control-sm" [style.width.px]='120'>
+                    </div>
+                </div>
+                <a *ngIf="!isRecharging" (click)="recharging()" class="btn btn-primary">
+                    Recharger
+                </a>
+                <a *ngIf="isRecharging" (click)="validRecharging()" class="btn btn-primary">
+                    Valider
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="card" style="width: 18rem">
+    <img
+      class="card-img-top"
+      src="../../../assets/uploads/41420.jpg"
+      alt="Card image cap"
+    />
+
+    <div class="card-body">
+      <h5 class="card-title">Nom</h5>
+      <p class="card-text">prix service : </p>
+      <p class="card-text">durree :</p>
+      <p class="card-text">commission : </p>
+      <a class="btn btn-primary"
+        >Modifier</a
+      >
+      <a class="btn btn-danger"
+        >Supprimer</a
+      >
+    </div>
+</div> -->
