@@ -82,7 +82,6 @@ router.get(
   rendezVousController.checkRendezVousAtIntervallOfTimeController
 );
 
-//preference
 router.post("/preference/add", PreferenceController.AddPreferenceController);
 router.get(
   "/preference/checkIfItExist",
