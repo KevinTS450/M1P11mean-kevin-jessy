@@ -37,9 +37,15 @@
   <br />
   <br />
   <br />
-  <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-default">
+  <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-      <a class="navbar-brand" href="#">Liste des services</a>
+      <a *ngIf="list_service" class="navbar-brand" href="#"
+        >Liste des services</a
+      >
+      <a *ngIf="list_preference" class="navbar-brand" href="#"
+        >Service préferer</a
+      >
+
       <button
         class="navbar-toggler"
         type="button"
@@ -77,7 +83,11 @@
         </div>
         <ul class="navbar-nav ml-lg-auto">
           <li class="nav-item">
-            <a class="nav-link nav-link-icon position-relative" href="#">
+            <a
+              (click)="changeStatePreference()"
+              *ngIf="list_service"
+              class="nav-link nav-link-icon position-relative"
+            >
               <i class="ni ni-favourite-28"></i>
               <span
                 class="badge badge-white rounded-circle position-absolute top-0 start-100 translate-middle"
@@ -86,6 +96,14 @@
               </span>
               <span class="nav-link-inner--text d-lg-none">Discover</span>
             </a>
+
+            <button
+              *ngIf="list_preference"
+              (click)="BackListService()"
+              class="btn btn-sm btn-primary"
+            >
+              retour aux listes des services
+            </button>
           </li>
         </ul>
       </div>
@@ -93,8 +111,66 @@
   </nav>
   <br />
   <br />
+
   <div class="service-container">
-    <div #cardWrapper class="card-wrapper">
+    <div *ngIf="list_preference" #cardWrapper class="card-wrapper">
+      <div
+        *ngFor="let service_query of List_preference_query"
+        class="card-wrapper"
+        cdkDrag
+      >
+        <div class="card" style="width: 18rem">
+          <img
+            class="card-img-top"
+            src="assets/uploads/{{ service_query.service.imageServ }}"
+            width="200"
+            height="200"
+            alt="Card image cap"
+          />
+
+          <div class="card-body">
+            <h5 class="card-title">{{ service_query.service.nomServ }}</h5>
+            <p class="card-text">
+              prix service : {{ service_query.service.prixServ }}
+            </p>
+            <p class="card-text">
+              durree : {{ service_query.service.durreServ }}
+            </p>
+            <p class="card-text">
+              commission : {{ service_query.service.commSer }}
+            </p>
+            <a
+              *ngIf="userProfile.role === 'employe'"
+              (click)="ToUpdate(service_query._id)"
+              class="btn btn-primary"
+              >Modifier</a
+            >
+            <a *ngIf="userProfile.role === 'employe'" class="btn btn-danger">
+              Supprimer
+            </a>
+            <a
+              *ngIf="userProfile.role === 'client'"
+              (click)="removePreference(userProfile._id)"
+              class="btn btn-danger"
+              >Remove to favorites</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        #deleteIconWrapper
+        class="delete-icon-wrapper"
+        cdkDropList
+        (cdkDropListDropped)="onDeleteIconDrop($event)"
+      >
+        <a *ngIf="isDragging" class="btn btn-danger">
+          <i class="ni ni-fat-remove text-red"></i> Supprimer
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="list_service" #cardWrapper class="card-wrapper">
       <div *ngFor="let service_query of service" class="card-wrapper" cdkDrag>
         <div class="card" style="width: 18rem">
           <img
@@ -129,16 +205,32 @@
                   service_query._id,
                   service_query.nom,
                   service_query.prix,
-                  service_query.commission
+                  service_query.commission,
+                  service_query.durre,
+                  service_query.image
                 )
               "
               *ngIf="
-                userProfile.role !== 'employe' && userProfile.role !== 'manager'
+                userProfile.role !== 'employe' &&
+                userProfile.role !== 'manager' &&
+                !isServiceAddedToFavorites(service_query._id)
               "
               class="btn btn-success"
             >
               <i class="ni ni-favourite-28"></i>
               Add to favorites
+            </a>
+            <a
+              *ngIf="
+                userProfile.role !== 'employe' &&
+                userProfile.role !== 'manager' &&
+                isServiceAddedToFavorites(service_query._id)
+              "
+              class="btn btn-danger"
+              (click)="removePreference(userProfile._id)"
+            >
+              <i class="ni ni-favourite-28"></i>
+              Remove to favorites
             </a>
           </div>
         </div>
@@ -156,6 +248,15 @@
       </div>
     </div>
   </div>
+  <div
+    *ngIf="removed_favoris"
+    class="alert alert-danger alert-dismissible fade show"
+    role="alert"
+  >
+    <span class="alert-inner--icon"><i class="ni ni-like-2"></i></span>
+    service retirer des favoris
+  </div>
+
   <div *ngIf="serviceDeleted" class="alert alert-danger" role="alert">
     Service deleted.
   </div>
