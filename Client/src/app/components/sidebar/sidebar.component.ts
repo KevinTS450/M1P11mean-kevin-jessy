@@ -66,6 +66,11 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     hidden: userProfileManger,
   },
+    { path: '/RendezVous', title: 'RendezVous',  icon:'ni-watch-time text-blue', class: '' },
+    { path: '/Solde', title: 'Solde',  icon:'ni-money-coins text-blue', class: '' },
+    { path: '/maps', title: 'Maps',  icon:'ni-pin-3 text-orange', class: '' },
+    { path: '/tables', title: 'Tables',  icon:'ni-bullet-list-67 text-red', class: '' },
+    { path: '/testPage', title: 'Page de test',  icon:'ni-bullet-list-67 text-red', class: '' }
 ];
 
 @Component({
