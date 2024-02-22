@@ -7,12 +7,12 @@ async function createRendezVous(req, res, next) {
     const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } = req.body;
     console.log(req.body);
     const newRendezVous = new RendezVous(
-      { idEmp: employe.idEmp, nomEmp: employe.nomEmp },
+      { idEmployee: employee.idEmployee, nomEmployee: employee.nomEmployee },
       { idClient: client.idClient, nomClient: client.nomClient },
       {
-        idServ: serviceAsked.idServ,
-        nomServ: serviceAsked.nomServ,
-        prixServ: serviceAsked.prixServ,
+        idService: serviceAsked.idService,
+        nom: serviceAsked.nom,
+        prix: serviceAsked.prix,
       },
       start,
       end,
