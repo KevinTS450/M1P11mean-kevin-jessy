@@ -56,11 +56,11 @@ async function GetAllUsers() {
   }
 }
 
-async function updateUser(user) {
+async function updateUser(user, email) {
   try {
     const collection = database.client.db("MEAN").collection("users");
 
-    const filter = { id: user.id };
+    const filter = { email: email };
 
     const updateDoc = {
       $set: {
@@ -69,7 +69,7 @@ async function updateUser(user) {
       },
     };
 
-    const result = await collection.updateOne(filter, updateDoc);
+    const result = await collection.updateMany(filter, updateDoc);
 
     if (result.matchedCount === 0) {
       console.warn("No user found with the provided filter:", filter);

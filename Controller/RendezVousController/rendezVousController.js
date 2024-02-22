@@ -3,16 +3,16 @@ const RendezVous = require("../../model/RendezVous/rendezVous");
 
 async function createRendezVous(req, res, next) {
   try {
-    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } =
-      req.body;
+    
+    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } = req.body;
     console.log(req.body);
     const newRendezVous = new RendezVous(
-      { idEmp: employee.idEmployee, nomEmp: employee.nomEmployee },
-      { idCli: client.idClient, nomCli: client.nomClient },
+      { idEmp: employe.idEmp, nomEmp: employe.nomEmp },
+      { idClient: client.idClient, nomClient: client.nomClient },
       {
-        idServ: serviceAsked.idService,
-        nomServ: serviceAsked.nom,
-        prixServ: serviceAsked.prix,
+        idServ: serviceAsked.idServ,
+        nomServ: serviceAsked.nomServ,
+        prixServ: serviceAsked.prixServ,
       },
       start,
       end,
@@ -25,13 +25,31 @@ async function createRendezVous(req, res, next) {
 
     res.status(200).json({ message: "RendezVous registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
+  }
+}
+async function checkRendezVousAtIntervallOfTimeController(req, res, next) {
+  try {
+    const { start, end, employeId } = req.query;
+    const rendezVous = await RendezVousService.checkRendezVousInInterval(
+      start,
+      end,
+      employeId
+    );
+    if (rendezVous) {
+      return res
+        .status(200)
+        .json({ message: "Employe disponible", emp: rendezVous });
+    } else {
+      return res.status(500).json({ message: "internal server error" });
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
 const GetRendezVousById = async (req, res) => {
   try {
-    // Assuming there is a RendezVous model with findById method
     console.log("Decoded RendezVous ID in Controller:", req.params.id);
 
     const rendezVous = await RendezVousService.getRendezVousById(req.params.id);
@@ -85,7 +103,7 @@ async function updateRendezVous(req, res, next) {
 
     res.status(200).json({ message: "RendezVous registered successfully" });
   } catch (error) {
-    next(error); // Pass the error to the next middleware (error handler)
+    next(error);
   }
 }
 
@@ -125,5 +143,6 @@ module.exports = {
   GetAllRendezVous,
   updateRendezVous,
   deleteRendezVous,
-  getRendezVousByRoleAndId
+  getRendezVousByRoleAndId,
+  checkRendezVousAtIntervallOfTimeController
 };

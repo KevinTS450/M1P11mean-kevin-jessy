@@ -1,5 +1,6 @@
 const PointageService = require("../../service/Pointage/pointage");
 const Pointage = require("../../model/pointage/pointage");
+const socketIo = require("../../socketio");
 
 async function createPointage(req, res, next) {
   try {
@@ -38,14 +39,22 @@ async function GetEmpPointageHandler(req, res, next) {
 
 async function updatePointageHandler(req, res, next) {
   try {
-    const { idEmp, nomEmp, emailEmp, start_time, end_time } = req.body;
-    const pointage = new Pointage(
-      { nomEmp, emailEmp },
+    const { idEmp, start_time, end_time } = req.body;
+
+    const updateFields = {};
+    if (start_time) updateFields.start_time = start_time;
+    if (end_time) updateFields.end_time = end_time;
+
+    const response = await PointageService.updatePointageEmp(
       idEmp,
-      start_time,
-      end_time
+      updateFields
     );
-    const response = await PointageService.updatePointageEmp(pointage);
+    const io = socketIo.getIO();
+    io.emit("pointageUpdated", {
+      event: "pointageUpdated",
+      pointage: updateFields,
+    });
+
     res.status(200).json({ user: response });
   } catch (error) {
     console.error(error);

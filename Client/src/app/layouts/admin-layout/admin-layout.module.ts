@@ -8,8 +8,6 @@ import { ClipboardModule } from "ngx-clipboard";
 
 import { AdminLayoutRoutes } from "./admin-layout.routing";
 import { DashboardComponent } from "../../pages/dashboard/dashboard.component";
-import { IconsComponent } from "../../pages/icons/icons.component";
-import { MapsComponent } from "../../pages/maps/maps.component";
 import { UserProfileComponent } from "../../pages/user-profile/user-profile.component";
 import { TablesComponent } from "../../pages/tables/tables.component";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -17,6 +15,9 @@ import { ServiceTypeComponent } from "src/app/pages/ServiceType/service-type/ser
 import { AjouterServiceComponent } from "src/app/pages/ServiceType/AjouterService/ajouter-service/ajouter-service.component";
 import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierService/modifier-service/modifier-service.component";
 // import { ToastrModule } from 'ngx-toastr';
+import { PriseRendezVousComponent } from "src/app/pages/RendezVous/PriseRendezVous/prise-rendez-vous/prise-rendez-vous.component";
+import { AjoutMobileMoneyComponent } from "src/app/pages/MobileMoney/AjouterMobileMoney/ajout-mobile-money/ajout-mobile-money.component";
+import { PersonnelComponent } from "src/app/pages/Personnel/personnel/personnel.component";
 
 @NgModule({
   imports: [
@@ -32,11 +33,12 @@ import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierServ
     DashboardComponent,
     UserProfileComponent,
     TablesComponent,
-    IconsComponent,
-    MapsComponent,
     ServiceTypeComponent,
     AjouterServiceComponent,
     ModifierServiceComponent,
+    PriseRendezVousComponent,
+    AjoutMobileMoneyComponent,
+    PersonnelComponent,
   ],
 })
 export class AdminLayoutModule {}

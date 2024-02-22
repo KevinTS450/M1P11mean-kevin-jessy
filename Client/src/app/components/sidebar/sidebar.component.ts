@@ -43,6 +43,28 @@ export const ROUTES: RouteInfo[] = [
     title: "service",
     icon: "ni-book-bookmark text-red",
     class: "",
+    hidden: userProfileEmp,
+  },
+  {
+    path: "/priseRendezVous",
+    title: "rendez vous",
+    icon: "ni-single-copy-04 text-red",
+    class: "",
+    hidden: userProfileClient,
+  },
+  {
+    path: "/ajoutMobileMoney",
+    title: "Mobile money",
+    icon: "ni-money-coins text-green",
+    class: "",
+    hidden: userProfileClient,
+  },
+  {
+    path: "/personnel",
+    title: "Personnel",
+    icon: "ni-badge text-green",
+    class: "",
+    hidden: userProfileManger,
   },
     { path: '/RendezVous', title: 'RendezVous',  icon:'ni-watch-time text-blue', class: '' },
     { path: '/Solde', title: 'Solde',  icon:'ni-money-coins text-blue', class: '' },
@@ -73,7 +95,8 @@ export class SidebarComponent implements OnInit {
   public getUser() {
     try {
       this.user.GetUserByToken().subscribe((response: any) => {
-        this.UserProfile = response.User;
+        this.UserProfile = response.user;
+        console.log(this.UserProfile);
         this.updateMenuItems();
       });
     } catch (error) {
@@ -88,8 +111,18 @@ export class SidebarComponent implements OnInit {
   }
 }
 
-function userProfileExists(userProfile: User) {
-  // Implement your logic here to check if UserProfile exists
-  // Return true if UserProfile exists, otherwise return false
-  return !!userProfile; // Example: Return true if UserProfile is truthy
+function userProfileExists() {
+  return !!this.UserProfile;
+}
+function userProfileEmp(userProfile: User): boolean {
+  console.log(userProfile);
+  return userProfile.role === "employe";
+}
+function userProfileManger(userProfile: User): boolean {
+  console.log(userProfile);
+  return userProfile.role === "manager";
+}
+function userProfileClient(userProfile: User): boolean {
+  console.log(userProfile);
+  return userProfile.role === "client";
 }

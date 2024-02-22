@@ -2,6 +2,7 @@ const express = require("express");
 const UserService = require("../../service/User/UserService.js");
 const AuthService = require("../../service/Auth/Auth.js");
 const User = require("../../model/Users/user");
+const socketIOSetup = require("../../socketio.js");
 
 const GetUserByToken = async (req, res) => {
   try {
@@ -74,9 +75,12 @@ const GetUserByEmail = async (req, res) => {
 async function updateUser(req, res, next) {
   try {
     const { name, last_name } = req.body;
+    const { email } = req.query;
     const newUser = new User(name, last_name);
+    const io = socketIOSetup.getIO();
 
-    await UserService.updateUser(newUser);
+    await UserService.updateUser(newUser, email);
+    io.emit("userUpdated", { event: "userUpdated", user: newUser });
 
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {

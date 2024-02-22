@@ -16,6 +16,7 @@ import { ModifierServiceComponent } from "./pages/ServiceType/ModifierService/mo
 import { RendezVousComponent } from './pages/rendez-vous/rendez-vous.component';
 import { TestPageComponent } from './pages/testPage/test-page/test-page.component';
 import { SoldeComponent } from './pages/solde/solde.component';
+import { PersonnelComponent } from "./pages/Personnel/personnel/personnel.component";
 
 @NgModule({
   imports: [

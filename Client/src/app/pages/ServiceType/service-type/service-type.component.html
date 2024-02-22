@@ -109,25 +109,29 @@
   </nav>
   <br />
   <br />
-  <div *ngFor="let service_query of service">
-    <div class="card" style="width: 18rem">
-      <img
-        class="card-img-top"
-        src="assets/uploads/{{ service_query.image }}"
-        alt="Card image cap"
-      />
+  <div class="service-container">
+    <div *ngFor="let service_query of service" class="card-wrapper">
+      <div class="card" style="width: 18rem">
+        <img
+          class="card-img-top"
+          src="assets/uploads/{{ service_query.image }}"
+          width="200"
+          height="200"
+          alt="Card image cap"
+        />
 
-      <div class="card-body">
-        <h5 class="card-title">{{ service_query.nom }}</h5>
-        <p class="card-text">prix service : {{ service_query.prix }}</p>
-        <p class="card-text">durree : {{ service_query.durre }}</p>
-        <p class="card-text">commission : {{ service_query.commission }}</p>
-        <a (click)="ToUpdate(service_query._id)" class="btn btn-primary"
-          >Modifier</a
-        >
-        <a (click)="RemoveService(service_query._id)" class="btn btn-danger"
-          >Supprimer</a
-        >
+        <div class="card-body">
+          <h5 class="card-title">{{ service_query.nom }}</h5>
+          <p class="card-text">prix service : {{ service_query.prix }}</p>
+          <p class="card-text">durree : {{ service_query.durre }}</p>
+          <p class="card-text">commission : {{ service_query.commission }}</p>
+          <a (click)="ToUpdate(service_query._id)" class="btn btn-primary"
+            >Modifier</a
+          >
+          <a (click)="RemoveService(service_query._id)" class="btn btn-danger"
+            >Supprimer</a
+          >
+        </div>
       </div>
     </div>
   </div>

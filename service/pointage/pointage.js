@@ -33,28 +33,25 @@ async function GetEmpPointage(id) {
   }
 }
 
-async function updatePointageEmp(emp) {
+async function updatePointageEmp(id, updateFields) {
   try {
     const collection = database.client.db("MEAN").collection("pointage");
 
-    const filter = { id: emp.id };
+    const filter = { idEmp: id };
 
     const updateDoc = {
-      $set: {
-        start_time: emp.start_time,
-        end_time: emp.end_time,
-      },
+      $set: updateFields,
     };
 
     const result = await collection.updateOne(filter, updateDoc);
 
     if (result.matchedCount === 0) {
-      console.warn("No user found with the provided filter:", filter);
+      console.warn("No pointage found with the provided ID:", id);
     } else {
-      console.log("User updated successfully:", result.matchedCount);
+      console.log("Pointage updated successfully:", result.matchedCount);
     }
   } catch (err) {
-    console.error("Error during user update:", err);
+    console.error("Error during pointage update:", err);
     throw err;
   }
 }

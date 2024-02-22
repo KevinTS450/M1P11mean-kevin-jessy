@@ -28,6 +28,17 @@ export class UserService {
     return this.http.put<string[]>(`${this.baseUrl}/update`, data);
   }
 
+  public UpdateProfile(data: User, email: string): Observable<string[]> {
+    return this.http.put<string[]>(
+      `${this.baseUrl}/update?email=${email}`,
+      data
+    );
+  }
+
+  public ListUser(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.baseUrl}/AllUser`);
+  }
+
   public findByRole(role:string): Observable<User[]> {
     return this.http.get<User[]>(`${this.baseUrl}`+`/findByRole`+`/${role}`);
   }

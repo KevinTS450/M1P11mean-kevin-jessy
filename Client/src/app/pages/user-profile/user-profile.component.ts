@@ -11,6 +11,7 @@ import {
 import { PointageService } from "src/app/Service/PointageService/pointage.service";
 import { Pointage } from "src/app/Model/pointage/pointage";
 import { TimeService } from "src/app/utils/Time/time.service";
+import { SocketService } from "src/app/socket/socket.service";
 
 @Component({
   selector: "app-user-profile",
@@ -22,7 +23,8 @@ export class UserProfileComponent implements OnInit {
     private userService: UserService,
     private formBuilder: FormBuilder,
     private pointage: PointageService,
-    private timeService: TimeService
+    private timeService: TimeService,
+    private socketService: SocketService // Inject SocketService
   ) {}
   UserForm: FormGroup;
   PointageForm: FormGroup;
@@ -34,8 +36,11 @@ export class UserProfileComponent implements OnInit {
   initialLastName: string;
   TotalHeure: string;
   PointageUpdated: boolean = false;
-
+  id_user: string;
   initial_start_time: string;
+  initial_id_emp: string;
+  email: string;
+
   initial_end_time: string;
   users_updated: boolean = false;
   users: User = new User();
@@ -45,6 +50,7 @@ export class UserProfileComponent implements OnInit {
     this.GetUser();
     this.Form();
     this.pointageForm();
+    this.AutoRefreh();
   }
   public Form() {
     this.UserForm = this.formBuilder.group({
@@ -52,6 +58,21 @@ export class UserProfileComponent implements OnInit {
       last_name: ["", Validators.required],
     });
   }
+  public AutoRefreh() {
+    try {
+      this.socketService.on("userUpdated", (data) => {
+        console.log("Web socket User updated event received:", data);
+        this.GetUser();
+      });
+      this.socketService.on("pointageUpdated", (data) => {
+        console.log("Web socket pointage updated event received:", data);
+        this.GetTotalHours();
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   public GetTotalHours() {
     try {
       this.TotalHeure = this.TotalHoraire(
@@ -101,11 +122,22 @@ export class UserProfileComponent implements OnInit {
       };
       UserForm.patchValue(updatedUser);
 
-      this.userService.UpdateProfile(updatedUser).subscribe((response) => {
-        console.log(response);
-        this.users_updated = true;
-        this.GetUser();
-      });
+      this.userService
+        .UpdateProfile(updatedUser, this.id_user)
+        .subscribe((response) => {
+          console.log(response);
+          this.users_updated = true;
+          this.userService
+            .UpdateProfile(updatedUser, this.email)
+            .subscribe((response) => {
+              console.log(response);
+              this.users_updated = true;
+              this.socketService.emit("userUpdated", {
+                event: "userUpdated",
+                user: updatedUser,
+              });
+            });
+        });
     } else {
       console.log("Nothing to update");
     }
@@ -117,7 +149,11 @@ export class UserProfileComponent implements OnInit {
         this.initialid = this.UserQuery._id;
         this.initialName = this.UserQuery.name;
         this.initialLastName = this.UserQuery.last_name;
-        this.GetPointageEmp(response.user._id);
+        this.id_user = response.user._id;
+        this.email = response.user.email;
+        if (this.UserQuery.role === "employe") {
+          this.GetPointageEmp(response.user._id);
+        }
       });
     } catch (error) {
       console.error(error);
@@ -129,9 +165,9 @@ export class UserProfileComponent implements OnInit {
       this.pointage.GetPointageEmp(id).subscribe((response: any) => {
         console.log(response);
         this.pointageDisplay = response.pointage;
-
         this.initial_start_time = this.pointageDisplay.start_time;
         this.initial_end_time = this.pointageDisplay.end_time;
+        this.initial_id_emp = this.pointageDisplay.idEmp;
         this.GetTotalHours();
       });
     } catch (error) {
@@ -144,17 +180,16 @@ export class UserProfileComponent implements OnInit {
     const newEnd_time = PointageForm.value.end_time;
 
     if (
-      (newStart_time !== this.initial_start_time ||
-        newEnd_time !== this.initial_end_time) &&
-      (newStart_time !== "" || newEnd_time !== "")
+      newStart_time !== this.initial_start_time ||
+      newEnd_time !== this.initial_end_time
     ) {
-      const newPointage: {} = {
+      const newPointage: any = {
+        idEmp: this.initial_id_emp,
         start_time:
-          newStart_time === "" ? this.initial_start_time : newStart_time,
-        end_time: newEnd_time === "" ? this.initial_end_time : newEnd_time,
+          newStart_time !== "" ? newStart_time : this.initial_start_time,
+        end_time: newEnd_time !== "" ? newEnd_time : this.initial_end_time,
       };
       PointageForm.patchValue(newPointage);
-
       this.pointage
         .UpdatePointageForEmp(newPointage)
         .subscribe((response: any) => {
@@ -165,7 +200,6 @@ export class UserProfileComponent implements OnInit {
             this.initialName = this.UserQuery.name;
             this.initialLastName = this.UserQuery.last_name;
             this.GetPointageEmp(response.user._id);
-            this.GetTotalHours();
           });
         });
     } else {
