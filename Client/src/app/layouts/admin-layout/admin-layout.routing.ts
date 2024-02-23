@@ -20,7 +20,7 @@ import { PersonnelComponent } from "src/app/pages/Personnel/personnel/personnel.
 export const AdminLayoutRoutes: Routes = [
     { path: "dashboard", component: DashboardComponent },
     { path: "user-profile", component: UserProfileComponent },
-    { path: "tables", component: TablesComponent },
+    // { path: "tables", component: TablesComponent },
     // { path: "icons", component: IconsComponent },
     // { path: "maps", component: MapsComponent },
     { path: "serviceType", component: ServiceTypeComponent },
@@ -29,7 +29,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'RendezVous',     component: RendezVousComponent },
     { path: 'testPage',     component: TestPageComponent },
     { path: 'Solde',     component: SoldeComponent },
-    { path: "priseRendezVous", component: PriseRendezVousComponent },
-    { path: "ajoutMobileMoney", component: AjoutMobileMoneyComponent },
+    // { path: "priseRendezVous", component: PriseRendezVousComponent },
+    // { path: "ajoutMobileMoney", component: AjoutMobileMoneyComponent },
     { path: "personnel", component: PersonnelComponent }
 ];

@@ -77,15 +77,15 @@ async function GetAllRendezVous() {
   }
 }
 
-async function updateRendezVous(rendezVous) {
+async function updateRendezVous(id, rendezVous) {
   try {
     const collection = database.client.db("MEAN").collection("rendezVous");
 
-    const filter = { id: rendezVous.id };
+    const filter = { _id: new ObjectId(id) };
 
     const updateRendezVous = {
       $set: {
-        employee: rendezVous.employe,
+        employee: rendezVous.employee,
         client: rendezVous.client,
         serviceAsked: rendezVous.serviceAsked,
         start: rendezVous.start,

@@ -20,6 +20,7 @@ export class RendezVousComponent implements OnInit {
   UserQuery: User = new User();
   listEmploye:User[];
   employeSelected:User = new User();
+  isEmployeeFreeBool:boolean = true;
 
   page = "liste_rendez_vous";
 
@@ -30,10 +31,52 @@ export class RendezVousComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.GetUserByToken().subscribe((response: any) => {
-      this.UserQuery = response.user;this.getAllRendezVous();
+      this.UserQuery = response.user;
+      this.getAllRendezVous();
       this.getServices();
       this.getEmployee();
     });   
+  }
+
+  isEmployeeFree() {
+    let ans:boolean;
+    if(this.employeSelected && this.newRendezVous.start) {
+      this.rendezVousService.findByUser(this.employeSelected).subscribe((response: any) => {
+        let  empRDV:RendezVous[] = response.rendezVous;
+        empRDV = empRDV.filter(response => 
+          response.status != 'annuler' &&
+          (new Date(response.start) <= new Date(this.newRendezVous.start) && new Date(response.end) >= new Date(this.newRendezVous.start) || 
+          new Date(response.end) >= new Date(this.newRendezVous.end)  && new Date(response.start) <= new Date(this.newRendezVous.end))
+        );
+        console.log(empRDV);
+        if(empRDV.length > 0) this.isEmployeeFreeBool = false;
+        else this.isEmployeeFreeBool = true;
+      //   console.log(empRDV);
+      //   if(empRDV.length > 0) {
+      //     console.log("Emp manana rendezVous");
+      //     for(let rdv of empRDV) {
+      //       if(new Date(rdv.start) < new Date(this.newRendezVous.start) && new Date(rdv.end) > new Date(this.newRendezVous.start) || 
+      //       new Date(rdv.end) > new Date(this.newRendezVous.end) && new Date(rdv.start) < new Date(this.newRendezVous.end)) {
+      //         console.log("emp non dispo");
+      //         this.isEmployeeFreeBool = false;
+
+      //         console.log("Rendez vous start => ",new Date(rdv.start));
+      //         console.log("Rendez vous select start => ",new Date(this.newRendezVous.start));
+      //         console.log("Rendez vous end => ",new Date(rdv.end));
+      //         console.log("Rendez vous select end => ",new Date(this.newRendezVous.end));
+      //         ans = false;
+      //         console.log(ans);
+      //         break;
+      //       } else {
+      //         ans = true;
+      //         console.log("Emp dispo")
+      //         this.isEmployeeFreeBool = true;
+      //         console.log(ans);
+      //       }
+      //     }
+      //   } else console.log("Emp tsy manana rendezVous"); ans = true;
+      });
+    } else console.log("Tsy misy empSelec sy nwRDVStrt");
   }
 
   getAllRendezVous() {
@@ -68,6 +111,7 @@ export class RendezVousComponent implements OnInit {
   getEmployee() {
     this.userService.findByRole('employe').subscribe((response: any) => {
       this.listEmploye = response.Users;
+      console.log(this.listEmploye);
       this.employeSelected = this.listEmploye[0];
       this.newRendezVous.employee = { idEmployee: this.employeSelected._id, nomEmployee: this.employeSelected.name };
       this.newRendezVous.employee.idEmployee = this.employeSelected._id;
@@ -81,9 +125,11 @@ export class RendezVousComponent implements OnInit {
 
   setEmployeSelected() {
     this.newRendezVous.employee = { idEmployee: this.employeSelected._id, nomEmployee: this.employeSelected.name };
+    this.isEmployeeFree();
   }
 
   addEndTimeRDV(start:string):string {
+    this.isEmployeeFree();
     const dateDebut:Date = new Date(this.newRendezVous.start);
 
     const date = dateDebut.getDate();
@@ -108,28 +154,30 @@ export class RendezVousComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
     });
-    
+    this.newRendezVous.end = formatDate(newDate.getTime().toString(), 'yyyy-MM-dd HH:mm', 'en-US');
     return formatDate(newDate.getTime().toString(), 'yyyy-MM-dd HH:mm', 'en-US')
   }
 
   createRDV() {
-    this.newRendezVous.status = "en attente";
-    this.newRendezVous.end = this.addEndTimeRDV(this.newRendezVous.start);
-    this.newRendezVous.client = { idClient: this.UserQuery._id, nomClient: this.UserQuery.name };
-    this.newRendezVous.start = formatDate(new Date(this.newRendezVous.start).toString(), 'yyyy-MM-dd HH:mm', 'en-US');
-    this.newRendezVous.isConfirmed = false;
-    this.newRendezVous.isDone = false;
-    console.log(this.newRendezVous);
-    this.rendezVousService.create(this.newRendezVous).subscribe((response:any) => {
-      this.page = "liste_rendez_vous";
-      this.getAllRendezVous();
-      this.newRendezVous = new RendezVous();
-    })
+    if(this.newRendezVous.start) {
+      this.newRendezVous.status = "en attente";
+      this.newRendezVous.end = this.addEndTimeRDV(this.newRendezVous.start);
+      this.newRendezVous.client = { idClient: this.UserQuery._id, nomClient: this.UserQuery.name };
+      this.newRendezVous.start = formatDate(new Date(this.newRendezVous.start).toString(), 'yyyy-MM-dd HH:mm', 'en-US');
+      this.newRendezVous.isConfirmed = false;
+      this.newRendezVous.isDone = false;
+      console.log(this.newRendezVous);
+      this.rendezVousService.create(this.newRendezVous).subscribe((response:any) => {
+        this.page = "liste_rendez_vous";
+        this.getAllRendezVous();
+        this.newRendezVous = new RendezVous();
+      })
+    } else this.isEmployeeFreeBool = false;
   }
 
   updateRendezVous(rendezVous:RendezVous) {
-    this.rendezVousService.update(rendezVous).subscribe((response:any) => {
-      console.log(response);
+    this.rendezVousService.update(rendezVous._id, rendezVous).subscribe((response:any) => {
+      this.getAllRendezVous();
     })
   }
 
