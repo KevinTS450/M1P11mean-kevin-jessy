@@ -6,6 +6,7 @@ import { ServieType } from "src/app/Model/serviceType/servie-type";
 import { ServiceTypeService } from "src/app/Service/ServiceTypeService/service-type.service";
 import { UserService } from "src/app/Service/UserService/user.service";
 import { RendezVousService } from "src/app/Service/rendezVous/rendez-vous.service";
+import { SocketService } from "src/app/socket/socket.service";
 
 @Component({
   selector: "app-rendez-vous",
@@ -28,7 +29,8 @@ export class RendezVousComponent implements OnInit {
   constructor(
     private rendezVousService: RendezVousService,
     private userService: UserService,
-    private serviceTypeService: ServiceTypeService
+    private serviceTypeService: ServiceTypeService,
+    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,7 @@ export class RendezVousComponent implements OnInit {
       this.getAllRendezVous();
       this.getServices();
       this.getEmployee();
+      this.AutoRefresh();
     });
   }
 
@@ -68,6 +71,42 @@ export class RendezVousComponent implements OnInit {
         this.UserQuery = response.user;
         console.log(this.UserQuery);
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public AutoRefresh() {
+    try {
+      this.socketService.on("ChangeState", (data) => {
+        console.log("Web socket User updated event received:", data);
+        this.getAllRendezVous();
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public ConfirmRdv(clientId: string, idEmp: string) {
+    try {
+      const state = true;
+      this.rendezVousService
+        .ChangeStateRdv(clientId, idEmp, state)
+        .subscribe((response) => {
+          console.log(response);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  public DeclinemRdv(clientId: string, idEmp: string) {
+    try {
+      const state = false;
+      this.rendezVousService
+        .ChangeStateRdv(clientId, idEmp, state)
+        .subscribe((response) => {
+          console.log(response);
+        });
     } catch (error) {
       console.error(error);
     }

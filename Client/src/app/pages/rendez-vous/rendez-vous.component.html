@@ -74,7 +74,9 @@
             </div>
             <div class="col-4 text-right">
               <button
-                *ngIf="page == 'liste_rendez_vous'"
+                *ngIf="
+                  page == 'liste_rendez_vous' && UserQuery.role === 'client'
+                "
                 (click)="page = 'creating_rendez_vous'"
                 class="btn btn-sm btn-primary"
               >
@@ -137,10 +139,30 @@
                                     </td> -->
                       <td class="text-center">
                         <div *ngIf="UserQuery.role == 'employe'">
-                          <button class="btn btn-sm btn-success">
+                          <button
+                            *ngIf="rdv.isConfirmed === false"
+                            (click)="
+                              ConfirmRdv(
+                                rdv.client.idClient,
+                                rdv.employee.idEmp
+                              )
+                            "
+                            class="btn btn-sm btn-success"
+                          >
                             Confirmer
                           </button>
-                          <button class="btn btn-sm btn-danger">Rejeter</button>
+                          <button
+                            *ngIf="rdv.isConfirmed === true"
+                            class="btn btn-sm btn-success"
+                          >
+                            Rendez-vous confirmer
+                          </button>
+                          <button
+                            *ngIf="rdv.isConfirmed === false"
+                            class="btn btn-sm btn-danger"
+                          >
+                            Rejeter
+                          </button>
                         </div>
                         <div *ngIf="UserQuery.role == 'client'">
                           <div *ngIf="rdv.status == 'en attente'">
