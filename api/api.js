@@ -81,6 +81,10 @@ router.get(
   "/rendezVous/intervalTime",
   rendezVousController.checkRendezVousAtIntervallOfTimeController
 );
+router.put(
+  "/rendezVous/changeState",
+  rendezVousController.ChangeStateRdvController
+);
 
 //preference
 router.post("/preference/add", PreferenceController.AddPreferenceController);

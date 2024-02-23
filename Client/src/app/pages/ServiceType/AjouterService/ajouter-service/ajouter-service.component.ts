@@ -41,6 +41,7 @@ export class AjouterServiceComponent implements OnInit {
   ServiceForm: FormGroup;
   serviceCreated: boolean = false;
   file_query: File;
+  loading: boolean = false;
 
   public toListService() {
     try {
@@ -58,17 +59,30 @@ export class AjouterServiceComponent implements OnInit {
   public AddServie(ServiceForm) {
     try {
       if (ServiceForm.valid) {
-        const result = ServiceForm.value;
-        this.upload.UploadImg(this.file_query).subscribe((responseFile) => {
-          console.log(responseFile);
-          result.image = this.file_query.name;
-          this.serviceTypeService
-            .CreateService(result)
-            .subscribe((response) => {
-              console.log(response);
-              this.serviceCreated = true;
-            });
-        });
+        this.loading = true;
+        setTimeout(() => {
+          const loadingTimeout = setTimeout(() => {
+            this.loading = false;
+          }, 30000);
+          this.loading = true;
+
+          const result = ServiceForm.value;
+          this.upload.UploadImg(this.file_query).subscribe((responseFile) => {
+            console.log(responseFile);
+            result.image = this.file_query.name;
+            this.serviceTypeService
+              .CreateService(result)
+              .subscribe((response) => {
+                console.log(response);
+                clearTimeout(loadingTimeout);
+                this.loading = false;
+                this.serviceCreated = true;
+                setTimeout(() => {
+                  this.serviceCreated = false;
+                }, 4000);
+              });
+          });
+        }, 3000);
       } else {
         ServiceForm.markAllAsTouched();
       }
