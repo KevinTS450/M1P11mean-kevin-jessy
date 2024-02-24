@@ -126,25 +126,18 @@
                       <td>
                         {{ rdv.employee.nomEmployee }}
                       </td>
-                      <!-- <td>
-                                        <span class="badge badge-dot mr-4" *ngIf="!rdv.isConfirmed && !rdv.isDone">
-                                          <i class="bg-warning"></i> en attente
-                                        </span>
-                                        <span class="badge badge-dot mr-4" *ngIf="rdv.isConfirmed && !rdv.isDone">
-                                          <i class="bg-danger"></i> confirmé
-                                        </span>
-                                        <span class="badge badge-dot mr-4" *ngIf="rdv.isConfirmed && rdv.isDone">
-                                          <i class="bg-success"></i> Terminé
-                                        </span>
-                                    </td> -->
+
                       <td class="text-center">
                         <div *ngIf="UserQuery.role == 'employe'">
                           <button
-                            *ngIf="rdv.isConfirmed === false"
+                            *ngIf="
+                              rdv.isConfirmed === false &&
+                              rdv.isCancel === false
+                            "
                             (click)="
                               ConfirmRdv(
                                 rdv.client.idClient,
-                                rdv.employee.idEmp
+                                rdv.employee.idEmployee
                               )
                             "
                             class="btn btn-sm btn-success"
@@ -158,14 +151,30 @@
                             Rendez-vous confirmer
                           </button>
                           <button
-                            *ngIf="rdv.isConfirmed === false"
+                            *ngIf="rdv.isCancel === true"
+                            class="btn btn-sm btn-danger"
+                          >
+                            Rendez-vous rejeter
+                          </button>
+
+                          <button
+                            *ngIf="
+                              rdv.isConfirmed === false &&
+                              rdv.isCancel === false
+                            "
+                            (click)="
+                              DeclineRdv(
+                                rdv.client.idClient,
+                                rdv.employee.idEmployee
+                              )
+                            "
                             class="btn btn-sm btn-danger"
                           >
                             Rejeter
                           </button>
                         </div>
                         <div *ngIf="UserQuery.role == 'client'">
-                          <div *ngIf="rdv.status == 'en attente'">
+                          <div *ngIf="rdv.isConfirmed == false">
                             <button
                               (click)="setRendezVousToAnnuler(rdv)"
                               class="btn btn-sm btn-danger"
@@ -173,7 +182,7 @@
                               Annuler
                             </button>
                           </div>
-                          <div *ngIf="rdv.status == 'confirmer'">
+                          <div *ngIf="rdv.isConfirmed == true">
                             <button
                               class="btn btn-sm btn-success"
                               [ngbPopover]="popContent"

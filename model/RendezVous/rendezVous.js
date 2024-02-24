@@ -7,7 +7,9 @@ class rendezVous {
     end,
     isDone,
     isConfirmed,
-    status
+    status,
+    isCancel,
+    onGoing
   ) {
     this.employee = { idEmployee, nomEmployee };
     this.client = { idClient, nomClient };
@@ -15,8 +17,10 @@ class rendezVous {
     this.start = start;
     this.end = end;
     this.isDone = isDone;
+    this.isCancel = isCancel;
     this.isConfirmed = isConfirmed;
     this.status = status;
+    this.onGoing = onGoing;
   }
 }
 module.exports = rendezVous;

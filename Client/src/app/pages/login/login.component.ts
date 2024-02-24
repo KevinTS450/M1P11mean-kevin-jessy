@@ -74,6 +74,8 @@ export class LoginComponent implements OnInit {
               });
           } else {
             clearTimeout(loadingTimeout);
+            this.loading = false;
+
             this.account_not_exist = true;
             this.error_auth = false;
           }

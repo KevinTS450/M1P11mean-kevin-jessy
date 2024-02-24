@@ -1,0 +1,16 @@
+.tache-container {
+  display: flex;
+  flex-wrap: nowrap; /* Ensures items don't wrap to next line */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+.card-wrapper {
+  display: flex; /* Make the wrapper a flex container */
+  gap: 10px; /* Adjust spacing between cards */
+}
+.delete-icon-wrapper {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999; /* Ensure the delete icon appears above other content */
+}

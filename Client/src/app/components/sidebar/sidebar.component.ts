@@ -67,6 +67,13 @@ export const ROUTES: RouteInfo[] = [
     hidden: userProfileManger,
   },
   {
+    path: "/tache",
+    title: "Tache",
+    icon: "ni-badge text-green",
+    class: "",
+    hidden: userProfileEmp,
+  },
+  {
     path: "/RendezVous",
     title: "RendezVous",
     icon: "ni-watch-time text-blue",
