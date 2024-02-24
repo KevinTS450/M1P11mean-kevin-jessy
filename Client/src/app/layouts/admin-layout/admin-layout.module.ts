@@ -19,7 +19,7 @@ import { PriseRendezVousComponent } from "src/app/pages/RendezVous/PriseRendezVo
 import { AjoutMobileMoneyComponent } from "src/app/pages/MobileMoney/AjouterMobileMoney/ajout-mobile-money/ajout-mobile-money.component";
 import { PersonnelComponent } from "src/app/pages/Personnel/personnel/personnel.component";
 import { NgxLoadingModule } from "ngx-loading";
-
+import { TacheComponent } from "src/app/pages/Tache/tache/tache.component";
 @NgModule({
   imports: [
     CommonModule,
@@ -28,6 +28,7 @@ import { NgxLoadingModule } from "ngx-loading";
     HttpClientModule,
     NgbModule,
     ClipboardModule,
+
     ReactiveFormsModule,
     NgxLoadingModule.forRoot({}),
   ],
@@ -41,6 +42,7 @@ import { NgxLoadingModule } from "ngx-loading";
     PriseRendezVousComponent,
     AjoutMobileMoneyComponent,
     PersonnelComponent,
+    TacheComponent,
   ],
 })
 export class AdminLayoutModule {}

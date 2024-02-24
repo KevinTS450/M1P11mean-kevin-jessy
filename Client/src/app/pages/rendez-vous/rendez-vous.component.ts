@@ -1,7 +1,7 @@
 import { formatDate } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { User } from "src/app/Model/User/user";
-import { RendezVous } from "src/app/Model/rendez-vous";
+import { RendezVous } from "src/app/Model/rendezVous/rendez-vous";
 import { ServieType } from "src/app/Model/serviceType/servie-type";
 import { ServiceTypeService } from "src/app/Service/ServiceTypeService/service-type.service";
 import { UserService } from "src/app/Service/UserService/user.service";
@@ -99,11 +99,13 @@ export class RendezVousComponent implements OnInit {
   getServices() {
     this.serviceTypeService.ListService().subscribe((response: any) => {
       this.serviceList = response.service;
+      console.log(this.serviceList);
       this.serviceSelected = this.serviceList[0];
       this.newRendezVous.serviceAsked = {
         idService: this.serviceSelected._id,
         nom: this.serviceSelected.nom,
         prix: this.serviceSelected.prix,
+        durre: this.serviceSelected.durre,
       };
     });
   }
@@ -132,9 +134,9 @@ export class RendezVousComponent implements OnInit {
 
   public ConfirmRdv(clientId: string, idEmp: string) {
     try {
-      const state = true;
+      const stateFor = "confirm";
       this.rendezVousService
-        .ChangeStateRdv(clientId, idEmp, state)
+        .ChangeStateRdv(clientId, idEmp, stateFor)
         .subscribe((response) => {
           console.log(response);
         });
@@ -142,11 +144,11 @@ export class RendezVousComponent implements OnInit {
       console.error(error);
     }
   }
-  public DeclinemRdv(clientId: string, idEmp: string) {
+  public DeclineRdv(clientId: string, idEmp: string) {
     try {
-      const state = false;
+      const stateFor = "cancel";
       this.rendezVousService
-        .ChangeStateRdv(clientId, idEmp, state)
+        .ChangeStateRdv(clientId, idEmp, stateFor)
         .subscribe((response) => {
           console.log(response);
         });
@@ -174,6 +176,7 @@ export class RendezVousComponent implements OnInit {
       idService: this.serviceSelected._id,
       nom: this.serviceSelected.nom,
       prix: this.serviceSelected.prix,
+      durre: this.serviceSelected.durre,
     };
   }
 
@@ -213,6 +216,25 @@ export class RendezVousComponent implements OnInit {
   }
 
   createRDV() {
+    this.newRendezVous.status = "en attente";
+    this.newRendezVous.end = this.newRendezVous.start;
+    this.newRendezVous.client = {
+      idClient: this.UserQuery._id,
+      nomClient: this.UserQuery.name,
+    };
+    this.newRendezVous.start = formatDate(
+      new Date(this.newRendezVous.start).toString(),
+      "yyyy-MM-dd HH:mm",
+      "en-US"
+    );
+    this.newRendezVous.isConfirmed = false;
+    this.newRendezVous.isCancel = false;
+    this.newRendezVous.onGoing = false;
+    this.newRendezVous.isDone = false;
+    console.log(this.newRendezVous);
+    this.rendezVousService
+      .create(this.newRendezVous)
+      .subscribe((response: any) => {
     if(this.newRendezVous.start) {
       this.newRendezVous.status = "en attente";
       this.newRendezVous.end = this.addEndTimeRDV(this.newRendezVous.start);

@@ -51,7 +51,7 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
     this.AutoRefreh();
   }
   List_preference_query: Preference[];
-
+  loading: boolean = false;
   list_service: boolean = true;
   list_preference: boolean = false;
   id_user: string;
@@ -128,18 +128,41 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
 
   public AutoRefreh() {
     try {
+      this.serviceDeletedRefreshPage();
+      this.removeFavRefreshPage();
+      this.countFavRefreshPage();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public serviceDeletedRefreshPage() {
+    try {
       this.socketService.on("serviceDeleted", (data) => {
         console.log("Web socket servicer deleted event received:", data);
 
         this.getService();
       });
-      this.socketService.on("countFavService", (data) => {
-        console.log("Web socket Notif updated event received:", data);
-        this.getUser();
-      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public removeFavRefreshPage() {
+    try {
       this.socketService.on("removeFav", (data) => {
         console.log("Web socket Notif removed event received:", data);
         this.getUserRefresh(data);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  public countFavRefreshPage() {
+    try {
+      this.socketService.on("countFavService", (data) => {
+        console.log("Web socket Notif updated event received:", data);
+        this.getUser();
       });
     } catch (error) {
       console.error(error);
@@ -155,47 +178,60 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
     image: string
   ) {
     try {
-      const clientData: {} = {
-        idClient: this.id_user,
-        nomClient: this.userProfile.name,
-      };
-      const serviceData: any = {
-        idServ: id,
-        nomServ: nom,
-        prixServ: prix,
-        commSer: commission,
-        durreServ: durre,
-        imageServ: image,
-      };
-      const empData: {} = {
-        idEmploye: "not specified",
-        nomEmploye: "not specified",
-      };
+      this.loading = true;
+      setTimeout(async () => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 30000);
 
-      const preference: Preference = {
-        employe: empData,
-        client: clientData,
-        service: serviceData,
-        type: "service",
-        idEmp: this.id_user,
-      };
-      const isPrefExist = await this.checkPreferenceExist(
-        preference.type,
-        this.id_user,
-        id
-      );
-      console.log(isPrefExist);
-      if (isPrefExist) {
-        this.pref_exist = true;
-      } else {
-        this.preferenceService
-          .AddPreference(preference)
-          .subscribe((response) => {
-            console.log(response);
-            this.pref_added = true;
-            this.removed_favoris = false;
-          });
-      }
+        const clientData: {} = {
+          idClient: this.id_user,
+          nomClient: this.userProfile.name,
+        };
+        const serviceData: any = {
+          idServ: id,
+          nomServ: nom,
+          prixServ: prix,
+          commSer: commission,
+          durreServ: durre,
+          imageServ: image,
+        };
+        const empData: {} = {
+          idEmploye: "not specified",
+          nomEmploye: "not specified",
+        };
+
+        const preference: Preference = {
+          employe: empData,
+          client: clientData,
+          service: serviceData,
+          type: "service",
+          idEmp: this.id_user,
+        };
+        const isPrefExist = await this.checkPreferenceExist(
+          preference.type,
+          this.id_user,
+          id
+        );
+        console.log(isPrefExist);
+        if (isPrefExist) {
+          this.pref_exist = true;
+        } else {
+          this.preferenceService
+            .AddPreference(preference)
+            .subscribe((response) => {
+              console.log(response);
+              clearTimeout(loadingTimeout);
+              this.loading = false;
+              this.pref_added = true;
+              setTimeout(() => {
+                this.pref_added = false;
+              }, 3000);
+              this.pref_added = true;
+              this.removed_favoris = false;
+            });
+        }
+      }, 2000);
     } catch (error) {
       console.error(error);
     }
@@ -213,6 +249,15 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
 
   public BackListService() {
     try {
+      this.loading = true;
+      setTimeout(async () => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 3000);
+        clearTimeout(loadingTimeout);
+        this.loading = false;
+      }, 2000);
+
       this.list_preference = false;
       this.list_service = true;
     } catch (error) {
@@ -222,14 +267,25 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
 
   public removePreference(clientId: string) {
     try {
-      const type = "service";
-      this.preferenceService
-        .RemovePreference(type, clientId)
-        .subscribe((response) => {
-          console.log(response);
-          this.removed_favoris = true;
-          this.pref_added = false;
-        });
+      this.loading = true;
+      setTimeout(async () => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 30000);
+        const type = "service";
+        this.preferenceService
+          .RemovePreference(type, clientId)
+          .subscribe((response) => {
+            console.log(response);
+            clearTimeout(loadingTimeout);
+            this.loading = false;
+            this.removed_favoris = true;
+            setTimeout(async () => {
+              this.removed_favoris = false;
+            }, 3000);
+            this.pref_added = false;
+          });
+      }, 2000);
     } catch (error) {
       console.error(error);
     }
@@ -237,7 +293,6 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
 
   public GetPreference(clientId: string) {
     try {
-      console.log("ato");
       const type = "service";
       this.preferenceService
         .GetPreference(type, clientId)
@@ -252,9 +307,19 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
 
   public changeStatePreference() {
     try {
-      this.list_preference = true;
-      this.list_service = false;
-      this.GetPreference(this.id_user);
+      this.loading = true;
+
+      setTimeout(async () => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 3000);
+        clearTimeout(loadingTimeout);
+        this.loading = false;
+        this.list_preference = true;
+        this.list_service = false;
+
+        this.GetPreference(this.id_user);
+      }, 3000);
     } catch (error) {
       console.error(error);
     }
@@ -262,10 +327,18 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
 
   public getService() {
     try {
-      this.serviceTypeService.ListService().subscribe((response: any) => {
-        console.log(response);
-        this.service = response.service;
-      });
+      this.loading = true;
+      setTimeout(() => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 30000);
+        this.serviceTypeService.ListService().subscribe((response: any) => {
+          console.log(response);
+          this.service = response.service;
+          clearTimeout(loadingTimeout);
+          this.loading = false;
+        });
+      }, 3000);
     } catch (error) {
       console.error(error);
     }

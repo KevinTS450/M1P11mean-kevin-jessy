@@ -1,0 +1,106 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello {{ UserQuery.name }}</h1>
+        <p class="text-white mt-0 mb-5">Liste des taches a accomplir</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Tache a effectuer</a>
+    <div class="container">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar-default"
+        aria-controls="navbar-default"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar-default">
+        <div class="navbar-collapse-header">
+          <div class="row">
+            <div class="col-6 collapse-brand">
+              <a href="../../index.html">
+                <img src="assets/img/brand/blue.png" />
+              </a>
+            </div>
+            <div class="col-6 collapse-close">
+              <button
+                type="button"
+                class="navbar-toggler"
+                data-toggle="collapse"
+                data-target="#navbar-default"
+                aria-controls="navbar-default"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span></span>
+                <span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <ul class="navbar-nav ml-lg-auto">
+          <li class="nav-item"></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <br />
+  <br />
+
+  <div class="service-container">
+    <ngx-loading
+      [show]="loading"
+      [config]="{ backdropBorderRadius: '8px' }"
+    ></ngx-loading>
+    <div *ngFor="let rdv of tache" class="card-wrapper">
+      <div class="card" style="width: 18rem">
+        <!-- <img
+            class="card-img-top"
+            src="assets/uploads/{{ service_query.service.imageServ }}"
+            width="200"
+            height="200"
+            alt="Card image cap"
+          /> -->
+
+        <div class="card-body">
+          <h5 class="card-title">{{ rdv.serviceAsked.nom }}</h5>
+          <p class="card-text">prix service : {{ rdv.serviceAsked.prix }}</p>
+
+          <hr />
+          <p class="card-text">rendez vous : {{ rdv.start }}</p>
+          <hr />
+          <p class="card-text">Client : {{ rdv.client.nomClient }}</p>
+          <button *ngIf="rdv.onGoing === false" class="btn btn-sm btn-info">
+            Commencer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

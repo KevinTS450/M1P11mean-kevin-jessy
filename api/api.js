@@ -80,6 +80,10 @@ router.put(
   "/rendezVous/changeState",
   rendezVousController.ChangeStateRdvController
 );
+router.get(
+  "/rendezVous/getRdvConfirmed",
+  rendezVousController.getRendezVousByRoleAndIdConfirmed
+);
 
 //preference
 router.post("/preference/add", PreferenceController.AddPreferenceController);

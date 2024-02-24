@@ -68,6 +68,13 @@ export const ROUTES: RouteInfo[] = [
   },
   { path: '/testPage', title: 'Page de test',  icon:'ni-bullet-list-67 text-red', class: '' },
   {
+    path: "/tache",
+    title: "Tache",
+    icon: "ni-badge text-green",
+    class: "",
+    hidden: userProfileEmp,
+  },
+  {
     path: "/RendezVous",
     title: "RendezVous",
     icon: "ni-watch-time text-blue",

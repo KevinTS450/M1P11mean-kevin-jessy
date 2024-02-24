@@ -57,6 +57,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbar-default">
         <div class="navbar-collapse-header">
           <div class="row">
@@ -113,6 +114,10 @@
   <br />
 
   <div class="service-container">
+    <ngx-loading
+      [show]="loading"
+      [config]="{ backdropBorderRadius: '8px' }"
+    ></ngx-loading>
     <div *ngIf="list_preference" #cardWrapper class="card-wrapper">
       <div
         *ngFor="let service_query of List_preference_query"
