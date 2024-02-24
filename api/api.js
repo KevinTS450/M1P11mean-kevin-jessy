@@ -32,6 +32,7 @@ router.get("/user/findByRole/:role", HandlerUser.getUsersByRole);
 router.post("/mobileMoney/create", mobileMoneyController.createMobileMoney);
 router.get("/mobileMoney/findAll", mobileMoneyController.GetAllMobileMoney);
 router.get("/mobilemoney/findByUser/:id/:nom/:email", mobileMoneyController.GetMobileMoneyByUser);
+
 router.get(
   "/mobileMoney/findById/:id",
   mobileMoneyController.GetMobileMoneyById
@@ -75,14 +76,25 @@ router.get(
   "/rendezVous/intervalTime",
   rendezVousController.checkRendezVousAtIntervallOfTimeController
 );
+router.put(
+  "/rendezVous/changeState",
+  rendezVousController.ChangeStateRdvController
+);
 
-
+//preference
 router.post("/preference/add", PreferenceController.AddPreferenceController);
 router.get(
   "/preference/checkIfItExist",
   PreferenceController.CheckPreferenceController
 );
 router.get("/preference/count", PreferenceController.CountPreference);
-
+router.get(
+  "/preference/getPreference",
+  PreferenceController.GetPreferenceController
+);
+router.delete(
+  "/preference/remove",
+  PreferenceController.RemovePreferenceController
+);
 
 module.exports = router;

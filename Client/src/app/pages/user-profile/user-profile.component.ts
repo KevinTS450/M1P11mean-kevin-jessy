@@ -31,7 +31,7 @@ export class UserProfileComponent implements OnInit {
   UserQuery: User = new User();
   path: string;
   pathDeformed: string;
-  initialid:string;
+  initialid: string;
   initialName: string;
   initialLastName: string;
   TotalHeure: string;
@@ -40,6 +40,7 @@ export class UserProfileComponent implements OnInit {
   initial_start_time: string;
   initial_id_emp: string;
   email: string;
+  loading: boolean = false;
 
   initial_end_time: string;
   users_updated: boolean = false;
@@ -52,6 +53,7 @@ export class UserProfileComponent implements OnInit {
     this.pointageForm();
     this.AutoRefreh();
   }
+
   public Form() {
     this.UserForm = this.formBuilder.group({
       name: ["", Validators.required],
@@ -62,7 +64,7 @@ export class UserProfileComponent implements OnInit {
     try {
       this.socketService.on("userUpdated", (data) => {
         console.log("Web socket User updated event received:", data);
-        this.GetUser();
+        this.GetUserForRefresh(data);
       });
       this.socketService.on("pointageUpdated", (data) => {
         console.log("Web socket pointage updated event received:", data);
@@ -101,58 +103,96 @@ export class UserProfileComponent implements OnInit {
   }
 
   public EditProfil(UserForm: FormGroup) {
-    const newid = UserForm.value._id;
-    const newName = UserForm.value.name;
-    const newLastName = UserForm.value.last_name;
+    this.loading = true;
+    setTimeout(() => {
+      const loadingTimeout = setTimeout(() => {
+        this.loading = false;
+      }, 30000);
+      const newid = UserForm.value._id;
+      const newName = UserForm.value.name;
+      const newLastName = UserForm.value.last_name;
 
-    if (
-      (newName !== this.initialName || newLastName !== this.initialLastName) &&
-      (newName !== "" || newLastName !== "")
-    ) {
-      const updatedUser: User = {
-        _id: newid !== "" ? newid : this.initialid,
-        name: newName !== "" ? newName : this.initialName,
-        last_name: newLastName !== "" ? newLastName : this.initialLastName,
-        email: "",
-        role: "",
-        date_naissance: "",
-        is_activate: "",
-        age: "",
-        image: "",
-      };
-      UserForm.patchValue(updatedUser);
+      if (
+        (newName !== this.initialName ||
+          newLastName !== this.initialLastName) &&
+        (newName !== "" || newLastName !== "")
+      ) {
+        const updatedUser: User = {
+          _id: newid !== "" ? newid : this.initialid,
+          name: newName !== "" ? newName : this.initialName,
+          last_name: newLastName !== "" ? newLastName : this.initialLastName,
+          email: "",
+          role: "",
+          date_naissance: "",
+          is_activate: "",
+          age: "",
+          image: "",
+        };
+        UserForm.patchValue(updatedUser);
 
-      this.userService
-        .UpdateProfile(updatedUser, this.id_user)
-        .subscribe((response) => {
-          console.log(response);
-          this.users_updated = true;
-          this.userService
-            .UpdateProfile(updatedUser, this.email)
-            .subscribe((response) => {
-              console.log(response);
-              this.users_updated = true;
-              this.socketService.emit("userUpdated", {
-                event: "userUpdated",
-                user: updatedUser,
+        this.userService
+          .UpdateProfile(updatedUser, this.id_user)
+          .subscribe((response) => {
+            console.log(response);
+            this.users_updated = true;
+            this.userService
+              .UpdateProfile(updatedUser, this.email)
+              .subscribe((response) => {
+                console.log(response);
+                clearTimeout(loadingTimeout);
+                this.loading = false;
+                this.users_updated = true;
+                this.socketService.emit("userUpdated", {
+                  event: "userUpdated",
+                  user: updatedUser,
+                });
+                setTimeout(() => {
+                  this.users_updated = false;
+                }, 4000);
               });
-            });
-        });
-    } else {
-      console.log("Nothing to update");
-    }
+          });
+      } else {
+        console.log("Nothing to update");
+      }
+    }, 3000);
   }
   public GetUser() {
     try {
-      this.userService.GetUserByToken().subscribe((response: any) => {
-        this.UserQuery = response.user;
+      this.loading = true;
+      setTimeout(() => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 30000);
+
+        this.userService.GetUserByToken().subscribe((response: any) => {
+          this.UserQuery = response.user;
+          this.initialid = this.UserQuery._id;
+          this.initialName = this.UserQuery.name;
+          this.initialLastName = this.UserQuery.last_name;
+          this.id_user = response.user._id;
+          this.email = response.user.email;
+          if (this.UserQuery.role === "employe") {
+            this.GetPointageEmp(response.user._id);
+          }
+        });
+        clearTimeout(loadingTimeout);
+        this.loading = false;
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  public GetUserForRefresh(data: any) {
+    try {
+      this.userService.GetUserByToken().subscribe((data: any) => {
+        this.UserQuery = data.user;
         this.initialid = this.UserQuery._id;
         this.initialName = this.UserQuery.name;
         this.initialLastName = this.UserQuery.last_name;
-        this.id_user = response.user._id;
-        this.email = response.user.email;
+        this.id_user = data.user._id;
+        this.email = data.user.email;
         if (this.UserQuery.role === "employe") {
-          this.GetPointageEmp(response.user._id);
+          this.GetPointageEmp(data.user._id);
         }
       });
     } catch (error) {

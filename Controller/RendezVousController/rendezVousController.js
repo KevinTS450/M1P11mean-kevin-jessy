@@ -1,10 +1,19 @@
 const RendezVousService = require("../../service/RendezVous/rendezVous");
 const RendezVous = require("../../model/RendezVous/rendezVous");
+const socketIo = require("../../socketio");
 
 async function createRendezVous(req, res, next) {
   try {
-    
-    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } = req.body;
+    const {
+      employee,
+      client,
+      serviceAsked,
+      start,
+      end,
+      isDone,
+      isConfirmed,
+      status,
+    } = req.body;
     console.log(req.body);
     const newRendezVous = new RendezVous(
       { idEmployee: employee.idEmployee, nomEmployee: employee.nomEmployee },
@@ -86,6 +95,7 @@ async function updateRendezVous(req, res, next) {
       req.body;
 
     const id = req.params.id;
+
     const newRendezVous = new RendezVous(
       { idEmployee: employee.idEmployee, nomEmployee: employee.nomEmployee },
       { idClient: client.idClient, nomClient: client.nomClient },
@@ -126,7 +136,12 @@ async function getRendezVousByRoleAndId(req, res, next) {
   try {
     console.log("Decoded RendezVous ID in Controller:", req.params.id);
 
-    const rendezVous = await RendezVousService.getRendezVousByRoleAndIdAndNom_user(req.params.role, req.params.id, req.params.nom_user);
+    const rendezVous =
+      await RendezVousService.getRendezVousByRoleAndIdAndNom_user(
+        req.params.role,
+        req.params.id,
+        req.params.nom_user
+      );
     console.log("RendezVous Details:", rendezVous);
 
     if (!rendezVous) {
@@ -140,6 +155,33 @@ async function getRendezVousByRoleAndId(req, res, next) {
   }
 }
 
+async function ChangeStateRdvController(req, res, next) {
+  try {
+    const { clientId, idEmp, state } = req.query;
+
+    const update = await RendezVousService.ChangeStateRendezVous(
+      idEmp,
+      clientId,
+      state
+    );
+
+    if (update) {
+      const socketResponse = socketIo.getIO();
+
+      socketResponse.emit("ChangeState", {
+        event: "ChangeState",
+        data: "state changed",
+      });
+      return res.status(200).json({ message: "rendez vous confirmer" });
+    } else {
+      return res.status(200).json({ message: "internal server error" });
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
 module.exports = {
   createRendezVous,
   GetRendezVousById,
@@ -147,5 +189,6 @@ module.exports = {
   updateRendezVous,
   deleteRendezVous,
   getRendezVousByRoleAndId,
-  checkRendezVousAtIntervallOfTimeController
+  checkRendezVousAtIntervallOfTimeController,
+  ChangeStateRdvController,
 };

@@ -60,53 +60,99 @@
                 </div>
               </div>
             </div>
+          </div>
         </div>
-        <div class="col-xl-8 order-xl-1">
-            <div class="card bg-secondary shadow">
-                <div class="card-header bg-white border-0">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <h3 class="mb-0">Rendez-vous</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                          <button *ngIf="page == 'liste_rendez_vous'" (click)="page = 'creating_rendez_vous'" class="btn btn-sm btn-primary">Nouveau</button>
-                          <button *ngIf="page == 'creating_rendez_vous'" (click)="page = 'liste_rendez_vous'" class="btn btn-sm btn-primary">Liste rendez-vous</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                  <div *ngIf="page == 'liste_rendez_vous'" class="col">
-                      <div class="card shadow">
-                          <div class="card-header border-0">
-                              <h3 class="mb-0">Liste rendez-vous</h3>
+
+        <div class="card-body pt-0 pt-md-4">
+          <div class="row">
+            <div class="col">
+              <div
+                class="card-profile-stats d-flex justify-content-center mt-md-5"
+              ></div>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="h5 mt-4">
+              <h3>
+                {{ UserQuery.last_name }}{{ " " }}{{ UserQuery.name
+                }}<span class="font-weight-light"
+                  >, {{ UserQuery.age }} ans</span
+                >
+              </h3>
+            </div>
+            <div class="h5 mt-4">
+              <h3>
+                {{ UserQuery.role }}
+              </h3>
+            </div>
+
+            <hr class="my-4" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8 order-xl-1">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Rendez-vous</h3>
+            </div>
+            <div class="col-4 text-right">
+              <button
+                *ngIf="
+                  page == 'liste_rendez_vous' && UserQuery.role === 'client'
+                "
+                (click)="page = 'creating_rendez_vous'"
+                class="btn btn-sm btn-primary"
+              >
+                Nouveau
+              </button>
+              <button
+                *ngIf="page == 'creating_rendez_vous'"
+                (click)="page = 'liste_rendez_vous'"
+                class="btn btn-sm btn-primary"
+              >
+                Liste rendez-vous
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="page == 'liste_rendez_vous'" class="col">
+            <div class="card shadow">
+              <div class="card-header border-0">
+                <h3 class="mb-0">Liste rendez-vous</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Service</th>
+                      <th scope="col">Employé</th>
+                      <!-- <th scope="col">Status</th> -->
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let rdv of listeRendezVous">
+                    <tr>
+                      <th scope="row">
+                        <div class="media align-items-center">
+                          <div class="media-body">
+                            <span class="mb-0 text-sm">{{ rdv.start }}</span>
                           </div>
-                          <div class="table-responsive">
-                            <table class="table align-items-center table-flush">
-                                <thead class="thead-light">
-                                    <tr>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Service</th>
-                                    <th scope="col">Employé</th>
-                                    <!-- <th scope="col">Status</th> -->
-                                    <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody *ngFor="let rdv of listeRendezVous">
-                                  <tr>
-                                    <th scope="row">
-                                      <div class="media align-items-center">
-                                        <div class="media-body">
-                                          <span class="mb-0 text-sm">{{ rdv.start }}</span>
-                                        </div>
-                                      </div>
-                                    </th>
-                                    <td>
-                                      <button class="btn btn-link">{{rdv.serviceAsked.nom}}</button>
-                                    </td>
-                                    <td>
-                                      {{rdv.employee.nomEmployee}}
-                                    </td>
-                                    <!-- <td>
+                        </div>
+                      </th>
+                      <td>
+                        <button class="btn btn-link">
+                          {{ rdv.serviceAsked.nom }}
+                        </button>
+                      </td>
+                      <td>
+                        {{ rdv.employee.nomEmployee }}
+                      </td>
+                      <!-- <td>
                                         <span class="badge badge-dot mr-4" *ngIf="!rdv.isConfirmed && !rdv.isDone">
                                           <i class="bg-warning"></i> en attente
                                         </span>
@@ -277,15 +323,26 @@
                     </div>
                   </div>
                 </div>
+                <a class="btn btn-info" (click)="createRDV()"
+                  >Créer rendez-vous</a
+                >
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <ng-template #popContent let-greeting="greetings">
-  <div style="display: flex; align-items: center;" style="width: 400px;">
-    <label for="Operateur">Suite à votre paiment, votre compte sera diminué de <b style="color: rgb(233, 58, 58);">14€ </b>.</label>
-    <label for="Operateur">Voulez-vous continuer?
+  <div style="display: flex; align-items: center" style="width: 400px">
+    <label for="Operateur"
+      >Suite à votre paiment, votre compte sera diminué de
+      <b style="color: rgb(233, 58, 58)">14€ </b>.</label
+    >
+    <label for="Operateur"
+      >Voulez-vous continuer?
       <button class="btn btn-sm btn-success">Ok</button>
       <button class="btn btn-sm btn-danger">Annuler</button>
     </label>

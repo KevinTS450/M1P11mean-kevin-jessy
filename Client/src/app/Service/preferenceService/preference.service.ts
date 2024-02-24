@@ -14,4 +14,40 @@ export class PreferenceService {
   public AddPreference(data: Preference): Observable<Preference> {
     return this.http.post<Preference>(`${this.baseUrl}/add`, data);
   }
+  public GetCountPreference(
+    type: string,
+    idClient: string
+  ): Observable<number> {
+    return this.http.get<number>(
+      `${this.baseUrl}/count?type=${type}&clientId=${idClient}`
+    );
+  }
+
+  public CheckIfItExist(
+    type: string,
+    clientId: string,
+    serviceId: string
+  ): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${this.baseUrl}/checkIfItExist?type=${type}&clientId=${clientId}&idService=${serviceId}`
+    );
+  }
+
+  public GetPreference(
+    type: string,
+    clientId: string
+  ): Observable<Preference[]> {
+    return this.http.get<Preference[]>(
+      `${this.baseUrl}/getPreference?type=${type}&clientId=${clientId}`
+    );
+  }
+
+  public RemovePreference(
+    type: string,
+    clientId: string
+  ): Observable<Preference> {
+    return this.http.delete<Preference>(
+      `${this.baseUrl}/remove?type=${type}&clientId=${clientId}`
+    );
+  }
 }

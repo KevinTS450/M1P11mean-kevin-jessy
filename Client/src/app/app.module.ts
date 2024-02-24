@@ -17,6 +17,7 @@ import { RendezVousComponent } from './pages/rendez-vous/rendez-vous.component';
 import { TestPageComponent } from './pages/testPage/test-page/test-page.component';
 import { SoldeComponent } from './pages/solde/solde.component';
 import { PersonnelComponent } from "./pages/Personnel/personnel/personnel.component";
+import { SpinerComponent } from './pages/spiner/spiner/spiner.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,7 @@ import { PersonnelComponent } from "./pages/Personnel/personnel/personnel.compon
     HttpClientModule,
     NgbPopoverModule
   ],
-  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent, RendezVousComponent, TestPageComponent, SoldeComponent],
+  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent, RendezVousComponent, TestPageComponent, SoldeComponent, SpinerComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

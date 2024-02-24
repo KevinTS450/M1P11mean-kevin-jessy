@@ -22,7 +22,12 @@
     </div>
   </div>
 </div>
+
 <div class="container-fluid mt--7">
+  <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '8px' }"
+  ></ngx-loading>
   <div class="row">
     <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
       <div class="card card-profile shadow">
@@ -88,7 +93,7 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username"
-                      >Username</label
+                      >Nom</label
                     >
                     <input
                       type="text"
@@ -101,7 +106,7 @@
                   </div>
                   <div class="form-group">
                     <label class="form-control-label" for="input-username"
-                      >Username</label
+                      >Prenom</label
                     >
                     <input
                       type="text"
@@ -150,7 +155,7 @@
                 class="alert alert-success"
                 role="alert"
               >
-                Profile updated.
+                Profile modifier.
               </div>
             </div>
             <hr class="my-4" />

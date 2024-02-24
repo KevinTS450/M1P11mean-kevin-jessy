@@ -9,6 +9,7 @@ async function AddToPreference(pref) {
       employe: pref.employe,
       client: pref.client,
       service: pref.service,
+      idEmp: pref.idEmp,
       type: pref.type,
     });
   } catch (error) {
@@ -16,13 +17,14 @@ async function AddToPreference(pref) {
   }
 }
 
-async function checkIfItPreferencesExist(type, clientId) {
+async function checkIfItPreferencesExist(type, clientId, serviceId) {
   try {
     const collection = database.client.db("MEAN").collection("preference");
 
     const query = {
       type: type,
       "client.idClient": clientId,
+      "service.idServ": serviceId,
     };
 
     const oneResult = await collection.findOne(query);
@@ -37,16 +39,13 @@ async function checkIfItPreferencesExist(type, clientId) {
   }
 }
 
-async function CountPreferences(clientId) {
+async function CountPreferences(type, clientId) {
   try {
     const collection = database.client.db("MEAN").collection("preference");
 
-    const query = {
-      "client.idClient": clientId,
-    };
-
     const count = await collection.countDocuments({
-      query,
+      type: type,
+      "client.idClient": clientId,
     });
     return count;
   } catch (error) {
@@ -54,8 +53,36 @@ async function CountPreferences(clientId) {
     throw error;
   }
 }
+async function GetPreference(type, clientId) {
+  try {
+    const collection = database.client.db("MEAN").collection("preference");
+    const preferences = await collection
+      .find({ type: type, "client.idClient": clientId })
+      .toArray();
+    return preferences;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function removePreference(type, clientId) {
+  try {
+    const collection = database.client.db("MEAN").collection("preference");
+    const deletePref = await collection.deleteOne({
+      type: type,
+      "client.idClient": clientId,
+    });
+    return deletePref;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
   AddToPreference,
   checkIfItPreferencesExist,
   CountPreferences,
+  GetPreference,
+  removePreference,
 };

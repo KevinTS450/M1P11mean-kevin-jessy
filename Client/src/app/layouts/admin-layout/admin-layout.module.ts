@@ -18,6 +18,7 @@ import { ModifierServiceComponent } from "src/app/pages/ServiceType/ModifierServ
 import { PriseRendezVousComponent } from "src/app/pages/RendezVous/PriseRendezVous/prise-rendez-vous/prise-rendez-vous.component";
 import { AjoutMobileMoneyComponent } from "src/app/pages/MobileMoney/AjouterMobileMoney/ajout-mobile-money/ajout-mobile-money.component";
 import { PersonnelComponent } from "src/app/pages/Personnel/personnel/personnel.component";
+import { NgxLoadingModule } from "ngx-loading";
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { PersonnelComponent } from "src/app/pages/Personnel/personnel/personnel.
     NgbModule,
     ClipboardModule,
     ReactiveFormsModule,
+    NgxLoadingModule.forRoot({}),
   ],
   declarations: [
     DashboardComponent,
