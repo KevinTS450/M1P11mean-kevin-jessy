@@ -72,6 +72,7 @@ export class AjoutMobileMoneyComponent implements OnInit {
         };
 
         const resultFinal: MobileMoney = {
+          _id: null,
           user: user,
           operateurNom: result.operateur,
           monnaie: 5000,

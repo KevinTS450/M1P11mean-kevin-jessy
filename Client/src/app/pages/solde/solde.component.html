@@ -35,13 +35,13 @@
         <div class="card">
         
             <div class="card-body">
-                <p >Votre solde est de : <b style="color: rgb(233, 58, 58);">14€ </b>.</p>
+                <p *ngIf="myMobileMoney.monnaie">Votre solde est de : <b style="color: rgb(233, 58, 58);"> {{myMobileMoney.monnaie}} </b> Ariary.</p>
+                <p *ngIf="!myMobileMoney.monnaie">Votre solde est de : <b style="color: rgb(233, 58, 58);"> 0 </b> Ariary.</p>
                 <div *ngIf="isRecharging">
-                    <div style="display: flex; align-items: center;">
-                        
+                  <div style="display: flex; align-items: center;">                       
                     <label for="input">Entrer le montant à charger : </label>
-                    <input type="number" class="form-control form-control-sm" [style.width.px]='120'>
-                    </div>
+                    <input [(ngModel)]="rechargeValue" type="number" class="form-control form-control-sm" [style.width.px]='120'>
+                  </div>
                 </div>
                 <a *ngIf="!isRecharging" (click)="recharging()" class="btn btn-primary">
                     Recharger

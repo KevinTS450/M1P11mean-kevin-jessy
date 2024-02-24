@@ -40,18 +40,26 @@ const GetMobileMoneyById = async (req, res) => {
 
 const GetMobileMoneyByUser = async (req, res) => {
   try {
+    
+    const idUser = req.params.id;
+    const nomUser = req.params.nom;
+    const emailUser = req.params.email;
+    console.log(req.params);
+    let mobileMoney = await MobileMoneyService.getMobileMoneyByUser(idUser, nomUser, emailUser);
 
-    const mobileMoney = await MobileMoneyService.getMobileMoneyByUser(
-      req.params.id,
-      req.params.nom
-    );
     console.log("MobileMoney Details:", mobileMoney);
 
     if (!mobileMoney) {
-      return res.status(404).json({ message: "MobileMoney not found" });
-    }
+      const newMobileMoney = new MobileMoney(
+        { idUser, nomUser, emailUser},
+        "Airtel Money",
+        0,
+        "en attente"
+      );
+      mobileMoney = await MobileMoneyService.createMobileMoney(newMobileMoney);
+      res.status(200).json({ mobileMoney });
+    } else res.json({ mobileMoney });
 
-    res.json({ mobileMoney });
   } catch (error) {
     console.error(error);
     +res.status(500).json({ message: "Internal server error" });
@@ -74,12 +82,14 @@ const GetAllMobileMoney = async (req, res) => {
 
 async function updateMobileMoney(req, res, next) {
   try {
-    const { user, operateurNom, monnaie } = req.body;
+    const { _id ,user, operateurNom, monnaie, status } = req.body;
     const newMobileMoney = new MobileMoney(
-      { idUser: user.idUser, nomUser: user.nom },
+      { idUser: user._id, nomUser: user.name, emailUser: user.email },
       operateurNom,
-      monnaie
+      monnaie,
+      status
     );
+    newMobileMoney._id = _id;
 
     await MobileMoneyService.updateMobileMoney(newMobileMoney);
 

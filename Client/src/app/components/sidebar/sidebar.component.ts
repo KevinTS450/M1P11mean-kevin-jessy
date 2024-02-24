@@ -18,12 +18,12 @@ export const ROUTES: RouteInfo[] = [
     icon: "ni-tv-2 text-primary",
     class: "",
   },
-  {
-    path: "/user-profile",
-    title: "User profile",
-    icon: "ni-single-02 text-yellow",
-    class: "",
-  },
+  // {
+  //   path: "/user-profile",
+  //   title: "User profile",
+  //   icon: "ni-single-02 text-yellow",
+  //   class: "",
+  // },
   {
     path: "/login",
     title: "Login",
@@ -45,20 +45,20 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     hidden: userProfileClientEmp,
   },
-  {
-    path: "/priseRendezVous",
-    title: "rendez vous",
-    icon: "ni-single-copy-04 text-red",
-    class: "",
-    hidden: userProfileClient,
-  },
-  {
-    path: "/ajoutMobileMoney",
-    title: "Mobile money",
-    icon: "ni-money-coins text-green",
-    class: "",
-    hidden: userProfileClient,
-  },
+  // {
+  //   path: "/priseRendezVous",
+  //   title: "rendez vous",
+  //   icon: "ni-single-copy-04 text-red",
+  //   class: "",
+  //   hidden: userProfileClient,
+  // },
+  // {
+  //   path: "/ajoutMobileMoney",
+  //   title: "Mobile money",
+  //   icon: "ni-money-coins text-green",
+  //   class: "",
+  //   hidden: userProfileClient,
+  // },
   {
     path: "/personnel",
     title: "Personnel",
@@ -66,6 +66,7 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     hidden: userProfileManger,
   },
+  { path: '/testPage', title: 'Page de test',  icon:'ni-bullet-list-67 text-red', class: '' },
   {
     path: "/tache",
     title: "Tache",
@@ -110,7 +111,7 @@ export class SidebarComponent implements OnInit {
     try {
       this.user.GetUserByToken().subscribe((response: any) => {
         this.UserProfile = response.user;
-        console.log(this.UserProfile);
+        // console.log(this.UserProfile);
         this.updateMenuItems();
       });
     } catch (error) {
@@ -129,18 +130,18 @@ function userProfileExists() {
   return !!this.UserProfile;
 }
 function userProfileEmp(userProfile: User): boolean {
-  console.log(userProfile);
+  // console.log(userProfile);
   return userProfile.role === "employe";
 }
 function userProfileManger(userProfile: User): boolean {
-  console.log(userProfile);
+  // console.log(userProfile);
   return userProfile.role === "manager";
 }
 function userProfileClient(userProfile: User): boolean {
-  console.log(userProfile);
+  // console.log(userProfile);
   return userProfile.role === "client";
 }
 function userProfileClientEmp(userProfile: User): boolean {
-  console.log(userProfile);
+  // console.log(userProfile);
   return userProfile.role === "client" || userProfile.role === "employe";
 }

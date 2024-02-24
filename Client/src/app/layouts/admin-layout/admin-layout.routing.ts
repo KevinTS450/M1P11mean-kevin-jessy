@@ -45,4 +45,18 @@ export const AdminLayoutRoutes: Routes = [
   { path: "ajoutMobileMoney", component: AjoutMobileMoneyComponent },
   { path: "personnel", component: PersonnelComponent },
   { path: "tache", component: TacheComponent },
+    { path: "dashboard", component: DashboardComponent },
+    { path: "user-profile", component: UserProfileComponent },
+    // { path: "tables", component: TablesComponent },
+    // { path: "icons", component: IconsComponent },
+    // { path: "maps", component: MapsComponent },
+    { path: "serviceType", component: ServiceTypeComponent },
+    { path: "AjoutService", component: AjouterServiceComponent },
+    { path: "ModifierService/:id", component: ModifierServiceComponent },
+    { path: 'RendezVous',     component: RendezVousComponent },
+    { path: 'testPage',     component: TestPageComponent },
+    { path: 'Solde',     component: SoldeComponent },
+    // { path: "priseRendezVous", component: PriseRendezVousComponent },
+    // { path: "ajoutMobileMoney", component: AjoutMobileMoneyComponent },
+    { path: "personnel", component: PersonnelComponent }
 ];

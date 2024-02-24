@@ -95,23 +95,18 @@ const GetAllRendezVous = async (req, res) => {
 
 async function updateRendezVous(req, res, next) {
   try {
-    const {
-      employee,
-      client,
-      serviceAsked,
-      start,
-      end,
-      isDone,
-      isConfirmed,
-      status,
-    } = req.body;
+    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } =
+      req.body;
+
+    const id = req.params.id;
+
     const newRendezVous = new RendezVous(
-      { idEmp: employee.idEmployee, nomEmp: employee.nomEmployee },
-      { idCli: client.idClient, nomCli: client.nomClient },
+      { idEmployee: employee.idEmployee, nomEmployee: employee.nomEmployee },
+      { idClient: client.idClient, nomClient: client.nomClient },
       {
-        idServ: serviceAsked.idService,
-        nomServ: serviceAsked.nom,
-        prixServ: serviceAsked.prix,
+        idService: serviceAsked.idService,
+        nom: serviceAsked.nom,
+        prix: serviceAsked.prix,
       },
       start,
       end,
@@ -119,8 +114,9 @@ async function updateRendezVous(req, res, next) {
       isConfirmed,
       status
     );
+    console.log(newRendezVous);
 
-    await RendezVousService.updateRendezVous(newRendezVous);
+    await RendezVousService.updateRendezVous(id, newRendezVous);
 
     res.status(200).json({ message: "RendezVous registered successfully" });
   } catch (error) {
