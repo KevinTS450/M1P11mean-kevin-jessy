@@ -31,10 +31,8 @@ router.get("/user/findByRole/:role", HandlerUser.getUsersByRole);
 //pointage
 router.post("/mobileMoney/create", mobileMoneyController.createMobileMoney);
 router.get("/mobileMoney/findAll", mobileMoneyController.GetAllMobileMoney);
-router.get(
-  "/mobilemoney/findByUser/:id/:nom",
-  mobileMoneyController.GetMobileMoneyByUser
-);
+router.get("/mobilemoney/findByUser/:id/:nom/:email", mobileMoneyController.GetMobileMoneyByUser);
+
 router.get(
   "/mobileMoney/findById/:id",
   mobileMoneyController.GetMobileMoneyById
@@ -68,11 +66,8 @@ router.get("/service/getById", ServiceController.GetServiceByIdController);
 router.post("/rendezVous/create", rendezVousController.createRendezVous);
 router.get("/rendezVous/findAll", rendezVousController.GetAllRendezVous);
 router.get("/rendezVous/findById/:id", rendezVousController.GetRendezVousById);
-router.put("/rendezVous/update", rendezVousController.updateRendezVous);
-router.get(
-  "/rendezVous/findByRoleAndId/:role/:id/:nom_user",
-  rendezVousController.getRendezVousByRoleAndId
-);
+router.put("/rendezVous/update/:id", rendezVousController.updateRendezVous);
+router.get("/rendezVous/findByRoleAndId/:role/:id/:nom_user", rendezVousController.getRendezVousByRoleAndId);
 router.delete(
   "/rendezVous/deleteById/:id",
   rendezVousController.deleteRendezVous

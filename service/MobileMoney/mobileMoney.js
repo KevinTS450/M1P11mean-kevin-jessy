@@ -10,6 +10,7 @@ async function createMobileMoney(mobileMoney) {
       user: mobileMoney.user,
       operateurNom: mobileMoney.operateurNom,
       monnaie: mobileMoney.monnaie,
+      status: mobileMoney.status
     });
 
     console.log("mobileMoney registered successfully");
@@ -19,13 +20,13 @@ async function createMobileMoney(mobileMoney) {
   }
 }
 
-async function getMobileMoneyByUser(userId, nomUser) {
+async function getMobileMoneyByUser(idUser, nomUser, emailUser) {
   try {
     const collection = database.client.db("MEAN").collection("mobileMoney");
 
-    const mobileMoney = await collection.find({
-      user: { idUser: userId, nom: nomUser}
-    }).toArray();
+    const mobileMoney = await collection.findOne({
+      user: { idUser: idUser, nomUser: nomUser, emailUser: emailUser }
+    });
 
     return mobileMoney;
   } catch (error) {
@@ -64,12 +65,13 @@ async function updateMobileMoney(mobileMoney) {
   try {
     const collection = database.client.db("MEAN").collection("mobileMoney");
 
-    const filter = { id: mobileMoney.id };
+    const filter = { _id: new ObjectId(mobileMoney._id) };
 
     const updateMobileMoney = {
       $set: {
         user: mobileMoney.user,
         operateurNom: mobileMoney.operateurNom,
+        monnaie: mobileMoney.monnaie
       },
     };
 
