@@ -165,6 +165,20 @@ async function ChangeStateRendezVous(idEmp, idClient, stateFor) {
         update_cancel
       );
       return update_query;
+    } else if (stateFor === "start") {
+      const update_start = {
+        $set: {
+          onGoing: true,
+        },
+      };
+      const update_query = await collection.updateOne(
+        {
+          "employee.idEmployee": idEmp,
+          "client.idClient": idClient,
+        },
+        update_start
+      );
+      return update_query;
     }
   } catch (error) {
     console.error(error);

@@ -66,13 +66,25 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     hidden: userProfileManger,
   },
-  { path: '/testPage', title: 'Page de test',  icon:'ni-bullet-list-67 text-red', class: '' },
+  {
+    path: "/testPage",
+    title: "Page de test",
+    icon: "ni-bullet-list-67 text-red",
+    class: "",
+  },
   {
     path: "/tache",
     title: "Tache",
     icon: "ni-badge text-green",
     class: "",
     hidden: userProfileEmp,
+  },
+  {
+    path: "/Listemploye",
+    title: "Employe",
+    icon: "ni-badge text-green",
+    class: "",
+    hidden: userProfileClient,
   },
   {
     path: "/RendezVous",
@@ -130,18 +142,14 @@ function userProfileExists() {
   return !!this.UserProfile;
 }
 function userProfileEmp(userProfile: User): boolean {
-  // console.log(userProfile);
   return userProfile.role === "employe";
 }
 function userProfileManger(userProfile: User): boolean {
-  // console.log(userProfile);
   return userProfile.role === "manager";
 }
 function userProfileClient(userProfile: User): boolean {
-  // console.log(userProfile);
   return userProfile.role === "client";
 }
 function userProfileClientEmp(userProfile: User): boolean {
-  // console.log(userProfile);
   return userProfile.role === "client" || userProfile.role === "employe";
 }
