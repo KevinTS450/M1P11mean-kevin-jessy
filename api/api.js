@@ -12,6 +12,7 @@ const PointageController = require("../Controller/PointageController/pointageCon
 const ServiceController = require("../controller/ServiceTypeController/serviceController.js");
 const PreferenceController = require("../controller/preferenceController/preferenceController.js");
 const PaiementController = require("../Controller/PaiementController/paiementCtrl.js");
+const NotificationController = require("../Controller/NotificationController/notificationCtrl.js");
 
 //USER
 router.post("/user/inscription", handlerInscription);
@@ -78,6 +79,13 @@ router.get("/service/list", ServiceController.ListSerivceController);
 router.put("/service/update", ServiceController.UpdateServiceController);
 router.delete("/service/delete", ServiceController.DeleteServiceController);
 router.get("/service/getById", ServiceController.GetServiceByIdController);
+
+//notification
+router.post("/notification/create", NotificationController.createNotification);
+router.get("/notification/findAll", NotificationController.GetAllNotifications);
+router.get("/notification/findById/:id", NotificationController.GetNotificationById);
+router.put("/notification/updateById/:id", NotificationController.updateNotificationById);
+router.delete("/notification/deleteById/:id", NotificationController.deleteNotificationById);
 
 // RendezVous
 router.post("/rendezVous/create", rendezVousController.createRendezVous);
