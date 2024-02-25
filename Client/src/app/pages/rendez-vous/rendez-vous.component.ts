@@ -1,12 +1,16 @@
-import { formatDate } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
-import { User } from "src/app/Model/User/user";
-import { RendezVous } from "src/app/Model/rendezVous/rendez-vous";
-import { ServieType } from "src/app/Model/serviceType/servie-type";
-import { ServiceTypeService } from "src/app/Service/ServiceTypeService/service-type.service";
-import { UserService } from "src/app/Service/UserService/user.service";
-import { RendezVousService } from "src/app/Service/rendezVous/rendez-vous.service";
-import { SocketService } from "src/app/socket/socket.service";
+import { formatDate } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { MobileMoney } from 'src/app/Model/MobileMoney/mobile-money';
+import { User } from 'src/app/Model/User/user';
+import { Paiement } from 'src/app/Model/paiement/paiement';
+import { RendezVous } from 'src/app/Model/rendez-vous';
+import { ServieType } from 'src/app/Model/serviceType/servie-type';
+import { MobileMoneyService } from 'src/app/Service/MobileMoneyService/mobile-money.service';
+import { ServiceTypeService } from 'src/app/Service/ServiceTypeService/service-type.service';
+import { UserService } from 'src/app/Service/UserService/user.service';
+import { PaiementService } from 'src/app/Service/paiement/paiement.service';
+import { RendezVousService } from 'src/app/Service/rendezVous/rendez-vous.service';
+import { SocketService } from 'src/app/socket/socket.service';
 
 @Component({
   selector: "app-rendez-vous",
@@ -18,25 +22,29 @@ export class RendezVousComponent implements OnInit {
   newRendezVous: RendezVous = new RendezVous();
 
   UserQuery: User = new User();
-  listEmploye: User[];
-  employeSelected: User = new User();
-  isEmployeeFreeBool: boolean = true;
+  listEmploye:User[];
+  employeSelected:User = new User();
+  isEmployeeFreeBool:boolean = true;
+  factureValue = 0;
+  mobileMoneyToPay = new MobileMoney();
+  myMobileMoney = new MobileMoney();
+
 
   page = "liste_rendez_vous";
+  now = new Date();
 
-  serviceList: ServieType[];
-  serviceSelected: ServieType = new ServieType();
+  serviceList:ServieType[];
+  serviceSelected:ServieType = new ServieType();
+  idRendezVousToPay: string;
+  rendezVousToPay: RendezVous;
 
-  constructor(
-    private rendezVousService: RendezVousService,
-    private userService: UserService,
-    private serviceTypeService: ServiceTypeService,
-    private socketService: SocketService
-  ) {}
+  constructor(private rendezVousService:RendezVousService, private userService:UserService, private serviceTypeService:ServiceTypeService,
+    private mobileMoneyService:MobileMoneyService, private paiementService:PaiementService,private socketService:SocketService) { }
 
   ngOnInit(): void {
     this.userService.GetUserByToken().subscribe((response: any) => {
       this.UserQuery = response.user;
+      this.getMyMobileMoney();
       this.getAllRendezVous();
       this.getServices();
       this.getEmployee();
@@ -45,49 +53,20 @@ export class RendezVousComponent implements OnInit {
   }
 
   isEmployeeFree() {
-    let ans: boolean;
-    if (this.employeSelected && this.newRendezVous.start) {
-      this.rendezVousService
-        .findByUser(this.employeSelected)
-        .subscribe((response: any) => {
-          let empRDV: RendezVous[] = response.rendezVous;
-          empRDV = empRDV.filter(
-            (response) =>
-              response.status != "annuler" &&
-              ((new Date(response.start) <=
-                new Date(this.newRendezVous.start) &&
-                new Date(response.end) >= new Date(this.newRendezVous.start)) ||
-                (new Date(response.end) >= new Date(this.newRendezVous.end) &&
-                  new Date(response.start) <= new Date(this.newRendezVous.end)))
-          );
-          console.log(empRDV);
-          if (empRDV.length > 0) this.isEmployeeFreeBool = false;
-          else this.isEmployeeFreeBool = true;
-          //   console.log(empRDV);
-          //   if(empRDV.length > 0) {
-          //     console.log("Emp manana rendezVous");
-          //     for(let rdv of empRDV) {
-          //       if(new Date(rdv.start) < new Date(this.newRendezVous.start) && new Date(rdv.end) > new Date(this.newRendezVous.start) ||
-          //       new Date(rdv.end) > new Date(this.newRendezVous.end) && new Date(rdv.start) < new Date(this.newRendezVous.end)) {
-          //         console.log("emp non dispo");
-          //         this.isEmployeeFreeBool = false;
-
-          //         console.log("Rendez vous start => ",new Date(rdv.start));
-          //         console.log("Rendez vous select start => ",new Date(this.newRendezVous.start));
-          //         console.log("Rendez vous end => ",new Date(rdv.end));
-          //         console.log("Rendez vous select end => ",new Date(this.newRendezVous.end));
-          //         ans = false;
-          //         console.log(ans);
-          //         break;
-          //       } else {
-          //         ans = true;
-          //         console.log("Emp dispo")
-          //         this.isEmployeeFreeBool = true;
-          //         console.log(ans);
-          //       }
-          //     }
-          //   } else console.log("Emp tsy manana rendezVous"); ans = true;
-        });
+    console.log(this.newRendezVous);
+    if(this.employeSelected && this.newRendezVous.start) {
+      this.rendezVousService.findByUser(this.employeSelected).subscribe((response: any) => {
+        let  empRDV:RendezVous[] = response.rendezVous;
+        empRDV = empRDV.filter(response => 
+          response.status != 'annuler' &&
+          (new Date(response.start) <= new Date(this.newRendezVous.start) && new Date(response.end) >= new Date(this.newRendezVous.start) || 
+          new Date(response.end) >= new Date(this.newRendezVous.end)  && new Date(response.start) <= new Date(this.newRendezVous.end) ||
+          new Date(response.start) <= new Date(this.newRendezVous.end) && new Date(response.end) >= new Date(this.newRendezVous.start))
+        );
+        console.log(empRDV);
+        if(empRDV.length > 0) this.isEmployeeFreeBool = false;
+        else this.isEmployeeFreeBool = true;
+      });
     } else console.log("Tsy misy empSelec sy nwRDVStrt");
   }
 
@@ -104,14 +83,11 @@ export class RendezVousComponent implements OnInit {
   getServices() {
     this.serviceTypeService.ListService().subscribe((response: any) => {
       this.serviceList = response.service;
-      console.log(this.serviceList);
       this.serviceSelected = this.serviceList[0];
       this.newRendezVous.serviceAsked = {
         idService: this.serviceSelected._id,
         nom: this.serviceSelected.nom,
         prix: this.serviceSelected.prix,
-        durre: this.serviceSelected.durre,
-        image: this.serviceSelected.image,
       };
     });
   }
@@ -140,9 +116,9 @@ export class RendezVousComponent implements OnInit {
 
   public ConfirmRdv(clientId: string, idEmp: string) {
     try {
-      const stateFor = "confirm";
+      const state = true;
       this.rendezVousService
-        .ChangeStateRdv(clientId, idEmp, stateFor)
+        .ChangeStateRdv(clientId, idEmp, state)
         .subscribe((response) => {
           console.log(response);
         });
@@ -150,11 +126,11 @@ export class RendezVousComponent implements OnInit {
       console.error(error);
     }
   }
-  public DeclineRdv(clientId: string, idEmp: string) {
+  public DeclinemRdv(clientId: string, idEmp: string) {
     try {
-      const stateFor = "cancel";
+      const state = false;
       this.rendezVousService
-        .ChangeStateRdv(clientId, idEmp, stateFor)
+        .ChangeStateRdv(clientId, idEmp, state)
         .subscribe((response) => {
           console.log(response);
         });
@@ -182,22 +158,17 @@ export class RendezVousComponent implements OnInit {
       idService: this.serviceSelected._id,
       nom: this.serviceSelected.nom,
       prix: this.serviceSelected.prix,
-      durre: this.serviceSelected.durre,
-      image: this.serviceSelected.image,
     };
   }
 
   setEmployeSelected() {
-    this.newRendezVous.employee = {
-      idEmployee: this.employeSelected._id,
-      nomEmployee: this.employeSelected.name,
-    };
+    this.newRendezVous.employee = { idEmployee: this.employeSelected._id, nomEmployee: this.employeSelected.name };
     this.isEmployeeFree();
   }
 
-  addEndTimeRDV(start: string): string {
+  addEndTimeRDV(start:string):string {
     this.isEmployeeFree();
-    const dateDebut: Date = new Date(this.newRendezVous.start);
+    const dateDebut:Date = new Date(this.newRendezVous.start);
 
     const date = dateDebut.getDate();
     const month = dateDebut.getMonth() + 1;
@@ -209,98 +180,118 @@ export class RendezVousComponent implements OnInit {
     const newMinutes = (minutes + timeToAddInMinutes) % 60;
     const newHours = Math.floor((minutes + timeToAddInMinutes) / 60);
 
-    const newDate = new Date(
-      year,
-      month - 1,
-      date,
-      hours + newHours,
-      newMinutes
-    );
+    const newDate = new Date(year, month - 1, date, hours + newHours, newMinutes);
 
-    const formattedDate = newDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
+    const formattedDate = newDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
     });
-
-    const formattedTime = newDate.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    
+    const formattedTime = newDate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
-    this.newRendezVous.end = formatDate(
-      newDate.getTime().toString(),
-      "yyyy-MM-dd HH:mm",
-      "en-US"
-    );
-    return formatDate(
-      newDate.getTime().toString(),
-      "yyyy-MM-dd HH:mm",
-      "en-US"
-    );
+    this.newRendezVous.end = formatDate(newDate.getTime().toString(), 'yyyy-MM-dd HH:mm', 'en-US');
+    return formatDate(newDate.getTime().toString(), 'yyyy-MM-dd HH:mm', 'en-US')
   }
 
   createRDV() {
-    this.newRendezVous.status = "en attente";
-    this.newRendezVous.end = this.newRendezVous.start;
-    this.newRendezVous.client = {
-      idClient: this.UserQuery._id,
-      nomClient: this.UserQuery.name,
-    };
-    this.newRendezVous.start = formatDate(
-      new Date(this.newRendezVous.start).toString(),
-      "yyyy-MM-dd HH:mm",
-      "en-US"
-    );
-    this.newRendezVous.isConfirmed = false;
-    this.newRendezVous.isCancel = false;
-    this.newRendezVous.onGoing = false;
-    this.newRendezVous.isDone = false;
-    console.log(this.newRendezVous);
-    this.rendezVousService
-      .create(this.newRendezVous)
-      .subscribe((response: any) => {
-        if (this.newRendezVous.start) {
-          this.newRendezVous.status = "en attente";
-          this.newRendezVous.end = this.addEndTimeRDV(this.newRendezVous.start);
-          this.newRendezVous.client = {
-            idClient: this.UserQuery._id,
-            nomClient: this.UserQuery.name,
-          };
-          this.newRendezVous.start = formatDate(
-            new Date(this.newRendezVous.start).toString(),
-            "yyyy-MM-dd HH:mm",
-            "en-US"
-          );
-          this.newRendezVous.isConfirmed = false;
-          this.newRendezVous.isDone = false;
-          console.log(this.newRendezVous);
-          this.rendezVousService
-            .create(this.newRendezVous)
-            .subscribe((response: any) => {
-              this.page = "liste_rendez_vous";
-              this.getAllRendezVous();
-              this.newRendezVous = new RendezVous();
-            });
-        } else this.isEmployeeFreeBool = false;
-      });
+    if(this.newRendezVous.start) {
+      this.newRendezVous.status = "en attente";
+      this.newRendezVous.end = this.addEndTimeRDV(this.newRendezVous.start);
+      this.newRendezVous.client = { idClient: this.UserQuery._id, nomClient: this.UserQuery.name };
+      this.newRendezVous.start = formatDate(new Date(this.newRendezVous.start).toString(), 'yyyy-MM-dd HH:mm', 'en-US');
+      this.newRendezVous.isConfirmed = false;
+      this.newRendezVous.isDone = false;
+      console.log(this.newRendezVous);
+      this.rendezVousService.create(this.newRendezVous).subscribe((response:any) => {
+        this.page = "liste_rendez_vous";
+        this.getAllRendezVous();
+        this.newRendezVous = new RendezVous();
+      })
+    } else this.isEmployeeFreeBool = false;
   }
 
-  // updateRendezVous(rendezVous:RendezVous) {
-  //   this.rendezVousService.update(rendezVous._id, rendezVous).subscribe((response:any) => {
-  //     this.getAllRendezVous();
-  //   })
-  // }
+  updateRendezVous(rendezVous:RendezVous) {
+    this.rendezVousService.update(rendezVous._id, rendezVous).subscribe((response:any) => {
+      this.getAllRendezVous();
+    })
+  }
 
-  // setRendezVousToAnnuler(rendezVous: RendezVous) {
-  //   rendezVous.status = "annuler";
-  //   this.updateRendezVous(rendezVous);
-  // }
+  setRendezVousToAnnuler(rendezVous: RendezVous) {
+    rendezVous.status = "annuler";
+    this.updateRendezVous(rendezVous);
+  }
 
-  // toggleWithGreeting(popover) {
-  //   if (popover.isOpen()) {
-  //     popover.close();
-  //   } else {
-  //     popover.open();
-  //   }
-  // }
+  toggleWithGreeting(popover, rendezVous?:RendezVous) {
+    if(rendezVous) {
+      this.rendezVousToPay = rendezVous;
+      this.factureValue = rendezVous.serviceAsked.prix;
+      this.idRendezVousToPay = rendezVous._id;
+    }
+    if (popover.isOpen()) {
+      popover.close();
+    } else {
+      popover.open();
+    }
+  }
+
+  getMyMobileMoney() {
+    try {
+      this.mobileMoneyService.getMyMobileMoney(this.UserQuery).subscribe((response:any) => {
+        if(response.mobileMoney) this.myMobileMoney = response.mobileMoney;
+        else {
+          this.getMyMobileMoney();
+        }
+        console.log(this.myMobileMoney);
+      })
+    } catch(error) {
+      console.log(error);
+    }
+    
+  }
+
+  payer() {
+    console.log("payer");
+    this.userService.findByRole("manager").subscribe((response:any) => {
+      const manager:User[] = response.Users;
+      console.log(manager[0]);
+      if(manager[0].email) {
+        let paiement = new Paiement();
+        paiement.idRendezVous = this.idRendezVousToPay;
+        paiement.montant = this.factureValue;
+        paiement.motif = "Paiement du rendez vous id = " + this.idRendezVousToPay + " .";
+        paiement.temp = new Date().toLocaleString();
+
+        this.paiementService.createPaiement(paiement).subscribe((response:any) => {
+          console.log(this.myMobileMoney);
+          this.myMobileMoney.monnaie = this.myMobileMoney.monnaie - this.factureValue;
+          console.log(this.myMobileMoney);
+          this.myMobileMoney.user = this.UserQuery;
+          this.mobileMoneyService.updateMobileMoney(this.myMobileMoney).subscribe((response:any) => {
+            console.log("userMoney after =>");
+            console.log(response);
+            this.getMyMobileMoney();
+          });
+
+          this.mobileMoneyService.getMyMobileMoney(manager[0]).subscribe((response:any) => {
+            let managerMoney:MobileMoney = response.mobileMoney
+            console.log(managerMoney);
+            managerMoney.monnaie = managerMoney.monnaie + this.factureValue;
+            managerMoney.user = manager[0];
+            this.mobileMoneyService.updateMobileMoney(managerMoney).subscribe((response:any) => {
+              console.log("managerMoney after =>");
+              console.log(response);
+            })
+          });
+
+          this.rendezVousToPay.status = 'confirmer';
+          this.rendezVousService.update(this.rendezVousToPay._id, this.rendezVousToPay).subscribe((response:any) => {
+            this.getAllRendezVous();
+          });
+        });
+      }
+    });
+  }
 }

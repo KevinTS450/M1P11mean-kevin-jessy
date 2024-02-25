@@ -11,6 +11,7 @@ const ThumbnailsController = require("../Controller/ThumbnailsController/thumbna
 const PointageController = require("../Controller/PointageController/pointageController.js");
 const ServiceController = require("../controller/ServiceTypeController/serviceController.js");
 const PreferenceController = require("../controller/preferenceController/preferenceController.js");
+const PaiementController = require("../Controller/PaiementController/paiementCtrl.js");
 
 //USER
 router.post("/user/inscription", handlerInscription);
@@ -28,7 +29,7 @@ router.patch("/user/newCode", HandlerUser.GenNewCode);
 router.get("/user/isManagerExist", HandlerUser.CheckManagerExist);
 router.get("/user/findByRole/:role", HandlerUser.getUsersByRole);
 
-//pointage
+//MobileMoney
 router.post("/mobileMoney/create", mobileMoneyController.createMobileMoney);
 router.get("/mobileMoney/findAll", mobileMoneyController.GetAllMobileMoney);
 router.get("/mobilemoney/findByUser/:id/:nom/:email", mobileMoneyController.GetMobileMoneyByUser);
@@ -46,6 +47,22 @@ router.delete(
   mobileMoneyController.deleteMobileMoney
 );
 router.put("/mobileMoneu/recharge");
+
+//Paiement
+router.post("/paiement/create", PaiementController.createPaiement);
+router.get("/paiement/findAll", PaiementController.GetAllPaiements);
+router.get(
+  "/paiement/findById/:id",
+  PaiementController.GetPaiementById
+);
+router.put(
+  "/paiement/updateById/:id",
+  PaiementController.updatePaiementById
+);
+router.delete(
+  "/paiement/deleteById/:id",
+  PaiementController.deletePaiementById
+);
 
 //pointage
 router.post("/pointage/createPointage", PointageController.createPointage);
