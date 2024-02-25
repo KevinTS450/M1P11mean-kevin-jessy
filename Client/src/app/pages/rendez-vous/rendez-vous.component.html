@@ -287,9 +287,13 @@
   <div style="display: flex; align-items: center;" style="width: 400px;">
     <label for="Operateur">Suite à votre paiment, vous serez facturé de <b style="color: rgb(233, 58, 58);">{{factureValue}} Ar</b>.</label>
     <label for="Operateur">Voulez-vous continuer?
-      <button (click)="payer()" class="btn btn-sm btn-success">Ok</button>
+      <button *ngIf="factureValue && myMobileMoney.monnaie >= factureValue" (click)="payer()" class="btn btn-sm btn-success">Ok</button>
       <button class="btn btn-sm btn-danger">Annuler</button>
     </label>
+    
+    <div *ngIf="factureValue && myMobileMoney.monnaie < factureValue" class="alert alert-danger" role="alert">
+      Recharger votre compte pour valider le paiement!
+    </div>
   </div>
 </ng-template>
 

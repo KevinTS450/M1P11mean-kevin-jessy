@@ -10,16 +10,16 @@ import { ServiceTypeService } from 'src/app/Service/ServiceTypeService/service-t
 import { UserService } from 'src/app/Service/UserService/user.service';
 import { PaiementService } from 'src/app/Service/paiement/paiement.service';
 import { RendezVousService } from 'src/app/Service/rendezVous/rendez-vous.service';
+import { SocketService } from 'src/app/socket/socket.service';
 
 @Component({
-  selector: 'app-rendez-vous',
-  templateUrl: './rendez-vous.component.html',
-  styleUrls: ['./rendez-vous.component.scss']
+  selector: "app-rendez-vous",
+  templateUrl: "./rendez-vous.component.html",
+  styleUrls: ["./rendez-vous.component.scss"],
 })
 export class RendezVousComponent implements OnInit {
-
-  listeRendezVous:RendezVous[];
-  newRendezVous:RendezVous = new RendezVous();
+  listeRendezVous: RendezVous[];
+  newRendezVous: RendezVous = new RendezVous();
 
   UserQuery: User = new User();
   listEmploye:User[];
@@ -28,6 +28,7 @@ export class RendezVousComponent implements OnInit {
   factureValue = 0;
   mobileMoneyToPay = new MobileMoney();
   myMobileMoney = new MobileMoney();
+
 
   page = "liste_rendez_vous";
   now = new Date();
@@ -38,7 +39,7 @@ export class RendezVousComponent implements OnInit {
   rendezVousToPay: RendezVous;
 
   constructor(private rendezVousService:RendezVousService, private userService:UserService, private serviceTypeService:ServiceTypeService,
-    private mobileMoneyService:MobileMoneyService, private paiementService:PaiementService) { }
+    private mobileMoneyService:MobileMoneyService, private paiementService:PaiementService,private socketService:SocketService) { }
 
   ngOnInit(): void {
     this.userService.GetUserByToken().subscribe((response: any) => {
@@ -47,7 +48,8 @@ export class RendezVousComponent implements OnInit {
       this.getAllRendezVous();
       this.getServices();
       this.getEmployee();
-    });   
+      this.AutoRefresh();
+    });
   }
 
   isEmployeeFree() {
@@ -69,7 +71,8 @@ export class RendezVousComponent implements OnInit {
   }
 
   getAllRendezVous() {
-    this.rendezVousService.findByUser(this.UserQuery)
+    this.rendezVousService
+      .findByUser(this.UserQuery)
       .subscribe((response: any) => {
         console.log(response);
         this.listeRendezVous = response.rendezVous;
@@ -78,12 +81,15 @@ export class RendezVousComponent implements OnInit {
   }
 
   getServices() {
-    this.serviceTypeService.ListService()
-      .subscribe((response: any) => {
-        this.serviceList = response.service;
-        this.serviceSelected = this.serviceList[0];
-        this.newRendezVous.serviceAsked = { idService: this.serviceSelected._id, nom: this.serviceSelected.nom, prix: this.serviceSelected.prix};
-      });
+    this.serviceTypeService.ListService().subscribe((response: any) => {
+      this.serviceList = response.service;
+      this.serviceSelected = this.serviceList[0];
+      this.newRendezVous.serviceAsked = {
+        idService: this.serviceSelected._id,
+        nom: this.serviceSelected.nom,
+        prix: this.serviceSelected.prix,
+      };
+    });
   }
 
   GetUser() {
@@ -97,19 +103,62 @@ export class RendezVousComponent implements OnInit {
     }
   }
 
+  public AutoRefresh() {
+    try {
+      this.socketService.on("ChangeState", (data) => {
+        console.log("Web socket User updated event received:", data);
+        this.getAllRendezVous();
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public ConfirmRdv(clientId: string, idEmp: string) {
+    try {
+      const state = true;
+      this.rendezVousService
+        .ChangeStateRdv(clientId, idEmp, state)
+        .subscribe((response) => {
+          console.log(response);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  public DeclinemRdv(clientId: string, idEmp: string) {
+    try {
+      const state = false;
+      this.rendezVousService
+        .ChangeStateRdv(clientId, idEmp, state)
+        .subscribe((response) => {
+          console.log(response);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   getEmployee() {
-    this.userService.findByRole('employe').subscribe((response: any) => {
+    this.userService.findByRole("employe").subscribe((response: any) => {
       this.listEmploye = response.Users;
       console.log(this.listEmploye);
       this.employeSelected = this.listEmploye[0];
-      this.newRendezVous.employee = { idEmployee: this.employeSelected._id, nomEmployee: this.employeSelected.name };
+      this.newRendezVous.employee = {
+        idEmployee: this.employeSelected._id,
+        nomEmployee: this.employeSelected.name,
+      };
       this.newRendezVous.employee.idEmployee = this.employeSelected._id;
       this.newRendezVous.employee.nomEmployee = this.employeSelected.name;
-    })
+    });
   }
 
   setServiceSelected() {
-    this.newRendezVous.serviceAsked = { idService: this.serviceSelected._id, nom: this.serviceSelected.nom, prix: this.serviceSelected.prix };
+    this.newRendezVous.serviceAsked = {
+      idService: this.serviceSelected._id,
+      nom: this.serviceSelected.nom,
+      prix: this.serviceSelected.prix,
+    };
   }
 
   setEmployeSelected() {
@@ -127,7 +176,7 @@ export class RendezVousComponent implements OnInit {
     const hours = dateDebut.getHours();
     const minutes = dateDebut.getMinutes();
 
-    const timeToAddInMinutes = this.serviceSelected.durre; 
+    const timeToAddInMinutes = this.serviceSelected.durre;
     const newMinutes = (minutes + timeToAddInMinutes) % 60;
     const newHours = Math.floor((minutes + timeToAddInMinutes) / 60);
 
@@ -170,7 +219,7 @@ export class RendezVousComponent implements OnInit {
     })
   }
 
-  setRendezVousToAnnuler(rendezVous:RendezVous) {
+  setRendezVousToAnnuler(rendezVous: RendezVous) {
     rendezVous.status = "annuler";
     this.updateRendezVous(rendezVous);
   }

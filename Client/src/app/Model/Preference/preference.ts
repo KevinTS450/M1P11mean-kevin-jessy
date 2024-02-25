@@ -1,6 +1,14 @@
 export class Preference {
   employe: {};
   client: {};
-  service: {};
+  service: {
+    idServ: string;
+    nomServ: string;
+    prixServ: string;
+    commSer: string;
+    durreServ: string;
+    imageServ: string;
+  };
   type: string;
+  idEmp: string;
 }
