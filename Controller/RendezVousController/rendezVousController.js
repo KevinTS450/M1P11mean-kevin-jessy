@@ -13,6 +13,8 @@ async function createRendezVous(req, res, next) {
       isDone,
       isConfirmed,
       status,
+      isCancel,
+      onGoing,
     } = req.body;
     console.log(req.body);
     const newRendezVous = new RendezVous(
@@ -22,12 +24,16 @@ async function createRendezVous(req, res, next) {
         idService: serviceAsked.idService,
         nom: serviceAsked.nom,
         prix: serviceAsked.prix,
+        durre: serviceAsked.durre,
+        image: serviceAsked.image,
       },
       start,
       end,
       isDone,
       isConfirmed,
-      status
+      status,
+      isCancel,
+      onGoing
     );
 
     await RendezVousService.createRendezVous(newRendezVous);
@@ -91,8 +97,16 @@ const GetAllRendezVous = async (req, res) => {
 
 async function updateRendezVous(req, res, next) {
   try {
-    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } =
-      req.body;
+    const {
+      employee,
+      client,
+      serviceAsked,
+      start,
+      end,
+      isDone,
+      isConfirmed,
+      status,
+    } = req.body;
 
     const id = req.params.id;
 
@@ -154,15 +168,40 @@ async function getRendezVousByRoleAndId(req, res, next) {
     +res.status(500).json({ message: "Internal server error" });
   }
 }
+async function getRendezVousByRoleAndIdConfirmed(req, res, next) {
+  try {
+    console.log("Decoded RendezVous ID in Controller:");
+
+    const { role, id, name } = req.query;
+    console.log(id);
+    const rendezVous =
+      await RendezVousService.getRendezVousByRoleAndIdAndNom_userConfirmed(
+        role,
+        id,
+        name
+      );
+    console.log("RendezVous Details:", rendezVous);
+
+    if (!rendezVous) {
+      return res.status(404).json({ message: "RendezVous not found" });
+    }
+
+    res.json({ rendezVous });
+  } catch (error) {
+    console.error(error);
+    +res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 async function ChangeStateRdvController(req, res, next) {
   try {
-    const { clientId, idEmp, state } = req.query;
+    const { clientId, idEmp, stateFor } = req.query;
 
     const update = await RendezVousService.ChangeStateRendezVous(
       idEmp,
       clientId,
-      state
+
+      stateFor
     );
 
     if (update) {
@@ -181,7 +220,6 @@ async function ChangeStateRdvController(req, res, next) {
     next(error);
   }
 }
-
 module.exports = {
   createRendezVous,
   GetRendezVousById,
@@ -191,4 +229,5 @@ module.exports = {
   getRendezVousByRoleAndId,
   checkRendezVousAtIntervallOfTimeController,
   ChangeStateRdvController,
+  getRendezVousByRoleAndIdConfirmed,
 };

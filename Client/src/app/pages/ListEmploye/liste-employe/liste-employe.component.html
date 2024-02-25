@@ -1,0 +1,182 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '8px' }"
+></ngx-loading>
+
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello {{ UserQuery.name }}</h1>
+        <p class="text-white mt-0 mb-5">Gerer les personnel</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xl-8 order-xl-1">
+  <div class="card bg-secondary shadow">
+    <div class="card-header bg-white border-0">
+      <div class="row align-items-center">
+        <div class="col-8">
+          <h3 class="mb-0">Employe</h3>
+        </div>
+        <div class="col-4 text-right">
+          <button
+            *ngIf="list_emp"
+            (click)="changeStatePreference()"
+            class="btn btn-sm btn-primary"
+          >
+            Liste des favoris <span class="badge badge-white">{{ count }}</span>
+          </button>
+          <button
+            *ngIf="list_preference"
+            (click)="changeStatePreferenceEmploye()"
+            class="btn btn-sm btn-primary"
+          >
+            Liste des employer
+          </button>
+        </div>
+      </div>
+      <div *ngIf="list_emp" class="card-body">
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Nom</th>
+                <th scope="col">prenom</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let users of employe">
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="#" class="avatar rounded-circle mr-3">
+                      <img
+                        alt="Image placeholder"
+                        src="assets/uploads/{{ users.image }}"
+                      />
+                    </a>
+                  </div>
+                </th>
+                <td>{{ users.name }}</td>
+                <td>
+                  {{ users.last_name }}
+                </td>
+                <td>
+                  {{ users.email }}
+                </td>
+                <td>
+                  {{ users.role }}
+                </td>
+
+                <td>
+                  <button
+                    *ngIf="!isServiceAddedToFavorites(users._id)"
+                    (click)="
+                      AddToPreference(
+                        users._id,
+                        users.name,
+                        users.last_name,
+                        users.image,
+                        users.email
+                      )
+                    "
+                    class="btn btn-sm btn-success"
+                  >
+                    Ajouter aux favoris
+                  </button>
+                  <button
+                    *ngIf="isServiceAddedToFavorites(users._id)"
+                    (click)="removePreference(UserQuery._id)"
+                    class="btn btn-sm btn-danger"
+                  >
+                    Retirer aux favoris
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="preference_add" class="alert alert-info" role="alert">
+            Employe ajouter au preference.
+          </div>
+          <div
+            *ngIf="preference_remove"
+            class="alert alert-danger"
+            role="alert"
+          >
+            Employe retirer au preference.
+          </div>
+        </div>
+      </div>
+      <div *ngIf="list_preference" class="card-body">
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Nom</th>
+                <th scope="col">prenom</th>
+                <th scope="col">Email</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let users of List_preference_query">
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="#" class="avatar rounded-circle mr-3">
+                      <img
+                        alt="Image placeholder"
+                        src="assets/uploads/{{ users.employe.imageEmploye }}"
+                      />
+                    </a>
+                  </div>
+                </th>
+                <td>{{ users.employe.nomEmploye }}</td>
+                <td>
+                  {{ users.employe.prenomEmploye }}
+                </td>
+                <td>
+                  {{ users.employe.emailEmploye }}
+                </td>
+
+                <td>
+                  <button
+                    (click)="removePreference(UserQuery._id)"
+                    class="btn btn-sm btn-danger"
+                  >
+                    Retirer aux favoris
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div
+            *ngIf="preference_remove"
+            class="alert alert-danger"
+            role="alert"
+          >
+            Employe retirer au preference.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

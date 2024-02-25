@@ -16,6 +16,8 @@ async function createRendezVous(rendezVous) {
       isDone: rendezVous.isDone,
       isConfirmed: rendezVous.isConfirmed,
       status: rendezVous.status,
+      isCancel: rendezVous.isCancel,
+      onGoing: rendezVous.onGoing,
     });
 
     console.log("rendezVous registered successfully");
@@ -130,24 +132,54 @@ async function deleteRendezVousById(idRendezVous) {
   }
 }
 
-async function ChangeStateRendezVous(idEmp, idClient, state) {
+async function ChangeStateRendezVous(idEmp, idClient, stateFor) {
   try {
     const collection = database.client.db("MEAN").collection("rendezVous");
 
-    const update = {
-      $set: {
-        isConfirmed: state,
-      },
-    };
+    if (stateFor === "confirm") {
+      const update_confirm = {
+        $set: {
+          isConfirmed: true,
+        },
+      };
 
-    const update_query = await collection.updateOne(
-      {
-        "employee.idEmployee": idEmp,
-        "client.idClient": idClient,
-      },
-      update
-    );
-    return update_query;
+      const update_query = await collection.updateOne(
+        {
+          "employee.idEmployee": idEmp,
+          "client.idClient": idClient,
+        },
+        update_confirm
+      );
+      return update_query;
+    } else if (stateFor === "cancel") {
+      const update_cancel = {
+        $set: {
+          isCancel: true,
+        },
+      };
+      const update_query = await collection.updateOne(
+        {
+          "employee.idEmployee": idEmp,
+          "client.idClient": idClient,
+        },
+        update_cancel
+      );
+      return update_query;
+    } else if (stateFor === "start") {
+      const update_start = {
+        $set: {
+          onGoing: true,
+        },
+      };
+      const update_query = await collection.updateOne(
+        {
+          "employee.idEmployee": idEmp,
+          "client.idClient": idClient,
+        },
+        update_start
+      );
+      return update_query;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -185,6 +217,44 @@ async function getRendezVousByRoleAndIdAndNom_user(role, id, nameUser) {
     throw error;
   }
 }
+async function getRendezVousByRoleAndIdAndNom_userConfirmed(
+  role,
+  id,
+  nameUser
+) {
+  try {
+    if (role == "client") {
+      const collection = database.client.db("MEAN").collection("rendezVous");
+      console.log("Role user :", role, " and Id :", id);
+
+      const users = await collection
+        .find({
+          client: { idClient: id, nomClient: nameUser },
+          isConfirmed: true,
+        })
+        .toArray();
+
+      console.log(users);
+
+      return users;
+    } else if (role == "employe") {
+      const collection = database.client.db("MEAN").collection("rendezVous");
+      console.log("Role user :", role, " and Id :", id);
+
+      const users = await collection
+        .find({
+          employee: { idEmployee: id, nomEmployee: nameUser },
+          isConfirmed: true,
+        })
+        .toArray();
+
+      return users;
+    }
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
 
 module.exports = {
   createRendezVous,
@@ -195,4 +265,5 @@ module.exports = {
   getRendezVousByRoleAndIdAndNom_user,
   checkRendezVousInInterval,
   ChangeStateRendezVous,
+  getRendezVousByRoleAndIdAndNom_userConfirmed,
 };

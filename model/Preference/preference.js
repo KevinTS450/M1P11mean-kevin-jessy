@@ -1,12 +1,18 @@
 class preference {
   constructor(
-    { idEmploye, nomEmploye },
+    { idEmploye, nomEmploye, prenomEmploye, emailEmploye, imageEmploye },
     { idClient, nomClient },
     { idServ, nomServ, prixServ, commSer, durreServ, imageServ },
     type,
     idEmp
   ) {
-    this.employe = { idEmploye, nomEmploye };
+    this.employe = {
+      idEmploye,
+      nomEmploye,
+      imageEmploye,
+      prenomEmploye,
+      emailEmploye,
+    };
     this.client = { idClient, nomClient };
     this.service = {
       idServ,
