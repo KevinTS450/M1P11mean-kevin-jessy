@@ -68,7 +68,7 @@
                         <div class="col-8">
                             <h3 class="mb-0">Rendez-vous</h3>
                         </div>
-                        <div class="col-4 text-right">
+                        <div class="col-4 text-right" *ngIf="UserQuery.role == 'client'">
                           <button *ngIf="page == 'liste_rendez_vous'" (click)="page = 'creating_rendez_vous'" class="btn btn-sm btn-primary">Nouveau</button>
                           <button *ngIf="page == 'creating_rendez_vous'" (click)="page = 'liste_rendez_vous'" class="btn btn-sm btn-primary">Liste rendez-vous</button>
                         </div>
@@ -149,22 +149,22 @@
                                         </button>
                                       </div>
                                       <div *ngIf="UserQuery.role == 'client'">
-                                        <div *ngIf="rdv.status == 'en attente'">                                         
-                                          <button (click)="setRendezVousToAnnuler(rdv)" class="btn btn-sm btn-danger">Annuler</button>
-                                        </div>
-                                        <div *ngIf="rdv.status == 'confirmer'">                                          
+                                        <div *ngIf="rdv.status == 'en attente'">                                                                            
                                           <button 
                                             class="btn btn-sm btn-success"
                                             [ngbPopover]="popContent"
                                             [popoverTitle]="popTitle"
                                             [ngbPopoverTemplate]="popContent"
                                             triggers="manual"
-                                            [autoClose]="false"
                                             #p1="ngbPopover"
-                                            (click)="toggleWithGreeting(p1)"
+                                            (click)="toggleWithGreeting(p1, rdv)"
                                           >
                                             Payer
-                                          </button>
+                                          </button>                                   
+                                          <button (click)="setRendezVousToAnnuler(rdv)" class="btn btn-sm btn-danger">Annuler</button>
+                                        </div>                                       
+                                        <div *ngIf="rdv.status == 'confirmer'">
+                                          <button class="btn btn-sm btn-primary" disabled>RDV confirmé</button>
                                         </div>
                                         <div *ngIf="rdv.status == 'annuler'">                                         
                                           <button class="btn btn-sm btn-outline-danger" disabled>RDV annulé</button>
@@ -237,6 +237,7 @@
                               >
                               <input
                                 type="datetime-local"
+                                [min]="now"
                                 class="form-control form-control-alternative"
                                 [(ngModel)]="newRendezVous.start"
                                 (change)="addEndTimeRDV(newRendezVous.start)"
@@ -284,9 +285,9 @@
 
 <ng-template #popContent let-greeting="greetings">
   <div style="display: flex; align-items: center;" style="width: 400px;">
-    <label for="Operateur">Suite à votre paiment, votre compte sera diminué de <b style="color: rgb(233, 58, 58);">14€ </b>.</label>
+    <label for="Operateur">Suite à votre paiment, vous serez facturé de <b style="color: rgb(233, 58, 58);">{{factureValue}} Ar</b>.</label>
     <label for="Operateur">Voulez-vous continuer?
-      <button class="btn btn-sm btn-success">Ok</button>
+      <button (click)="payer()" class="btn btn-sm btn-success">Ok</button>
       <button class="btn btn-sm btn-danger">Annuler</button>
     </label>
   </div>
