@@ -13,6 +13,7 @@ export class RendezVous {
     nom: string;
     prix: number;
     durre: number;
+    image: string;
   };
   start: string;
   end: string;

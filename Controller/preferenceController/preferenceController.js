@@ -6,7 +6,13 @@ async function AddPreferenceController(req, res, next) {
   try {
     const { employe, client, service, type, idEmp } = req.body;
     const preference_query = new preference(
-      { idEmploye: employe.idEmploye, nomEmploye: employe.nomEmploye },
+      {
+        idEmploye: employe.idEmploye,
+        nomEmploye: employe.nomEmploye,
+        prenomEmploye: employe.prenomEmploye,
+        imageEmploye: employe.imageEmploye,
+        emailEmploye: employe.emailEmploye,
+      },
       { idClient: client.idClient, nomClient: client.nomClient },
       {
         idServ: service.idServ,
@@ -22,18 +28,16 @@ async function AddPreferenceController(req, res, next) {
 
     PreferenceService.AddToPreference(preference_query);
     const socket = socketIo.getIO();
-    if (preference_query.type === "service") {
-      console.log("ato");
-      const count = await PreferenceService.CountPreferences(
-        preference_query.type,
-        preference_query.client.idClient
-      );
-      console.log(count);
-      socket.emit("countFavService", {
-        event: "countFavService",
-        count: count,
-      });
-    }
+
+    const count = await PreferenceService.CountPreferences(
+      preference_query.type,
+      preference_query.client.idClient
+    );
+    console.log(count);
+    socket.emit("countFavService", {
+      event: "countFavService",
+      count: count,
+    });
 
     return res.json({ pref: preference_query });
   } catch (error) {

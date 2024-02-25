@@ -3,6 +3,7 @@ import { RendezVous } from "src/app/Model/rendezVous/rendez-vous";
 import { User } from "src/app/Model/User/user";
 import { RendezVousService } from "src/app/Service/rendezVous/rendez-vous.service";
 import { UserService } from "src/app/Service/UserService/user.service";
+import { SocketService } from "src/app/socket/socket.service";
 
 @Component({
   selector: "app-tache",
@@ -12,7 +13,8 @@ import { UserService } from "src/app/Service/UserService/user.service";
 export class TacheComponent implements OnInit {
   constructor(
     private userService: UserService,
-    private rendezVousService: RendezVousService
+    private rendezVousService: RendezVousService,
+    private socketService: SocketService
   ) {}
   loading: boolean = false;
   UserQuery: User = new User();
@@ -24,6 +26,22 @@ export class TacheComponent implements OnInit {
   tache: RendezVous[];
   ngOnInit(): void {
     this.GetUser();
+    this.AutoRefresh();
+  }
+
+  public AutoRefresh() {
+    try {
+      this.startRefreshRdv();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public startRefreshRdv() {
+    this.socketService.on("ChangeState", (data) => {
+      console.log("Web socket User updated event received:", data);
+      this.GetUser();
+    });
   }
 
   public GetUser() {
@@ -58,6 +76,19 @@ export class TacheComponent implements OnInit {
         .subscribe((response: any) => {
           console.log(response);
           this.tache = response.rendezVous;
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public StartTask(clientId: string, idEmp: string) {
+    try {
+      const stateFor = "start";
+      this.rendezVousService
+        .ChangeStateRdv(clientId, idEmp, stateFor)
+        .subscribe((response) => {
+          console.log(response);
         });
     } catch (error) {
       console.error(error);

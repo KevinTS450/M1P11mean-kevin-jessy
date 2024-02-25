@@ -24,6 +24,8 @@ async function createRendezVous(req, res, next) {
         idService: serviceAsked.idService,
         nom: serviceAsked.nom,
         prix: serviceAsked.prix,
+        durre: serviceAsked.durre,
+        image: serviceAsked.image,
       },
       start,
       end,
@@ -95,8 +97,16 @@ const GetAllRendezVous = async (req, res) => {
 
 async function updateRendezVous(req, res, next) {
   try {
-    const { employee, client, serviceAsked, start, end, isDone, isConfirmed, status } =
-      req.body;
+    const {
+      employee,
+      client,
+      serviceAsked,
+      start,
+      end,
+      isDone,
+      isConfirmed,
+      status,
+    } = req.body;
 
     const id = req.params.id;
 

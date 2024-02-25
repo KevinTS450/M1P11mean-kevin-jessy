@@ -184,7 +184,7 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
           this.loading = false;
         }, 30000);
 
-        const clientData: {} = {
+        const clientData: any = {
           idClient: this.id_user,
           nomClient: this.userProfile.name,
         };
@@ -196,9 +196,12 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
           durreServ: durre,
           imageServ: image,
         };
-        const empData: {} = {
+        const empData: any = {
           idEmploye: "not specified",
           nomEmploye: "not specified",
+          prenomEmolye: "not specified",
+          imageEmploye: "not specified",
+          emailEmploye: "not specified",
         };
 
         const preference: Preference = {

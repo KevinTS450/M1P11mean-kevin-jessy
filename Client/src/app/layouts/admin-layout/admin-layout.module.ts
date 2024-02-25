@@ -20,6 +20,7 @@ import { AjoutMobileMoneyComponent } from "src/app/pages/MobileMoney/AjouterMobi
 import { PersonnelComponent } from "src/app/pages/Personnel/personnel/personnel.component";
 import { NgxLoadingModule } from "ngx-loading";
 import { TacheComponent } from "src/app/pages/Tache/tache/tache.component";
+import { ListeEmployeComponent } from "src/app/pages/ListEmploye/liste-employe/liste-employe.component";
 @NgModule({
   imports: [
     CommonModule,
@@ -43,6 +44,7 @@ import { TacheComponent } from "src/app/pages/Tache/tache/tache.component";
     AjoutMobileMoneyComponent,
     PersonnelComponent,
     TacheComponent,
+    ListeEmployeComponent,
   ],
 })
 export class AdminLayoutModule {}
