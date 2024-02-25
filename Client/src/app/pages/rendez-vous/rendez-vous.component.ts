@@ -1,9 +1,9 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MobileMoney } from 'src/app/Model/MobileMoney/mobile-money';
+import { RendezVous } from 'src/app/Model/RendezVous/rendez-vous';
 import { User } from 'src/app/Model/User/user';
 import { Paiement } from 'src/app/Model/paiement/paiement';
-import { RendezVous } from 'src/app/Model/rendez-vous';
 import { ServieType } from 'src/app/Model/serviceType/servie-type';
 import { MobileMoneyService } from 'src/app/Service/MobileMoneyService/mobile-money.service';
 import { ServiceTypeService } from 'src/app/Service/ServiceTypeService/service-type.service';
@@ -88,6 +88,8 @@ export class RendezVousComponent implements OnInit {
         idService: this.serviceSelected._id,
         nom: this.serviceSelected.nom,
         prix: this.serviceSelected.prix,
+        durre: this.serviceSelected.durre,
+        image: this.serviceSelected.image
       };
     });
   }
@@ -114,31 +116,6 @@ export class RendezVousComponent implements OnInit {
     }
   }
 
-  public ConfirmRdv(clientId: string, idEmp: string) {
-    try {
-      const state = true;
-      this.rendezVousService
-        .ChangeStateRdv(clientId, idEmp, state)
-        .subscribe((response) => {
-          console.log(response);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  public DeclinemRdv(clientId: string, idEmp: string) {
-    try {
-      const state = false;
-      this.rendezVousService
-        .ChangeStateRdv(clientId, idEmp, state)
-        .subscribe((response) => {
-          console.log(response);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   getEmployee() {
     this.userService.findByRole("employe").subscribe((response: any) => {
       this.listEmploye = response.Users;
@@ -158,6 +135,8 @@ export class RendezVousComponent implements OnInit {
       idService: this.serviceSelected._id,
       nom: this.serviceSelected.nom,
       prix: this.serviceSelected.prix,
+      durre: this.serviceSelected.durre,
+      image: this.serviceSelected.image
     };
   }
 
