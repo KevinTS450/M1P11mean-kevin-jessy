@@ -14,6 +14,7 @@ export class RendezVous {
     prix: number;
     durre: number;
     image: string;
+    commission: number;
   };
   start: string;
   end: string;

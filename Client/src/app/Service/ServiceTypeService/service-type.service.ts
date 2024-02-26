@@ -17,8 +17,8 @@ export class ServiceTypeService {
     return this.http.get<ServieType[]>(`${this.baseUrl}/list`);
   }
 
-  public UpdateService(update: ServieType): Observable<ServieType> {
-    return this.http.put<ServieType>(`${this.baseUrl}/update`, update);
+  public UpdateService(update: ServieType, id: string): Observable<ServieType> {
+    return this.http.put<ServieType>(`${this.baseUrl}/update?id=${id}`, update);
   }
 
   public DeleteService(id: string): Observable<string> {

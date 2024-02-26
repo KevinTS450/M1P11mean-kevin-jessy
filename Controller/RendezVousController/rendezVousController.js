@@ -26,6 +26,7 @@ async function createRendezVous(req, res, next) {
         prix: serviceAsked.prix,
         durre: serviceAsked.durre,
         image: serviceAsked.image,
+        commission: serviceAsked.commission,
       },
       start,
       end,

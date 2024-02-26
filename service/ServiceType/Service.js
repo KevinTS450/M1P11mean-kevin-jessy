@@ -36,10 +36,10 @@ async function ListService() {
     console.error(error);
   }
 }
-async function updateService(service) {
+async function updateService(service, id) {
   try {
     const collection = database.client.db("MEAN").collection("service");
-    const filter = { id: service._id };
+    const filter = { _id: new ObjectId(id) };
 
     const updateDoc = {
       $set: {

@@ -84,7 +84,7 @@ export class ModifierServiceComponent implements OnInit {
           newService.image = this.file_query.name;
           console.log(newService.image);
           this.serviceTypeService
-            .UpdateService(newService)
+            .UpdateService(newService, this.id)
             .subscribe((response: any) => {
               console.log(response);
               this.serviceUpdated = true;
@@ -93,7 +93,7 @@ export class ModifierServiceComponent implements OnInit {
       } else {
         newService.image = this.initialImage;
         this.serviceTypeService
-          .UpdateService(newService)
+          .UpdateService(newService, this.id)
           .subscribe((response: any) => {
             console.log(response);
             this.serviceUpdated = true;

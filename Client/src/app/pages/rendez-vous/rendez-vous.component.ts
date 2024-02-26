@@ -109,6 +109,7 @@ export class RendezVousComponent implements OnInit {
         prix: this.serviceSelected.prix,
         durre: this.serviceSelected.durre,
         image: this.serviceSelected.image,
+        commission: this.serviceSelected.commission,
       };
     });
   }
@@ -156,6 +157,7 @@ export class RendezVousComponent implements OnInit {
       prix: this.serviceSelected.prix,
       durre: this.serviceSelected.durre,
       image: this.serviceSelected.image,
+      commission: this.serviceSelected.commission,
     };
   }
 
@@ -176,6 +178,23 @@ export class RendezVousComponent implements OnInit {
     let year = dateDebut.getFullYear();
     let hours = dateDebut.getHours();
     let minutes = dateDebut.getMinutes();
+
+    const formattedTime = newDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    this.newRendezVous.end = formatDate(
+      newDate.getTime().toString(),
+      "yyyy-MM-dd HH:mm",
+      "en-US"
+    );
+
+    return formatDate(
+      newDate.getTime().toString(),
+      "yyyy-MM-dd HH:mm",
+      "en-US"
+    );
 
     minutes = minutes + this.serviceSelected.durre;
     while(minutes > 60) {

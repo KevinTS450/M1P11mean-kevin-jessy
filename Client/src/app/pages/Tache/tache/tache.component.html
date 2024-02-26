@@ -66,12 +66,23 @@
 
   <br />
   <br />
-
+  <div class="text-center">
+    <button
+      disabled
+      *ngIf="tache_effectuer"
+      class="btn btn-sm btn-primary d-flex align-items-center"
+    >
+      Montant total de commission pour la journée : {{ totalCommission }} Ar
+    </button>
+  </div>
+  <br />
+  <br />
   <div class="tache-container">
     <ngx-loading
       [show]="loading"
       [config]="{ backdropBorderRadius: '8px' }"
     ></ngx-loading>
+
     <div *ngFor="let rdv of tache" class="card-wrapper">
       <div *ngIf="tache_en_cours" class="card" style="width: 18rem">
         <img
@@ -128,24 +139,18 @@
           <h5 class="card-title">{{ rdv.serviceAsked.nom }}</h5>
           <p class="card-text">prix service : {{ rdv.serviceAsked.prix }}</p>
           <p class="card-text">durree service : {{ rdv.serviceAsked.durre }}</p>
+          <p class="card-text">
+            Commisssion sur les prix : {{ rdv.serviceAsked.commission }} %
+          </p>
+          <p class="card-text">
+            somme de la commission : {{ commissionTache }} Ar
+          </p>
 
           <hr />
           <p class="card-text">rendez vous : {{ rdv.start }}</p>
           <hr />
           <p class="card-text">Client : {{ rdv.client.nomClient }}</p>
-          <button
-            (click)="
-              StartTask(
-                rdv.client.idClient,
-                rdv.employee.idEmployee,
-                rdv.serviceAsked.idService
-              )
-            "
-            *ngIf="rdv.onGoing === false && rdv.isDone === false"
-            class="btn btn-sm btn-info"
-          >
-            Commencer
-          </button>
+
           <button *ngIf="rdv.onGoing === true" class="btn btn-sm btn-warning">
             en cours
           </button>
