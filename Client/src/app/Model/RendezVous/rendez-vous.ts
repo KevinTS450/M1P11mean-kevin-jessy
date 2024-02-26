@@ -22,4 +22,5 @@ export class RendezVous {
   isCancel: boolean;
   onGoing: boolean;
   status: string;
+  elapsedTime?: string; // Add elapsedTime property
 }

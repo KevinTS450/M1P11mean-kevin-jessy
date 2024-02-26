@@ -172,13 +172,14 @@ async function getRendezVousByRoleAndIdConfirmed(req, res, next) {
   try {
     console.log("Decoded RendezVous ID in Controller:");
 
-    const { role, id, name } = req.query;
+    const { role, id, name, stateFor } = req.query;
     console.log(id);
     const rendezVous =
       await RendezVousService.getRendezVousByRoleAndIdAndNom_userConfirmed(
         role,
         id,
-        name
+        name,
+        stateFor
       );
     console.log("RendezVous Details:", rendezVous);
 
@@ -195,12 +196,12 @@ async function getRendezVousByRoleAndIdConfirmed(req, res, next) {
 
 async function ChangeStateRdvController(req, res, next) {
   try {
-    const { clientId, idEmp, stateFor } = req.query;
+    const { clientId, idEmp, idService, stateFor } = req.query;
 
     const update = await RendezVousService.ChangeStateRendezVous(
       idEmp,
       clientId,
-
+      idService,
       stateFor
     );
 
@@ -211,9 +212,25 @@ async function ChangeStateRdvController(req, res, next) {
         event: "ChangeState",
         data: "state changed",
       });
+
       return res.status(200).json({ message: "rendez vous confirmer" });
     } else {
       return res.status(200).json({ message: "internal server error" });
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+async function countRDVfinishController(req, res, next) {
+  try {
+    const { idEmp, stateFor } = req.query;
+    const count = await RendezVousService.countRdvFinshed(idEmp, stateFor);
+    if (res.status(200)) {
+      return res.json({ count: count });
+    } else {
+      return res.json({ message: "internal server error" });
     }
   } catch (error) {
     console.error(error);
@@ -230,4 +247,5 @@ module.exports = {
   checkRendezVousAtIntervallOfTimeController,
   ChangeStateRdvController,
   getRendezVousByRoleAndIdConfirmed,
+  countRDVfinishController,
 };

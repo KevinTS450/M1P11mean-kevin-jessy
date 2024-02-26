@@ -25,13 +25,17 @@ export class RendezVousService {
         `/${user.name}`
     );
   }
-  public findByUserConfirmed(user: User): Observable<RendezVous[]> {
+  public findByUserConfirmed(
+    user: User,
+    stateFor: string
+  ): Observable<RendezVous[]> {
     return this.httpClient.get<RendezVous[]>(
       `${this.projetUrl}` +
         `getRdvConfirmed` +
         `?role=${user.role}` +
         `&id=${user._id}` +
-        `&name=${user.name}`
+        `&name=${user.name}` +
+        `&stateFor=${stateFor}`
     );
   }
 
@@ -39,18 +43,28 @@ export class RendezVousService {
     return this.httpClient.post(`${this.projetUrl}` + `create`, rendezVous);
   }
 
-  public update(id:string, rendezVous:RendezVous): Observable<any>{
-    return this.httpClient.put(`${this.projetUrl}`+`update`+`/${id}`, rendezVous);
+  public update(id: string, rendezVous: RendezVous): Observable<any> {
+    return this.httpClient.put(
+      `${this.projetUrl}` + `update` + `/${id}`,
+      rendezVous
+    );
   }
-  
+
   public ChangeStateRdv(
     clientId: string,
     idEmp: string,
+    idService: string,
     stateFor: string
   ): Observable<RendezVous> {
     return this.httpClient.put<RendezVous>(
-      `${this.projetUrl}changeState?clientId=${clientId}&idEmp=${idEmp}&stateFor=${stateFor}`,
+      `${this.projetUrl}changeState?clientId=${clientId}&idEmp=${idEmp}&idService=${idService}&stateFor=${stateFor}`,
       {}
+    );
+  }
+
+  public GetCountRdv(idEmp: string, stateFor: string): Observable<number> {
+    return this.httpClient.get<number>(
+      `${this.projetUrl}countRdvFinished?idEmp=${idEmp}&stateFor=${stateFor}`
     );
   }
 }
