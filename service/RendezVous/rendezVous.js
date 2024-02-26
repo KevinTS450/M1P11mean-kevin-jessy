@@ -132,7 +132,7 @@ async function deleteRendezVousById(idRendezVous) {
   }
 }
 
-async function ChangeStateRendezVous(idEmp, idClient, stateFor) {
+async function ChangeStateRendezVous(idEmp, idClient, idService, stateFor) {
   try {
     const collection = database.client.db("MEAN").collection("rendezVous");
 
@@ -147,6 +147,7 @@ async function ChangeStateRendezVous(idEmp, idClient, stateFor) {
         {
           "employee.idEmployee": idEmp,
           "client.idClient": idClient,
+          "serviceAsked.idService": idService,
         },
         update_confirm
       );
@@ -161,6 +162,7 @@ async function ChangeStateRendezVous(idEmp, idClient, stateFor) {
         {
           "employee.idEmployee": idEmp,
           "client.idClient": idClient,
+          "serviceAsked.idService": idService,
         },
         update_cancel
       );
@@ -175,6 +177,24 @@ async function ChangeStateRendezVous(idEmp, idClient, stateFor) {
         {
           "employee.idEmployee": idEmp,
           "client.idClient": idClient,
+          "serviceAsked.idService": idService,
+        },
+        update_start
+      );
+      return update_query;
+    } else if (stateFor === "end") {
+      const update_start = {
+        $set: {
+          isDone: true,
+          onGoing: false,
+          status: "terminer",
+        },
+      };
+      const update_query = await collection.updateOne(
+        {
+          "employee.idEmployee": idEmp,
+          "client.idClient": idClient,
+          "serviceAsked.idService": idService,
         },
         update_start
       );
@@ -188,6 +208,7 @@ async function ChangeStateRendezVous(idEmp, idClient, stateFor) {
 async function getRendezVousByRoleAndIdAndNom_user(role, id, nameUser) {
   try {
     if (role == "client") {
+      console.log("ato am client");
       const collection = database.client.db("MEAN").collection("rendezVous");
       console.log("Role user :", role, " and Id :", id);
 
@@ -217,10 +238,12 @@ async function getRendezVousByRoleAndIdAndNom_user(role, id, nameUser) {
     throw error;
   }
 }
+
 async function getRendezVousByRoleAndIdAndNom_userConfirmed(
   role,
   id,
-  nameUser
+  nameUser,
+  stateFor
 ) {
   try {
     if (role == "client") {
@@ -230,21 +253,35 @@ async function getRendezVousByRoleAndIdAndNom_userConfirmed(
       const users = await collection
         .find({
           client: { idClient: id, nomClient: nameUser },
-          isConfirmed: true,
+          status: "confirmer",
         })
         .toArray();
 
       console.log(users);
 
       return users;
-    } else if (role == "employe") {
+    } else if (role == "employe" && stateFor === "terminer") {
       const collection = database.client.db("MEAN").collection("rendezVous");
       console.log("Role user :", role, " and Id :", id);
 
       const users = await collection
         .find({
           employee: { idEmployee: id, nomEmployee: nameUser },
-          isConfirmed: true,
+          status: "terminer",
+          isDone: true,
+        })
+        .toArray();
+
+      return users;
+    } else if (role == "employe" && stateFor === "confirmer") {
+      const collection = database.client.db("MEAN").collection("rendezVous");
+      console.log("Role user :", role, " and Id :", id);
+
+      const users = await collection
+        .find({
+          employee: { idEmployee: id, nomEmployee: nameUser },
+          status: "confirmer",
+          isDone: false,
         })
         .toArray();
 
@@ -253,6 +290,35 @@ async function getRendezVousByRoleAndIdAndNom_userConfirmed(
   } catch (error) {
     console.error("Error during database query:", error);
     throw error;
+  }
+}
+
+async function countRdvFinshed(idEmp, stateFor) {
+  try {
+    if (stateFor === "finish") {
+      const collection = database.client.db("MEAN").collection("rendezVous");
+      const count = await collection.countDocuments({
+        "employee.idEmployee": idEmp,
+        isDone: true,
+        status: "terminer",
+      });
+      if (count) {
+        return count;
+      }
+    } else if (stateFor === "en_cours") {
+      const collection = database.client.db("MEAN").collection("rendezVous");
+      const count = await collection.countDocuments({
+        "employee.idEmployee": idEmp,
+        onGoing: true,
+        status: "confirmer",
+        isDone: false,
+      });
+      if (count) {
+        return count;
+      }
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -266,4 +332,5 @@ module.exports = {
   checkRendezVousInInterval,
   ChangeStateRendezVous,
   getRendezVousByRoleAndIdAndNom_userConfirmed,
+  countRdvFinshed,
 };

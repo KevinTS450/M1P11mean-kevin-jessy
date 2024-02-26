@@ -14,6 +14,7 @@ export class RendezVous {
     prix: number;
     durre: number;
     image: string;
+    commission: number;
   };
   start: string;
   end: string;
@@ -22,4 +23,5 @@ export class RendezVous {
   isCancel: boolean;
   onGoing: boolean;
   status: string;
+  elapsedTime?: string; // Add elapsedTime property
 }

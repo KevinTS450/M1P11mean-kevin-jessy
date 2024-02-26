@@ -2,7 +2,7 @@ class rendezVous {
   constructor(
     { idEmployee, nomEmployee },
     { idClient, nomClient },
-    { idService, nom, prix, durre, image },
+    { idService, nom, prix, durre, image, commission },
     start,
     end,
     isDone,
@@ -13,7 +13,7 @@ class rendezVous {
   ) {
     this.employee = { idEmployee, nomEmployee };
     this.client = { idClient, nomClient };
-    this.serviceAsked = { idService, nom, prix, durre, image };
+    this.serviceAsked = { idService, nom, prix, durre, image, commission };
     this.start = start;
     this.end = end;
     this.isDone = isDone;

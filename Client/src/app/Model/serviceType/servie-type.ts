@@ -1,5 +1,5 @@
 export class ServieType {
-  _id:string;
+  _id: string;
   nom: string;
   durre: number;
   prix: number;

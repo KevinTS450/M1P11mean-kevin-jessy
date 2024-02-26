@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { response } from "express";
 import { User } from "src/app/Model/User/user";
 import { UserService } from "src/app/Service/UserService/user.service";
 
@@ -9,6 +10,9 @@ import { UserService } from "src/app/Service/UserService/user.service";
 })
 export class PersonnelComponent implements OnInit {
   constructor(private userService: UserService) {}
+  
+  public focus;
+  searchValue = ''
   UserQuery: User = new User();
   ListUsers: User[];
   ngOnInit(): void {
@@ -34,6 +38,14 @@ export class PersonnelComponent implements OnInit {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  public searchUser() {
+    if(this.searchValue = '') {
+      this.ListUser();
+    } else {
+      this.ListUsers = this.ListUsers.filter(response => response.name.startsWith(this.searchValue));
     }
   }
 }
