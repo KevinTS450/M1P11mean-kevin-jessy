@@ -27,19 +27,8 @@
   <br />
   <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="#">Tache a effectuer</a>
-    <div class="container">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbar-default"
-        aria-controls="navbar-default"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
 
+    <div class="container">
       <div class="collapse navbar-collapse" id="navbar-default">
         <div class="navbar-collapse-header">
           <div class="row">
@@ -48,38 +37,43 @@
                 <img src="assets/img/brand/blue.png" />
               </a>
             </div>
-            <div class="col-6 collapse-close">
-              <button
-                type="button"
-                class="navbar-toggler"
-                data-toggle="collapse"
-                data-target="#navbar-default"
-                aria-controls="navbar-default"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span></span>
-                <span></span>
-              </button>
-            </div>
+            <div class="col-6 collapse-close"></div>
           </div>
         </div>
         <ul class="navbar-nav ml-lg-auto">
-          <li class="nav-item"></li>
+          <li class="nav-item">
+            <button
+              *ngIf="tache_en_cours"
+              (click)="changeStateTaskEffectuer()"
+              class="btn btn-sm btn-primary"
+            >
+              Tache effectuer
+              <span class="badge badge-white">{{ count_task_finished }}</span>
+            </button>
+            <button
+              *ngIf="tache_effectuer"
+              (click)="changeStateTaskEnCours()"
+              class="btn btn-sm btn-primary"
+            >
+              Tache en cours
+              <span class="badge badge-white">{{ count_task_finished }}</span>
+            </button>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
+
   <br />
   <br />
 
-  <div class="service-container">
+  <div class="tache-container">
     <ngx-loading
       [show]="loading"
       [config]="{ backdropBorderRadius: '8px' }"
     ></ngx-loading>
     <div *ngFor="let rdv of tache" class="card-wrapper">
-      <div class="card" style="width: 18rem">
+      <div *ngIf="tache_en_cours" class="card" style="width: 18rem">
         <img
           class="card-img-top"
           src="assets/uploads/{{ rdv.serviceAsked.image }}"
@@ -91,17 +85,75 @@
         <div class="card-body">
           <h5 class="card-title">{{ rdv.serviceAsked.nom }}</h5>
           <p class="card-text">prix service : {{ rdv.serviceAsked.prix }}</p>
+          <p class="card-text">durree service : {{ rdv.serviceAsked.durre }}</p>
 
           <hr />
           <p class="card-text">rendez vous : {{ rdv.start }}</p>
           <hr />
           <p class="card-text">Client : {{ rdv.client.nomClient }}</p>
           <button
-            (click)="StartTask(rdv.client.idClient, rdv.employee.idEmployee)"
-            *ngIf="rdv.onGoing === false"
+            (click)="
+              StartTask(
+                rdv.client.idClient,
+                rdv.employee.idEmployee,
+                rdv.serviceAsked.idService
+              )
+            "
+            *ngIf="rdv.onGoing === false && rdv.isDone === false"
             class="btn btn-sm btn-info"
           >
             Commencer
+          </button>
+          <button *ngIf="rdv.onGoing === true" class="btn btn-sm btn-warning">
+            en cours
+          </button>
+          <button
+            *ngIf="rdv.onGoing === false && rdv.isDone === true"
+            class="btn btn-sm btn-success"
+          >
+            Terminer
+          </button>
+        </div>
+      </div>
+      <div *ngIf="tache_effectuer" class="card" style="width: 18rem">
+        <img
+          class="card-img-top"
+          src="assets/uploads/{{ rdv.serviceAsked.image }}"
+          width="200"
+          height="200"
+          alt="Card image cap"
+        />
+
+        <div class="card-body">
+          <h5 class="card-title">{{ rdv.serviceAsked.nom }}</h5>
+          <p class="card-text">prix service : {{ rdv.serviceAsked.prix }}</p>
+          <p class="card-text">durree service : {{ rdv.serviceAsked.durre }}</p>
+
+          <hr />
+          <p class="card-text">rendez vous : {{ rdv.start }}</p>
+          <hr />
+          <p class="card-text">Client : {{ rdv.client.nomClient }}</p>
+          <button
+            (click)="
+              StartTask(
+                rdv.client.idClient,
+                rdv.employee.idEmployee,
+                rdv.serviceAsked.idService
+              )
+            "
+            *ngIf="rdv.onGoing === false && rdv.isDone === false"
+            class="btn btn-sm btn-info"
+          >
+            Commencer
+          </button>
+          <button *ngIf="rdv.onGoing === true" class="btn btn-sm btn-warning">
+            en cours
+          </button>
+          <button
+            *ngIf="rdv.onGoing === false && rdv.isDone === true"
+            class="btn btn-sm btn-success"
+          >
+            Terminer
           </button>
         </div>
       </div>
