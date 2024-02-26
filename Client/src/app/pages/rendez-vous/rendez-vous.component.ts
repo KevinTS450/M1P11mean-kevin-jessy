@@ -108,7 +108,7 @@ export class RendezVousComponent implements OnInit {
         prix: this.serviceSelected.prix,
         durre: this.serviceSelected.durre,
         image: this.serviceSelected.image,
-        commission: this.serviceSelected.commission,
+        commission: this.serviceSelected.commission
       };
     });
   }
@@ -156,7 +156,7 @@ export class RendezVousComponent implements OnInit {
       prix: this.serviceSelected.prix,
       durre: this.serviceSelected.durre,
       image: this.serviceSelected.image,
-      commission: this.serviceSelected.commission,
+      commission: this.serviceSelected.commission
     };
     console.log(this.newRendezVous)
   }
