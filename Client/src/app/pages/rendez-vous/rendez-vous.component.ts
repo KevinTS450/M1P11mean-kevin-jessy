@@ -8,9 +8,11 @@ import { ServieType } from 'src/app/Model/serviceType/servie-type';
 import { MobileMoneyService } from 'src/app/Service/MobileMoneyService/mobile-money.service';
 import { ServiceTypeService } from 'src/app/Service/ServiceTypeService/service-type.service';
 import { UserService } from 'src/app/Service/UserService/user.service';
+import { NotificationService } from 'src/app/Service/notificationService/notification.service';
 import { PaiementService } from 'src/app/Service/paiement/paiement.service';
 import { RendezVousService } from 'src/app/Service/rendezVous/rendez-vous.service';
 import { SocketService } from 'src/app/socket/socket.service';
+import { Notification } from 'src/app/Model/Notification/notification';
 
 @Component({
   selector: "app-rendez-vous",
@@ -20,10 +22,13 @@ import { SocketService } from 'src/app/socket/socket.service';
 export class RendezVousComponent implements OnInit {
   listeRendezVous: RendezVous[];
   newRendezVous: RendezVous = new RendezVous();
+  pagination:number = 1;
+  totalLength:any;
 
   UserQuery: User = new User();
   listEmploye:User[];
   employeSelected:User = new User();
+  idEmployeToPay:string;
   isEmployeeFreeBool:boolean = true;
   factureValue = 0;
   mobileMoneyToPay = new MobileMoney();
@@ -39,7 +44,8 @@ export class RendezVousComponent implements OnInit {
   rendezVousToPay: RendezVous;
 
   constructor(private rendezVousService:RendezVousService, private userService:UserService, private serviceTypeService:ServiceTypeService,
-    private mobileMoneyService:MobileMoneyService, private paiementService:PaiementService,private socketService:SocketService) { }
+    private mobileMoneyService:MobileMoneyService, private paiementService:PaiementService,private socketService:SocketService,
+    private notificationService:NotificationService) { }
 
   ngOnInit(): void {
     this.userService.GetUserByToken().subscribe((response: any) => {
@@ -208,6 +214,7 @@ export class RendezVousComponent implements OnInit {
       this.rendezVousToPay = rendezVous;
       this.factureValue = rendezVous.serviceAsked.prix;
       this.idRendezVousToPay = rendezVous._id;
+      this.idEmployeToPay = rendezVous.employee.idEmployee;
     }
     if (popover.isOpen()) {
       popover.close();
@@ -244,10 +251,36 @@ export class RendezVousComponent implements OnInit {
         paiement.temp = new Date().toLocaleString();
 
         this.paiementService.createPaiement(paiement).subscribe((response:any) => {
-          console.log(this.myMobileMoney);
           this.myMobileMoney.monnaie = this.myMobileMoney.monnaie - this.factureValue;
-          console.log(this.myMobileMoney);
           this.myMobileMoney.user = this.UserQuery;
+
+          let notification:Notification = new Notification();
+          notification.idDestinataire = manager[0]._id;
+          notification.isRead = false;
+          notification.notification = this.UserQuery.name + " a effectué son paiement pour son rendez vous id = " + this.idRendezVousToPay;
+          notification.temps = new Date().toLocaleString();
+          this.notificationService.createNotification(notification).subscribe((response:any) => {
+
+          });
+
+          let notificationRappelEmp:Notification = new Notification();
+          notificationRappelEmp.idDestinataire = this.rendezVousToPay.employee.idEmployee;
+          notificationRappelEmp.isRead = false;
+          notificationRappelEmp.notification = "Vous avez un rendezVous dans 2 heures (à " + this.rendezVousToPay.start + ").";
+          notificationRappelEmp.temps = this.getDateTimeTwoHoursBefore(new Date(this.rendezVousToPay.start)).toLocaleString();
+          this.notificationService.createNotification(notificationRappelEmp).subscribe((response:any) => {
+
+          });
+
+          let notificationRappelCli:Notification = new Notification();
+          notificationRappelCli.idDestinataire = this.rendezVousToPay.client.idClient;
+          notificationRappelCli.isRead = false;
+          notificationRappelCli.notification = "Vous avez un rendezVous dans 2 heures (à " + this.rendezVousToPay.start + ").";
+          notificationRappelCli.temps = this.getDateTimeTwoHoursBefore(new Date(this.rendezVousToPay.start)).toLocaleString();
+          this.notificationService.createNotification(notificationRappelCli).subscribe((response:any) => {
+
+          });
+
           this.mobileMoneyService.updateMobileMoney(this.myMobileMoney).subscribe((response:any) => {
             console.log("userMoney after =>");
             console.log(response);
@@ -272,5 +305,23 @@ export class RendezVousComponent implements OnInit {
         });
       }
     });
+  }
+
+  getDateTimeTwoHoursBefore(datetime: Date): Date {
+    const newDate = new Date(datetime.getTime());
+  
+    const hours = newDate.getHours();
+    const minutes = newDate.getMinutes();
+    const seconds = newDate.getSeconds();
+  
+    // newDate.setHours(hours - 2);
+  
+    // if (newDate.getHours() < hours) {
+    //   newDate.setDate(newDate.getDate() - 1); 
+    // }
+
+    datetime.setHours(hours - 2);
+  
+    return datetime;
   }
 }
