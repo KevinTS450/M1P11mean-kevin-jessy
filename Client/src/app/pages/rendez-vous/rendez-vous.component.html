@@ -162,7 +162,15 @@
                                             Payer
                                           </button>                                   
                                           <button (click)="setRendezVousToAnnuler(rdv)" class="btn btn-sm btn-danger">Annuler</button>
-                                        </div>                                       
+                                        </div>  
+                                        
+                                        <button 
+                                          *ngIf="rdv.status == 'terminer'" 
+                                          class="btn btn-sm btn-outline-success" 
+                                          disabled
+                                        >
+                                          RDV terminé
+                                        </button>                                     
                                         <div *ngIf="rdv.status == 'confirmer'">
                                           <button class="btn btn-sm btn-primary" disabled>RDV confirmé</button>
                                         </div>
