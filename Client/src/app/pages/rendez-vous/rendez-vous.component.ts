@@ -2,7 +2,7 @@
 import { formatDate } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { MobileMoney } from "src/app/Model/MobileMoney/mobile-money";
-import { RendezVous } from "src/app/Model/RendezVous/rendez-vous";
+import { RendezVous } from "src/app/Model/rendezVous/rendez-vous";
 import { User } from "src/app/Model/User/user";
 import { Paiement } from "src/app/Model/paiement/paiement";
 import { ServieType } from "src/app/Model/serviceType/servie-type";
@@ -167,7 +167,7 @@ export class RendezVousComponent implements OnInit {
     this.isEmployeeFree();
   }
 
-  addEndTimeRDV(start: string): string {
+  addEndTimeRDV(start: string) {
     this.isEmployeeFree();
     const dateDebut: Date = new Date(this.newRendezVous.start);
 
@@ -199,12 +199,8 @@ export class RendezVousComponent implements OnInit {
       hour: "2-digit",
       minute: "2-digit",
     });
+
     this.newRendezVous.end = formatDate(
-      newDate.getTime().toString(),
-      "yyyy-MM-dd HH:mm",
-      "en-US"
-    );
-    return formatDate(
       newDate.getTime().toString(),
       "yyyy-MM-dd HH:mm",
       "en-US"
