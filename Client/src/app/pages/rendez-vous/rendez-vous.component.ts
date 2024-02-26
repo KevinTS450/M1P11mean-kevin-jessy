@@ -158,6 +158,7 @@ export class RendezVousComponent implements OnInit {
       image: this.serviceSelected.image,
       commission: this.serviceSelected.commission,
     };
+    console.log(this.newRendezVous)
   }
 
   setEmployeSelected() {
@@ -201,7 +202,6 @@ export class RendezVousComponent implements OnInit {
         idClient: this.UserQuery._id,
         nomClient: this.UserQuery.name,
       };
-      this.newRendezVous.start = new Date().toLocaleString();
       this.newRendezVous.isConfirmed = false;
       this.newRendezVous.onGoing = false;
       this.newRendezVous.isDone = false;
@@ -232,6 +232,7 @@ export class RendezVousComponent implements OnInit {
   toggleWithGreeting(popover, rendezVous?: RendezVous) {
     if (rendezVous) {
       this.rendezVousToPay = rendezVous;
+      console.log(this.rendezVousToPay);
       this.factureValue = rendezVous.serviceAsked.prix;
       this.idRendezVousToPay = rendezVous._id;
       this.idEmployeToPay = rendezVous.employee.idEmployee;
