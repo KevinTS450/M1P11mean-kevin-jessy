@@ -103,6 +103,7 @@ export class RendezVousComponent implements OnInit {
         prix: this.serviceSelected.prix,
         durre: this.serviceSelected.durre,
         image: this.serviceSelected.image,
+        commission: this.serviceSelected.commission,
       };
     });
   }
@@ -150,6 +151,7 @@ export class RendezVousComponent implements OnInit {
       prix: this.serviceSelected.prix,
       durre: this.serviceSelected.durre,
       image: this.serviceSelected.image,
+      commission: this.serviceSelected.commission,
     };
   }
 
@@ -193,11 +195,13 @@ export class RendezVousComponent implements OnInit {
       hour: "2-digit",
       minute: "2-digit",
     });
+
     this.newRendezVous.end = formatDate(
       newDate.getTime().toString(),
       "yyyy-MM-dd HH:mm",
       "en-US"
     );
+
     return formatDate(
       newDate.getTime().toString(),
       "yyyy-MM-dd HH:mm",

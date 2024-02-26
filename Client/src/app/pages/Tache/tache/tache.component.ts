@@ -28,6 +28,8 @@ export class TacheComponent implements OnInit {
   id_user: string;
   tache: RendezVous[];
   count_task_finished: number;
+  totalCommission = 0;
+  commissionTache = 0;
 
   tache_en_cours: boolean = true;
   tache_effectuer: boolean = false;
@@ -89,6 +91,14 @@ export class TacheComponent implements OnInit {
           this.tache = response.rendezVous;
 
           this.tache.forEach((rdv) => {
+            if (stateFor === "terminer") {
+              const totalPriceWithCommision =
+                rdv.serviceAsked.prix * rdv.serviceAsked.commission;
+              console.warn(totalPriceWithCommision);
+              this.commissionTache = totalPriceWithCommision;
+              this.totalCommission += this.commissionTache;
+            }
+
             if (rdv.onGoing) {
               this.startTimer(
                 rdv._id,
@@ -121,13 +131,22 @@ export class TacheComponent implements OnInit {
     const minutes = parseInt(minutesStr, 10);
     const durationInMinutes = hours * 60 + minutes;
     const durationInMillis = durationInMinutes * 60000;
-    let elapsedTime = 0;
-    this.timers[rdvId] = setInterval(() => {
-      elapsedTime += 1000;
-      if (elapsedTime >= durationInMillis && done === false) {
-        clearInterval(this.timers[rdvId]);
+    const storedStartTime = localStorage.getItem(`timer_${rdvId}_startTime`);
+    const startTime = storedStartTime
+      ? parseInt(storedStartTime, 10)
+      : Date.now();
+
+    const timerId = setInterval(() => {
+      const currentTime = Date.now();
+      const elapsedTime = currentTime - startTime;
+      localStorage.setItem(`timer_${rdvId}_startTime`, startTime.toString());
+
+      if (elapsedTime >= durationInMillis && !done) {
+        clearInterval(timerId);
+        localStorage.removeItem(`timer_${rdvId}_startTime`);
         this.EndTask(clientId, idEmp, id_service);
       }
+
       const remainingTime = durationInMillis - elapsedTime;
       const remainingHours = Math.floor(
         (remainingTime / (1000 * 60 * 60)) % 24
@@ -199,6 +218,13 @@ export class TacheComponent implements OnInit {
       const stateForCount = "finish";
       this.GetRdvConfirmerd(stateFor);
       this.GetCountRdvFinished(this.UserQuery._id, stateForCount);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public getSumOfCommissionForTask() {
+    try {
     } catch (error) {
       console.error(error);
     }

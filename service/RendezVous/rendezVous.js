@@ -208,6 +208,7 @@ async function ChangeStateRendezVous(idEmp, idClient, idService, stateFor) {
 async function getRendezVousByRoleAndIdAndNom_user(role, id, nameUser) {
   try {
     if (role == "client") {
+      console.log("ato am client");
       const collection = database.client.db("MEAN").collection("rendezVous");
       console.log("Role user :", role, " and Id :", id);
 

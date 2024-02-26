@@ -53,8 +53,9 @@ async function GetServiceByIdController(req, res, next) {
 async function UpdateServiceController(req, res, next) {
   try {
     const { nom, prix, durre, commission, image } = req.body;
+    const { id } = req.query;
     const service = new Service(nom, prix, durre, commission, image);
-    await ServiceTypeService.updateService(service);
+    await ServiceTypeService.updateService(service, id);
 
     res.status(200).json({ message: " service updated" });
   } catch (error) {
