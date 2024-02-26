@@ -167,59 +167,40 @@ export class RendezVousComponent implements OnInit {
     this.isEmployeeFree();
   }
 
-  addEndTimeRDV(start: string) {
+  addEndTimeRDV() {
     this.isEmployeeFree();
     const dateDebut: Date = new Date(this.newRendezVous.start);
 
-    const date = dateDebut.getDate();
-    const month = dateDebut.getMonth() + 1;
-    const year = dateDebut.getFullYear();
-    const hours = dateDebut.getHours();
-    const minutes = dateDebut.getMinutes();
+    let date = dateDebut.getDate();
+    let month = dateDebut.getMonth() + 1;
+    let year = dateDebut.getFullYear();
+    let hours = dateDebut.getHours();
+    let minutes = dateDebut.getMinutes();
 
-    const timeToAddInMinutes = this.serviceSelected.durre;
-    const newMinutes = (minutes + timeToAddInMinutes) % 60;
-    const newHours = Math.floor((minutes + timeToAddInMinutes) / 60);
+    minutes = minutes + this.serviceSelected.durre;
+    while(minutes > 60) {
+      minutes = minutes - 60;
+      hours = hours + 1;
+    }
+    while(hours > 24) {
+      hours = hours - 24;
+      date = date + 1;
+    }
 
-    const newDate = new Date(
-      year,
-      month - 1,
-      date,
-      hours + newHours,
-      newMinutes
-    );
+    const end = new Date(year,month,date,hours,minutes);
 
-    const formattedDate = newDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-
-    const formattedTime = newDate.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    this.newRendezVous.end = formatDate(
-      newDate.getTime().toString(),
-      "yyyy-MM-dd HH:mm",
-      "en-US"
-    );
+    this.newRendezVous.end = end.toLocaleString();
+    console.log(this.newRendezVous);
   }
 
   createRDV() {
     if (this.newRendezVous.start) {
       this.newRendezVous.status = "en attente";
-      this.newRendezVous.end = this.newRendezVous.start;
       this.newRendezVous.client = {
         idClient: this.UserQuery._id,
         nomClient: this.UserQuery.name,
       };
-      this.newRendezVous.start = formatDate(
-        new Date(this.newRendezVous.start).toString(),
-        "yyyy-MM-dd HH:mm",
-        "en-US"
-      );
+      this.newRendezVous.start = new Date().toLocaleString();
       this.newRendezVous.isConfirmed = false;
       this.newRendezVous.onGoing = false;
       this.newRendezVous.isDone = false;
