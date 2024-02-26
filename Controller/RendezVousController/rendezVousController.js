@@ -118,6 +118,8 @@ async function updateRendezVous(req, res, next) {
         idService: serviceAsked.idService,
         nom: serviceAsked.nom,
         prix: serviceAsked.prix,
+        durre: serviceAsked.durre,
+        image: serviceAsked.image,
       },
       start,
       end,
