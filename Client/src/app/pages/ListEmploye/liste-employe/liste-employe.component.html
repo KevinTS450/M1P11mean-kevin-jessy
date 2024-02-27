@@ -63,7 +63,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let users of employe">
+              <tr
+                *ngFor="
+                  let users of employe
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: pagination,
+                          totalItems: totalLength
+                        }
+                "
+              >
                 <th scope="row">
                   <div class="media align-items-center">
                     <a href="#" class="avatar rounded-circle mr-3">
@@ -122,6 +132,12 @@
           >
             Employe retirer au preference.
           </div>
+          <div class="card-footer py-4">
+            <div class="pagination align-items-end">
+              <pagination-controls (pageChange)="pagination = $event">
+              </pagination-controls>
+            </div>
+          </div>
         </div>
       </div>
       <div *ngIf="list_preference" class="card-body">
@@ -137,7 +153,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let users of List_preference_query">
+              <tr
+                *ngFor="
+                  let users of List_preference_query
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: pagination,
+                          totalItems: totalLength
+                        }
+                "
+              >
                 <th scope="row">
                   <div class="media align-items-center">
                     <a href="#" class="avatar rounded-circle mr-3">
@@ -174,6 +200,13 @@
             role="alert"
           >
             Employe retirer au preference.
+          </div>
+          <div class="card-footer py-4">
+            <div class="pagination align-items-end">
+              <pagination-controls
+                (pageChange)="pagination = $event"
+              ></pagination-controls>
+            </div>
           </div>
         </div>
       </div>

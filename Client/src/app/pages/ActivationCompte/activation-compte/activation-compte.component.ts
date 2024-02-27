@@ -27,6 +27,7 @@ export class ActivationCompteComponent implements OnInit {
   code_query: number;
   error_code: boolean = false;
   success_code: boolean = false;
+  loading: boolean = false;
 
   ngOnInit(): void {
     this.email = this.activatedRoute.snapshot.params["email"];
@@ -50,16 +51,30 @@ export class ActivationCompteComponent implements OnInit {
   }
 
   Listencode(Code_form: FormGroup) {
-    if (this.code_query === Code_form.value.code) {
-      this.AuthService.ActivateAccount(this.email).subscribe((response) => {
-        this.success_code = true;
-        this.error_code = false;
-      });
-    } else {
-      this.success_code = false;
+    this.loading = true;
 
-      this.error_code = true;
-    }
+    setTimeout(() => {
+      this.loading = true;
+      const loadingTimeout = setTimeout(() => {
+        this.loading = false;
+      }, 3000);
+      if (this.code_query === Code_form.value.code) {
+        this.AuthService.ActivateAccount(this.email).subscribe((response) => {
+          clearTimeout(loadingTimeout);
+          this.loading = false;
+          this.success_code = true;
+
+          this.error_code = false;
+        });
+      } else {
+        this.success_code = false;
+
+        this.error_code = true;
+        setTimeout(() => {
+          this.error_code = false;
+        }, 3000);
+      }
+    }, 3000);
   }
   ToLogin() {
     return this.router.navigate(["login"]);

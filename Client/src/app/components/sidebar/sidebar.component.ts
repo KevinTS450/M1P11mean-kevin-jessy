@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { User } from "src/app/Model/User/user";
+import { NotificationService } from "src/app/Service/notificationService/notification.service";
 import { UserService } from "src/app/Service/UserService/user.service";
+import { SocketService } from "src/app/socket/socket.service";
 
 declare interface RouteInfo {
   path: string;
@@ -12,12 +14,6 @@ declare interface RouteInfo {
 }
 
 export const ROUTES: RouteInfo[] = [
-  {
-    path: "/dashboard",
-    title: "Dashboard",
-    icon: "ni-tv-2 text-primary",
-    class: "",
-  },
   // {
   //   path: "/user-profile",
   //   title: "User profile",
@@ -80,6 +76,13 @@ export const ROUTES: RouteInfo[] = [
     hidden: userProfileEmp,
   },
   {
+    path: "/paiements",
+    title: "Paiement",
+    icon: "ni-money-coins text-green",
+    class: "",
+    hidden: userProfileManger,
+  },
+  {
     path: "/Listemploye",
     title: "Employe",
     icon: "ni-badge text-green",
@@ -98,6 +101,12 @@ export const ROUTES: RouteInfo[] = [
     icon: "ni-money-coins text-blue",
     class: "",
   },
+  {
+    path: "/notification",
+    title: "Notification",
+    icon: "ni-bell-55 text-blue",
+    class: "",
+  },
 ];
 
 @Component({
@@ -109,14 +118,27 @@ export class SidebarComponent implements OnInit {
   public menuItems: any[];
   public isCollapsed = true;
   public UserProfile: User = new User();
-
-  constructor(private router: Router, private user: UserService) {}
+  public countNotif: number;
+  constructor(
+    private router: Router,
+    private user: UserService,
+    private notificationService: NotificationService,
+    private socketService: SocketService
+  ) {}
 
   ngOnInit() {
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
     });
     this.getUser();
+    this.AutoRefresh();
+  }
+  getNotificationCount(destinataire: string) {
+    this.notificationService
+      .GetCountNotif(destinataire)
+      .subscribe((response: any) => {
+        this.countNotif = response.count;
+      });
   }
 
   public getUser() {
@@ -125,6 +147,28 @@ export class SidebarComponent implements OnInit {
         this.UserProfile = response.user;
         // console.log(this.UserProfile);
         this.updateMenuItems();
+        this.getNotificationCount(response.user._id);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public AutoRefresh() {
+    try {
+      this.refreshNotif();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public refreshNotif() {
+    try {
+      this.socketService.on("countNotif", (data) => {
+        console.log("Web socket User updated event received:", data);
+        console.log(data);
+        this.getUser();
+        this.countNotif = data.count;
       });
     } catch (error) {
       console.error(error);

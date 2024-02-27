@@ -92,11 +92,15 @@ export class TacheComponent implements OnInit {
 
           this.tache.forEach((rdv) => {
             if (stateFor === "terminer") {
-              const totalPriceWithCommision =
-                rdv.serviceAsked.prix * rdv.serviceAsked.commission;
-              console.warn(totalPriceWithCommision);
-              this.commissionTache = totalPriceWithCommision;
-              this.totalCommission += this.commissionTache;
+              if (rdv.serviceAsked.commission !== 0) {
+                const totalPriceWithCommission =
+                  rdv.serviceAsked.prix / rdv.serviceAsked.commission;
+                console.warn(totalPriceWithCommission);
+                this.commissionTache = totalPriceWithCommission;
+                this.totalCommission += this.commissionTache;
+              } else {
+                console.error("Error: Commission value is zero.");
+              }
             }
 
             if (rdv.onGoing) {
@@ -218,13 +222,6 @@ export class TacheComponent implements OnInit {
       const stateForCount = "finish";
       this.GetRdvConfirmerd(stateFor);
       this.GetCountRdvFinished(this.UserQuery._id, stateForCount);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  public getSumOfCommissionForTask() {
-    try {
     } catch (error) {
       console.error(error);
     }

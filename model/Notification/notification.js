@@ -2,19 +2,19 @@ class offreSpeciale {
   constructor(
     notification,
     remarque,
-    dateCreation,
-    isSent,
+    date,
     isRead,
     { idServ, nomServ, prixServ },
-    { idDes, nomDes }
+    destinataire,
+    { idEnv, nomEnv, imageEnv }
   ) {
     this.notification = notification;
     this.remarque = remarque;
-    this.dateCreation = dateCreation;
-    this.isSent = isSent;
+    this.date = date;
     this.isRead = isRead;
-    this.serviceConcerne = { idService: idServ, nom: nomServ, prix: prixServ };
-    this.destinataire = { idUser: idDes, nom: nomDes };
+    this.serviceConcerne = { idServ, nomServ, prixServ };
+    this.destinataire = destinataire;
+    this.envoyeur = { idEnv, nomEnv, imageEnv };
   }
 }
 module.exports = offreSpeciale;

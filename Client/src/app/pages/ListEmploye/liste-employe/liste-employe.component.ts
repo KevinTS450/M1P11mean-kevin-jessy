@@ -27,13 +27,15 @@ export class ListeEmployeComponent implements OnInit {
 
   preference_add: boolean = false;
   preference_remove: boolean = false;
-
+  pagination: number = 1;
+  totalLength: any;
   ngOnInit(): void {
     this.GetUser();
     this.getUserByRole();
 
     this.AutoRefresh();
   }
+
   public removePreference(clientId: string) {
     try {
       this.loading = true;

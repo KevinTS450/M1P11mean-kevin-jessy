@@ -22,6 +22,7 @@ import { Observable } from "rxjs";
 })
 export class RegisterComponent implements OnInit {
   UserForm: FormGroup;
+  loading: boolean = false;
   isNotEquals: boolean;
   closed: boolean = false;
   accountCreated: boolean = false;
@@ -62,21 +63,31 @@ export class RegisterComponent implements OnInit {
 
   public saveForm(UserForm: FormGroup) {
     if (UserForm.valid) {
-      const result = UserForm.value;
-      if (this.file_query) {
-        this.upload.UploadImg(this.file_query).subscribe(
-          (response: any) => {
-            console.log("Image uploaded successfully:", response);
-            result.image = this.file_query.name;
-            this.createUser(result);
-          },
-          (error) => {
-            console.error("Error uploading image:", error);
-          }
-        );
-      } else {
-        this.createUser(result);
-      }
+      this.loading = true;
+
+      setTimeout(() => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 3000);
+        const result = UserForm.value;
+        if (this.file_query) {
+          this.upload.UploadImg(this.file_query).subscribe(
+            (response: any) => {
+              console.log("Image uploaded successfully:", response);
+
+              result.image = this.file_query.name;
+              this.createUser(result);
+              clearTimeout(loadingTimeout);
+              this.loading = false;
+            },
+            (error) => {
+              console.error("Error uploading image:", error);
+            }
+          );
+        } else {
+          this.createUser(result);
+        }
+      }, 3000);
     } else {
       UserForm.markAllAsTouched();
     }
@@ -87,7 +98,10 @@ export class RegisterComponent implements OnInit {
       (response: any) => {
         console.log(response);
         this.accountCreated = true;
-        this.account_exist = false;
+
+        setTimeout(() => {
+          this.accountCreated = false;
+        }, 30000);
         if (result.role === "employe") {
           const start_time = "08:00";
           const end_time = "18:00";
@@ -115,6 +129,9 @@ export class RegisterComponent implements OnInit {
       },
       (error) => {
         this.account_exist = true;
+        setTimeout(() => {
+          this.account_exist = false;
+        }, 3000);
         this.accountCreated = false;
         this.UserForm.reset();
         console.error("Account creation error or email duplicated:", error);

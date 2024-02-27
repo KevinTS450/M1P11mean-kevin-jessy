@@ -14,3 +14,9 @@
   right: 20px;
   z-index: 9999; /* Ensure the delete icon appears above other content */
 }
+.pagination-wrapper {
+  position: absolute;
+  margin-top: 480px;
+  left: 50%; /* Position in the center horizontally */
+  transform: translateX(-50%);
+}

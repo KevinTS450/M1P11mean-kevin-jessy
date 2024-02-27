@@ -120,7 +120,15 @@
     ></ngx-loading>
     <div *ngIf="list_preference" #cardWrapper class="card-wrapper">
       <div
-        *ngFor="let service_query of List_preference_query"
+        *ngFor="
+          let service_query of List_preference_query
+            | paginate
+              : {
+                  itemsPerPage: 5,
+                  currentPage: pagination,
+                  totalItems: totalLength
+                }
+        "
         class="card-wrapper"
         cdkDrag
       >
@@ -162,21 +170,27 @@
           </div>
         </div>
       </div>
-
-      <div
-        #deleteIconWrapper
-        class="delete-icon-wrapper"
-        cdkDropList
-        (cdkDropListDropped)="onDeleteIconDrop($event)"
-      >
-        <a *ngIf="isDragging" class="btn btn-danger">
-          <i class="ni ni-fat-remove text-red"></i> Supprimer
-        </a>
+      <div class="pagination-wrapper">
+        <pagination-controls
+          (pageChange)="pagination = $event"
+        ></pagination-controls>
       </div>
     </div>
 
     <div *ngIf="list_service" #cardWrapper class="card-wrapper">
-      <div *ngFor="let service_query of service" class="card-wrapper" cdkDrag>
+      <div
+        *ngFor="
+          let service_query of service
+            | paginate
+              : {
+                  itemsPerPage: 5,
+                  currentPage: pagination,
+                  totalItems: totalLength
+                }
+        "
+        class="card-wrapper"
+        cdkDrag
+      >
         <div class="card" style="width: 18rem">
           <img
             class="card-img-top"
@@ -240,19 +254,14 @@
           </div>
         </div>
       </div>
-
-      <div
-        #deleteIconWrapper
-        class="delete-icon-wrapper"
-        cdkDropList
-        (cdkDropListDropped)="onDeleteIconDrop($event)"
-      >
-        <a *ngIf="isDragging" class="btn btn-danger">
-          <i class="ni ni-fat-remove text-red"></i> Supprimer
-        </a>
+      <div class="pagination-wrapper">
+        <pagination-controls
+          (pageChange)="pagination = $event"
+        ></pagination-controls>
       </div>
     </div>
   </div>
+
   <div
     *ngIf="removed_favoris"
     class="alert alert-danger alert-dismissible fade show"

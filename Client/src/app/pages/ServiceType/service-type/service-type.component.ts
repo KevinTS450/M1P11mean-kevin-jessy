@@ -17,6 +17,8 @@ import { Preference } from "src/app/Model/Preference/preference";
 import { PreferenceService } from "src/app/Service/preferenceService/preference.service";
 import { SocketService } from "src/app/socket/socket.service";
 import { response } from "express";
+import { NotificationService } from "src/app/Service/notificationService/notification.service";
+import { Notification } from "src/app/Model/Notification/notification";
 @Component({
   selector: "app-service-type",
   templateUrl: "./service-type.component.html",
@@ -42,7 +44,8 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
     private serviceTypeService: ServiceTypeService,
     private router: Router,
     private preferenceService: PreferenceService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +66,9 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
   isDragging: boolean = false;
   serviceDeleted: boolean = false;
   notif: number;
+  pagination: number = 1;
+  totalLength: any;
+
   public ToUpdate(id: string) {
     return this.router.navigate(["ModifierService", id]);
   }
@@ -226,6 +232,7 @@ export class ServiceTypeComponent implements OnInit, AfterViewInit {
               console.log(response);
               clearTimeout(loadingTimeout);
               this.loading = false;
+
               this.pref_added = true;
               setTimeout(() => {
                 this.pref_added = false;
