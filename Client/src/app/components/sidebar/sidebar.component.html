@@ -145,7 +145,12 @@
             class="nav-link"
           >
             <i class="ni {{ menuItem.icon }}"></i>
-            {{ menuItem.title }}
+            {{ menuItem.title }} {{ "" }}
+            <span
+              *ngIf="menuItem.path === '/notification' && countNotif != 0"
+              class="badge badge-pill badge-danger"
+              >{{ countNotif }}</span
+            >
           </a>
         </li>
       </ul>

@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
                       clearTimeout(loadingTimeout);
                       if (responseAuth.accessToken) {
                         this.session.setToken(responseAuth.accessToken);
-                        this.route.navigate(["dashboard"]);
+                        this.route.navigate(["user-profile"]);
                       }
                     },
                     (error) => {

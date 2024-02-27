@@ -12,6 +12,7 @@ const PointageController = require("../Controller/PointageController/pointageCon
 const ServiceController = require("../controller/ServiceTypeController/serviceController.js");
 const PreferenceController = require("../controller/preferenceController/preferenceController.js");
 const PaiementController = require("../Controller/PaiementController/paiementCtrl.js");
+const NotificationController = require("../Controller/NotificationController/notificationController.js");
 
 //USER
 router.post("/user/inscription", handlerInscription);
@@ -60,7 +61,7 @@ router.delete(
   "/paiement/deleteById/:id",
   PaiementController.deletePaiementById
 );
-
+router.patch("/paiement/versement", PaiementController.versementEmploye);
 //pointage
 router.post("/pointage/createPointage", PointageController.createPointage);
 router.get("/pointage/empPointage", PointageController.GetEmpPointageHandler);
@@ -120,6 +121,21 @@ router.get(
 router.delete(
   "/preference/remove",
   PreferenceController.RemovePreferenceController
+);
+
+//notification
+router.post(
+  "/notification/create",
+  NotificationController.CreateNotifController
+);
+router.get("/notification/get", NotificationController.findNotif);
+router.get(
+  "/notification/count",
+  NotificationController.getCountNotifNoReadController
+);
+router.patch(
+  "/notification/update",
+  NotificationController.updateLectureController
 );
 
 module.exports = router;

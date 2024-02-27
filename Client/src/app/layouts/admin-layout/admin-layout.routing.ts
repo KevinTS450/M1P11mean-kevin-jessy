@@ -16,6 +16,8 @@ import { AjoutMobileMoneyComponent } from "src/app/pages/MobileMoney/AjouterMobi
 import { PersonnelComponent } from "src/app/pages/Personnel/personnel/personnel.component";
 import { TacheComponent } from "src/app/pages/Tache/tache/tache.component";
 import { ListeEmployeComponent } from "src/app/pages/ListEmploye/liste-employe/liste-employe.component";
+import { NotificationComponent } from "src/app/pages/Notification/notification/notification.component";
+import { PaiementsComponent } from "src/app/pages/Paiements/paiements/paiements.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "dashboard", component: DashboardComponent },
@@ -61,4 +63,6 @@ export const AdminLayoutRoutes: Routes = [
   // { path: "ajoutMobileMoney", component: AjoutMobileMoneyComponent },
   { path: "personnel", component: PersonnelComponent },
   { path: "Listemploye", component: ListeEmployeComponent },
+  { path: "notification", component: NotificationComponent },
+  { path: "paiements", component: PaiementsComponent },
 ];

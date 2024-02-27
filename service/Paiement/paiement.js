@@ -10,8 +10,11 @@ async function createPaiement(paiement) {
       montant: paiement.montant,
       motif: paiement.motif,
       temp: paiement.temp,
-      idRendezVous: paiement.idRendezVous,
-      idEmploye: paiement.idEmploye
+      versed: false,
+      rendezVous: paiement.rendezVous,
+      employe: paiement.employe,
+      client: paiement.client,
+      service: paiement.service,
     });
 
     console.log("rendezVous registered successfully");
@@ -26,6 +29,19 @@ async function getPaiementById(id) {
     const collection = database.client.db("MEAN").collection("paiement");
 
     const paiement = await collection.findOne({ _id: new ObjectId(id) });
+
+    return paiement;
+  } catch (error) {
+    console.error("Error during database query:", error);
+    throw error;
+  }
+}
+
+async function getPaiementByIdEmp(idEmp) {
+  try {
+    const collection = database.client.db("MEAN").collection("paiement");
+
+    const paiement = await collection.findOne({ "empoye.idEmp": idEmp });
 
     return paiement;
   } catch (error) {
@@ -59,7 +75,7 @@ async function updatePaiement(id, paiement) {
         motif: paiement.motif,
         temp: paiement.temp,
         idRendezVous: paiement.idRendezVous,
-        idEmploye: paiement.idEmploye
+        idEmploye: paiement.idEmploye,
       },
     };
 
@@ -78,10 +94,8 @@ async function updatePaiement(id, paiement) {
 
 async function deletePaiementById(idPaiement) {
   try {
-    // Specify the collection
     const collection = database.client.db("MEAN").collection("paiement");
 
-    // Delete the rendezVous document
     const result = await collection.deleteOne({
       _id: new ObjectId(idPaiement),
     });
@@ -97,10 +111,48 @@ async function deletePaiementById(idPaiement) {
   }
 }
 
+async function versementEmploye(idEmp, monaie) {
+  try {
+    const collection = database.client.db("MEAN").collection("mobileMoney");
+
+    const filter = { "user.idUser": idEmp };
+    const userDoc = await collection.findOne(filter);
+
+    let newMontant = parseFloat(monaie);
+
+    if (userDoc && userDoc.monnaie) {
+      newMontant += parseFloat(userDoc.monnaie);
+    }
+
+    const update = {
+      $set: {
+        monnaie: newMontant,
+      },
+    };
+    const result = await collection.updateOne(filter, update);
+
+    const paiementCollection = database.client
+      .db("MEAN")
+      .collection("paiement");
+    const paiementFilter = { "employe.idEmp": idEmp };
+    const paiementUpdate = {
+      $set: {
+        versed: true,
+      },
+    };
+    await paiementCollection.updateOne(paiementFilter, paiementUpdate);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
-    createPaiement,
-    getPaiementById,
-    GetAllPaiements,
-    updatePaiement,
-    deletePaiementById
+  createPaiement,
+  getPaiementById,
+  GetAllPaiements,
+  updatePaiement,
+  deletePaiementById,
+  versementEmploye,
 };

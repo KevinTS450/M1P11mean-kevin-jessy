@@ -29,6 +29,11 @@ export class RendezVousComponent implements OnInit {
   listEmploye: User[];
   employeSelected: User = new User();
   idEmployeToPay: string;
+  nomEmpToPay: string;
+
+  idClientToPay: string;
+  nomClientToPay: string;
+
   isEmployeeFreeBool: boolean = true;
   factureValue = 0;
   mobileMoneyToPay = new MobileMoney();
@@ -40,6 +45,13 @@ export class RendezVousComponent implements OnInit {
   serviceList: ServieType[];
   serviceSelected: ServieType = new ServieType();
   idRendezVousToPay: string;
+
+  idServiceToPay: string;
+  NomServiceToPay: string;
+  prixServiceToPay: number;
+  commissionServiceToPay: number;
+
+  StartRendezVoudToPay: string;
   rendezVousToPay: RendezVous;
   constructor(
     private rendezVousService: RendezVousService,
@@ -158,7 +170,7 @@ export class RendezVousComponent implements OnInit {
       image: this.serviceSelected.image,
       commission: this.serviceSelected.commission,
     };
-    console.log(this.newRendezVous)
+    console.log(this.newRendezVous);
   }
 
   setEmployeSelected() {
@@ -235,6 +247,16 @@ export class RendezVousComponent implements OnInit {
       console.log(this.rendezVousToPay);
       this.factureValue = rendezVous.serviceAsked.prix;
       this.idRendezVousToPay = rendezVous._id;
+      this.StartRendezVoudToPay = rendezVous.start;
+      this.nomEmpToPay = rendezVous.employee.nomEmployee;
+      this.idClientToPay = rendezVous.client.idClient;
+      this.nomClientToPay = rendezVous.client.nomClient;
+      this.idServiceToPay = rendezVous.serviceAsked.idService;
+
+      this.NomServiceToPay = rendezVous.serviceAsked.nom;
+      this.prixServiceToPay = rendezVous.serviceAsked.prix;
+      this.commissionServiceToPay = rendezVous.serviceAsked.commission;
+
       this.idEmployeToPay = rendezVous.employee.idEmployee;
     }
     if (popover.isOpen()) {
@@ -267,10 +289,39 @@ export class RendezVousComponent implements OnInit {
       console.log(manager[0]);
       if (manager[0].email) {
         let paiement = new Paiement();
-        paiement.idRendezVous = this.idRendezVousToPay;
+        paiement.rendezVous = {
+          idRendezVous: "",
+          start: "",
+        };
+        paiement.employe = {
+          idEmp: "",
+          nomEmp: "",
+        };
+        paiement.client = {
+          idClient: "",
+          nomClient: "",
+        };
+        paiement.service = {
+          idServ: "",
+          nomServ: "",
+          prixServ: 0,
+          commissionServ: 0,
+        };
+
+        paiement.rendezVous.idRendezVous = this.idRendezVousToPay;
+        paiement.rendezVous.start = this.StartRendezVoudToPay;
         paiement.montant = this.factureValue;
-        paiement.motif =
-          "Paiement du rendez vous id = " + this.idRendezVousToPay + " .";
+        paiement.employe.idEmp = this.idEmployeToPay;
+        paiement.employe.nomEmp = this.nomEmpToPay;
+        paiement.client.idClient = this.idClientToPay;
+        paiement.client.nomClient = this.nomClientToPay;
+        paiement.service.idServ = this.idServiceToPay;
+        paiement.service.nomServ = this.NomServiceToPay;
+        console.log(this.NomServiceToPay);
+        paiement.service.prixServ = this.prixServiceToPay;
+        paiement.service.commissionServ = this.commissionServiceToPay;
+
+        "Paiement du rendez vous id = " + this.idRendezVousToPay + " .";
         paiement.temp = new Date().toLocaleString();
 
         this.paiementService
@@ -281,26 +332,26 @@ export class RendezVousComponent implements OnInit {
             this.myMobileMoney.user = this.UserQuery;
 
             let notification: Notification = new Notification();
-            notification.idDestinataire = manager[0]._id;
+            notification.destinataire = manager[0]._id;
             notification.isRead = false;
             notification.notification =
               this.UserQuery.name +
               " a effectué son paiement pour son rendez vous id = " +
               this.idRendezVousToPay;
-            notification.temps = new Date().toLocaleString();
+            notification.date = new Date().toLocaleString();
             this.notificationService
               .createNotification(notification)
               .subscribe((response: any) => {});
 
             let notificationRappelEmp: Notification = new Notification();
-            notificationRappelEmp.idDestinataire =
+            notificationRappelEmp.destinataire =
               this.rendezVousToPay.employee.idEmployee;
             notificationRappelEmp.isRead = false;
             notificationRappelEmp.notification =
               "Vous avez un rendezVous dans 2 heures (à " +
               this.rendezVousToPay.start +
               ").";
-            notificationRappelEmp.temps = this.getDateTimeTwoHoursBefore(
+            notificationRappelEmp.date = this.getDateTimeTwoHoursBefore(
               new Date(this.rendezVousToPay.start)
             ).toLocaleString();
             this.notificationService
@@ -308,14 +359,14 @@ export class RendezVousComponent implements OnInit {
               .subscribe((response: any) => {});
 
             let notificationRappelCli: Notification = new Notification();
-            notificationRappelCli.idDestinataire =
+            notificationRappelCli.destinataire =
               this.rendezVousToPay.client.idClient;
             notificationRappelCli.isRead = false;
             notificationRappelCli.notification =
               "Vous avez un rendezVous dans 2 heures (à " +
               this.rendezVousToPay.start +
               ").";
-            notificationRappelCli.temps = this.getDateTimeTwoHoursBefore(
+            notificationRappelCli.date = this.getDateTimeTwoHoursBefore(
               new Date(this.rendezVousToPay.start)
             ).toLocaleString();
             this.notificationService

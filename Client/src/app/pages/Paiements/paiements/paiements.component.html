@@ -1,0 +1,121 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello username</h1>
+        <p class="text-white mt-0 mb-5">
+          Vous pouvez créez un rendez-vous pour un service avec un employé de
+          votre choix.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '8px' }"
+  ></ngx-loading>
+  <div class="row">
+    <div class="col-xl-8 order-xl-1">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-lg-8 col-md-6 col-sm-6">
+              <h3 class="mb-0">Paiements</h3>
+            </div>
+            <div
+              class="col-lg-4 col-md-6 col-sm-6 text-right"
+              *ngIf="UserQuery.role == 'client'"
+            >
+              <!-- Add content for client role if needed -->
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead>
+                <tr>
+                  <th scope="col">Rendez vous du</th>
+                  <th scope="col">Employe</th>
+                  <th scope="col">Client</th>
+                  <th scope="col">Service</th>
+                  <th scope="col">Montant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let paiements of Paiement">
+                  <!-- <td>
+                    <img
+                      alt="Image placeholder"
+                      src="assets/uploads/{{ notif.envoyeur.imageEnv }}"
+                      class="avatar rounded-circle"
+                      height="50"
+                      width="50"
+                    />
+                  </td> -->
+
+                  <td>
+                    <span class="text-sm">
+                      {{ paiements.rendezVous.start }}</span
+                    >
+                  </td>
+
+                  <td>
+                    <span class="text-sm"> {{ paiements.employe.nomEmp }}</span>
+                  </td>
+                  <td>
+                    <span class="text-sm">
+                      {{ paiements.client.nomClient }}</span
+                    >
+                  </td>
+                  <td>
+                    <button class="btn btn-link">
+                      {{ paiements.service.nomServ }} {{ "" }}
+                      {{ paiements.service.prixServ }} (
+                      {{ paiements.service.commissionServ }} % de commission)
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="
+                        versement(
+                          paiements.employe.idEmp,
+                          paiements.montant,
+                          paiements.service.commissionServ
+                        )
+                      "
+                      *ngIf="!paiements.versed"
+                      class="btn btn-sm btn-primary"
+                    >
+                      Verser a l'employe
+                    </button>
+                    <button
+                      *ngIf="paiements.versed === true"
+                      class="btn btn-sm btn-success"
+                    >
+                      Versement effectuer
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

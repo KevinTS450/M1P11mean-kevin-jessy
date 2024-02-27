@@ -1,15 +1,33 @@
 const PaiementService = require("../../service/Paiement/paiement");
 const Paiement = require("../../model/Paiement/paiement");
+const socketIo = require("../../socketio");
 
 async function createPaiement(req, res, next) {
   try {
-    const { montant, motif, temp, idRendezVous, idEmploye } = req.body;
+    const {
+      montant,
+      motif,
+      temp,
+      versed,
+      rendezVous,
+      employe,
+      client,
+      service,
+    } = req.body;
     const newPaiement = new Paiement(
       montant,
       motif,
       temp,
-      idRendezVous,
-      idEmploye
+      versed,
+      { idRendezVous: rendezVous.idRendezVous, start: rendezVous.start },
+      { idEmp: employe.idEmp, nomEmp: employe.nomEmp },
+      { idClient: client.idClient, nomClient: client.nomClient },
+      {
+        idServ: service.idServ,
+        nomServ: service.nomServ,
+        prixServ: service.prixServ,
+        commissionServ: service.commissionServ,
+      }
     );
 
     await PaiementService.createPaiement(newPaiement);
@@ -24,9 +42,7 @@ const GetPaiementById = async (req, res) => {
   try {
     console.log("Decoded MobileMoney ID in Controller:", req.params.id);
 
-    const paiement = await PaiementService.getPaiementById(
-      req.params.id
-    );
+    const paiement = await PaiementService.getPaiementById(req.params.id);
     console.log("MobileMoney Details:", paiement);
 
     if (!paiement) {
@@ -60,11 +76,11 @@ async function updatePaiementById(req, res, next) {
     console.log(req.body);
     const id = req.params.id;
     const newPaiement = new Paiement(
-        montant,
-        motif,
-        temp,
-        idRendezVous,
-        idEmploye
+      montant,
+      motif,
+      temp,
+      idRendezVous,
+      idEmploye
     );
 
     await PaiementService.updatePaiement(id, newPaiement);
@@ -87,10 +103,32 @@ async function deletePaiementById(req, res, next) {
   }
 }
 
+async function versementEmploye(req, res, next) {
+  try {
+    const { idEmp, monaie } = req.query;
+    const versement = await PaiementService.versementEmploye(idEmp, monaie);
+    if (versement) {
+      const socketResponse = socketIo.getIO();
+      socketResponse.emit("versed", {
+        event: "versed",
+        data: "versement effectuer",
+      });
+      return res
+        .status(200)
+        .json({ message: "versement effectuer", versement: versement });
+    } else {
+      return res.status(500).json({ message: "internal server error" });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
-    createPaiement,
-    GetPaiementById,
-    GetAllPaiements,
-    updatePaiementById,
-    deletePaiementById
+  createPaiement,
+  GetPaiementById,
+  GetAllPaiements,
+  updatePaiementById,
+  deletePaiementById,
+  versementEmploye,
 };
