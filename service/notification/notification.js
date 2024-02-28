@@ -61,7 +61,7 @@ async function getCountNotifNotRead(id) {
   try {
     const collection = database.client.db("MEAN").collection("notification");
     const countNotifNoRead = await collection.countDocuments({
-      destinataire: id,
+      destinataire: new ObjectId(id),
       isRead: false,
     });
     return countNotifNoRead;
