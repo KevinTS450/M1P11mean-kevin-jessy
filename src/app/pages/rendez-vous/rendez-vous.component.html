@@ -1,0 +1,360 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello username</h1>
+        <p class="text-white mt-0 mb-5">
+          Vous pouvez créez un rendez-vous pour un service avec un employé de
+          votre choix.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+      <div class="card card-profile shadow">
+        <div class="row justify-content-center">
+          <div class="col-lg-3 order-lg-2">
+            <div class="card-profile-image">
+              <a href="javascript:void(0)">
+                <img src="../../../assets/uploads/{{ UserQuery.image }}" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body pt-0 pt-md-4">
+          <div class="row">
+            <div class="col">
+              <div
+                class="card-profile-stats d-flex justify-content-center mt-md-5"
+              ></div>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="h5 mt-4">
+              <h3>
+                {{ UserQuery.last_name }}{{ " " }}{{ UserQuery.name
+                }}<span class="font-weight-light"
+                  >, {{ UserQuery.age }} ans</span
+                >
+              </h3>
+            </div>
+            <div class="h5 mt-4">
+              <h3>
+                {{ UserQuery.role }}
+              </h3>
+            </div>
+
+            <hr class="my-4" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8 order-xl-1">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Rendez-vous</h3>
+            </div>
+            <div class="col-4 text-right" *ngIf="UserQuery.role == 'client'">
+              <button
+                *ngIf="page == 'liste_rendez_vous'"
+                (click)="page = 'creating_rendez_vous'"
+                class="btn btn-sm btn-primary"
+              >
+                Nouveau
+              </button>
+              <button
+                *ngIf="page == 'creating_rendez_vous'"
+                (click)="page = 'liste_rendez_vous'"
+                class="btn btn-sm btn-primary"
+              >
+                Liste rendez-vous
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="page == 'liste_rendez_vous'" class="col">
+            <div class="card shadow">
+              <div class="card-header border-0">
+                <h3 class="mb-0">Liste rendez-vous</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Service</th>
+                      <th scope="col">Employé</th>
+                      <!-- <th scope="col">Status</th> -->
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    *ngFor="
+                      let rdv of listeRendezVous
+                        | paginate
+                          : {
+                              itemsPerPage: 5,
+                              currentPage: pagination,
+                              totalItems: totalLength
+                            }
+                    "
+                  >
+                    <tr>
+                      <th scope="row">
+                        <div class="media align-items-center">
+                          <div class="media-body">
+                            <span class="mb-0 text-sm">{{ rdv.start }}</span>
+                          </div>
+                        </div>
+                      </th>
+                      <td>
+                        <button class="btn btn-link">
+                          {{ rdv.serviceAsked.nom }}
+                        </button>
+                      </td>
+                      <td>
+                        {{ rdv.employee.nomEmployee }}
+                      </td>
+                      <!-- <td>
+                                        <span class="badge badge-dot mr-4" *ngIf="!rdv.isConfirmed && !rdv.isDone">
+                                          <i class="bg-warning"></i> en attente
+                                        </span>
+                                        <span class="badge badge-dot mr-4" *ngIf="rdv.isConfirmed && !rdv.isDone">
+                                          <i class="bg-danger"></i> confirmé
+                                        </span>
+                                        <span class="badge badge-dot mr-4" *ngIf="rdv.isConfirmed && rdv.isDone">
+                                          <i class="bg-success"></i> Terminé
+                                        </span>
+                                    </td> -->
+                      <td class="text-center">
+                        <div *ngIf="UserQuery.role == 'employe'">
+                          <button
+                            *ngIf="rdv.status == 'annuler'"
+                            class="btn btn-sm btn-outline-danger"
+                            disabled
+                          >
+                            RDV annulé
+                          </button>
+                          <button
+                            *ngIf="rdv.status == 'en attente'"
+                            class="btn btn-sm btn-info"
+                            disabled
+                          >
+                            RDV en attente
+                          </button>
+                          <button
+                            *ngIf="rdv.status == 'confirmer'"
+                            class="btn btn-sm btn-outline-success"
+                            disabled
+                          >
+                            RDV confirmé
+                          </button>
+                          <button
+                            *ngIf="rdv.status == 'terminer'"
+                            class="btn btn-sm btn-outline-success"
+                            disabled
+                          >
+                            RDV terminé
+                          </button>
+                        </div>
+                        <div *ngIf="UserQuery.role == 'client'">
+                          <div *ngIf="rdv.status == 'en attente'">
+                            <button
+                              class="btn btn-sm btn-success"
+                              [ngbPopover]="popContent"
+                              [popoverTitle]="popTitle"
+                              [ngbPopoverTemplate]="popContent"
+                              triggers="manual"
+                              #p1="ngbPopover"
+                              (click)="toggleWithGreeting(p1, rdv)"
+                            >
+                              Payer
+                            </button>
+                            <button
+                              (click)="setRendezVousToAnnuler(rdv)"
+                              class="btn btn-sm btn-danger"
+                            >
+                              Annuler
+                            </button>
+                          </div>
+
+                          <button
+                            *ngIf="rdv.status == 'terminer'"
+                            class="btn btn-sm btn-outline-success"
+                            disabled
+                          >
+                            RDV terminé
+                          </button>
+                          <div *ngIf="rdv.status == 'confirmer'">
+                            <button class="btn btn-sm btn-primary" disabled>
+                              RDV confirmé
+                            </button>
+                          </div>
+                          <div *ngIf="rdv.status == 'annuler'">
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              disabled
+                            >
+                              RDV annulé
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer py-4">
+                <div class="pagination align-items-end">
+                  <pagination-controls
+                    (pageChange)="pagination = $event"
+                  ></pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="page == 'creating_rendez_vous'" class="col">
+            <div class="card shadow">
+              <div class="card-header border-0">
+                <h3 class="mb-0">Création rendez-vous</h3>
+              </div>
+              <div class="pl-lg-4">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-username">
+                        Choississez le service
+                      </label>
+                      <select
+                        *ngIf="serviceList"
+                        class="form-control form-control-alternative"
+                        name="service"
+                        id=""
+                        [(ngModel)]="serviceSelected"
+                        (change)="setServiceSelected()"
+                      >
+                        <option
+                          *ngFor="let service of serviceList"
+                          [ngValue]="service"
+                          class="form-control form-control-alternative"
+                        >
+                          {{ service.nom }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-username"
+                        >Choississez la date et l'heure de rendez-vous</label
+                      >
+                      <input
+                        type="datetime-local"
+                        [min]="now"
+                        class="form-control form-control-alternative"
+                        [(ngModel)]="newRendezVous.start"
+                        (change)="addEndTimeRDV(newRendezVous.start)"
+                      />
+                      <div
+                        *ngIf="!isEmployeeFreeBool"
+                        class="alert alert-danger"
+                        role="alert"
+                      >
+                        Choississez une date ultérieur si vous souhaiter
+                        uniquement cet employé.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-username"
+                        >Choississez l'employé</label
+                      >
+                      <select
+                        class="form-control form-control-alternative"
+                        name="service"
+                        id=""
+                        [(ngModel)]="employeSelected"
+                        (change)="setEmployeSelected()"
+                      >
+                        <option
+                          *ngFor="let employe of listEmploye"
+                          [ngValue]="employe"
+                          class="form-control form-control-alternative"
+                        >
+                          {{ employe.name }}{{ " " }}{{ employe.last_name }}
+                        </option>
+                      </select>
+                      <div
+                        *ngIf="!isEmployeeFreeBool"
+                        class="alert alert-danger"
+                        role="alert"
+                      >
+                        Employé non disponible, Choississez une date ultérieur
+                        si vous souhaiter garder l'employé choisi.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="btn btn-info"
+                  (click)="createRDV()"
+                  [disabled]="!isEmployeeFreeBool"
+                >
+                  Créer rendez-vous
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #popContent let-greeting="greetings">
+  <div style="display: flex; align-items: center" style="width: 400px">
+    <label for="Operateur"
+      >Suite à votre paiment, vous serez facturé de
+      <b style="color: rgb(233, 58, 58)">{{ factureValue }} Ar</b>.</label
+    >
+    <label for="Operateur"
+      >Voulez-vous continuer?
+      <button
+        *ngIf="factureValue && myMobileMoney.monnaie >= factureValue"
+        (click)="payer()"
+        class="btn btn-sm btn-success"
+      >
+        Ok
+      </button>
+      <button class="btn btn-sm btn-danger">Annuler</button>
+    </label>
+
+    <div
+      *ngIf="factureValue && myMobileMoney.monnaie < factureValue"
+      class="alert alert-danger"
+      role="alert"
+    >
+      Recharger votre compte pour valider le paiement!
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #popTitle let-language="language">Paiement</ng-template>

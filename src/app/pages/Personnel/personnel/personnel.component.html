@@ -1,0 +1,78 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello {{ UserQuery.name }}</h1>
+        <p class="text-white mt-0 mb-5">Gerer les personnel</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form
+  class="navbar-search form-inline mr-3 d-none d-md-flex ml-lg-auto"
+>
+  <div class="form-group mb-0" [ngClass]="{ focused: focus === true }">
+    <div class="input-group input-group-alternative">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+      </div>
+      <input
+        class="form-control"
+        placeholder="Search"
+        type="text"
+        (focus)="focus = true"
+        (blur)="focus = false"
+        (change)="searchUser()"
+      />
+    </div>
+  </div>
+</form>
+<div class="table-responsive">
+  <table class="table align-items-center table-flush">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Image</th>
+        <th scope="col">Nom</th>
+        <th scope="col">prenom</th>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let users of ListUsers">
+        <th scope="row">
+          <div class="media align-items-center">
+            <a href="#" class="avatar rounded-circle mr-3">
+              <img
+                alt="Image placeholder"
+                src="assets/uploads/{{ users.image }}"
+              />
+            </a>
+          </div>
+        </th>
+        <td>{{ users.name }}</td>
+        <td>
+          {{ users.last_name }}
+        </td>
+        <td>
+          {{ users.email }}
+        </td>
+        <td>
+          {{ users.role }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

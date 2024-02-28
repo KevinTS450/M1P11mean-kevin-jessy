@@ -1,0 +1,93 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="
+    min-height: 600px;
+    background-image: url(assets/img/theme/profile-cover.jpg);
+    background-size: cover;
+    background-position: center top;
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">Hello {{ UserQuery.name }}</h1>
+        <p class="text-white mt-0 mb-5">
+          Recharger votre compte , Vous obtiendrai un cadeau de 5000 ar pour
+          l'ajout d'un operateur
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <div class="col-xl-8 order-xl-1">
+    <div class="card bg-secondary shadow">
+      <div class="card-header bg-white border-0">
+        <div class="row align-items-center">
+          <div class="col-8">
+            <h3 class="mb-0">Ajout</h3>
+          </div>
+          <div class="col-4 text-right">
+            <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="MobileMoneyForm">
+          <h6 class="heading-small text-muted mb-4">
+            Mobile Money information
+          </h6>
+          <div class="pl-lg-4">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username"
+                    >Operateur</label
+                  >
+                  <select
+                    class="form-control form-control-alternative"
+                    formControlName="operateur"
+                    (change)="onSelectOperator($event.target.value)"
+                  >
+                    <option selected disabled>Choisir un operateur</option>
+                    <option value="telma">Telma Mvola</option>
+                    <option value="orange">Orange money</option>
+                    <option value="aritel">Airtel money</option>
+                  </select>
+                </div>
+                <div
+                  *ngIf="
+                    MobileMoneyForm.get('operateur').invalid &&
+                    (MobileMoneyForm.get('operateur').dirty ||
+                      MobileMoneyForm.get('operateur').touched)
+                  "
+                  class="alert alert-danger"
+                  role="alert"
+                >
+                  operateur is required.
+                </div>
+              </div>
+            </div>
+
+            <a (click)="AddMobileMoney(MobileMoneyForm)" class="btn btn-info"
+              >Ajouter</a
+            >
+            <br />
+            <br />
+            <div
+              *ngIf="mobileMoneyAdded"
+              class="alert alert-success"
+              role="alert"
+            >
+              Operateur ajouter.
+            </div>
+          </div>
+          <hr class="my-4" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
