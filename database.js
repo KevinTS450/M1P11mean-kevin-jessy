@@ -10,7 +10,7 @@ async function connect() {
     await client.connect();
     console.log("Connected to MongoDB");
 
-    const database = client.db();
+    const database = client.db("MEAN");
     console.log("Using database : ", database.databaseName);
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);
