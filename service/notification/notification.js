@@ -75,7 +75,7 @@ async function UpdateLecture(id) {
     const collection = database.client.db("MEAN").collection("notification");
     const update = await collection.updateOne(
       {
-        destinataire: id,
+        destinataire: new ObjectId(id),
         isRead: false,
       },
       { $set: { isRead: true } }
