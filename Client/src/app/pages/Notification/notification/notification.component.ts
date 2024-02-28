@@ -22,6 +22,9 @@ export class NotificationComponent implements OnInit {
     this.GetUser();
     this.AutoRefresh();
   }
+  pagination: number = 1;
+  totalLength: any;
+
   id_user: string;
   initial_start_time: string;
   initial_id_emp: string;

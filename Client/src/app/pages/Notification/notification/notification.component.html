@@ -55,7 +55,17 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let notif of Notif">
+                <tr
+                  *ngFor="
+                    let notif of Notif
+                      | paginate
+                        : {
+                            itemsPerPage: 5,
+                            currentPage: pagination,
+                            totalItems: totalLength
+                          }
+                  "
+                >
                   <td>
                     <img
                       alt="Image placeholder"
@@ -98,6 +108,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="pagination align-items-end">
+              <pagination-controls
+                (pageChange)="pagination = $event"
+              ></pagination-controls>
+            </div>
           </div>
         </div>
       </div>

@@ -18,6 +18,8 @@ export class TacheComponent implements OnInit {
     private socketService: SocketService
   ) {}
   timers: { [key: string]: any } = {};
+  pagination: number = 1;
+  totalLength: any;
 
   loading: boolean = false;
   UserQuery: User = new User();

@@ -83,7 +83,18 @@
       [config]="{ backdropBorderRadius: '8px' }"
     ></ngx-loading>
 
-    <div *ngFor="let rdv of tache" class="card-wrapper">
+    <div
+      *ngFor="
+        let rdv of tache
+          | paginate
+            : {
+                itemsPerPage: 5,
+                currentPage: pagination,
+                totalItems: totalLength
+              }
+      "
+      class="card-wrapper"
+    >
       <div *ngIf="tache_en_cours" class="card" style="width: 18rem">
         <img
           class="card-img-top"
@@ -162,6 +173,11 @@
           </button>
         </div>
       </div>
+    </div>
+    <div class="pagination align-items-end">
+      <pagination-controls
+        (pageChange)="pagination = $event"
+      ></pagination-controls>
     </div>
   </div>
 </div>

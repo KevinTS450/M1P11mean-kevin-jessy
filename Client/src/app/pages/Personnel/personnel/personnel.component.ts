@@ -10,9 +10,11 @@ import { UserService } from "src/app/Service/UserService/user.service";
 })
 export class PersonnelComponent implements OnInit {
   constructor(private userService: UserService) {}
-  
+
   public focus;
-  searchValue = ''
+  pagination: number = 1;
+  totalLength: any;
+  searchValue = "";
   UserQuery: User = new User();
   ListUsers: User[];
   ngOnInit(): void {
@@ -42,10 +44,12 @@ export class PersonnelComponent implements OnInit {
   }
 
   public searchUser() {
-    if(this.searchValue = '') {
+    if ((this.searchValue = "")) {
       this.ListUser();
     } else {
-      this.ListUsers = this.ListUsers.filter(response => response.name.startsWith(this.searchValue));
+      this.ListUsers = this.ListUsers.filter((response) =>
+        response.name.startsWith(this.searchValue)
+      );
     }
   }
 }
