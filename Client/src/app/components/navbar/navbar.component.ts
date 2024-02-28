@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
   public listTitles: any[];
   public location: Location;
   userProfile: User = new User();
-
+  loading: boolean = false;
   constructor(
     location: Location,
     private element: ElementRef,
@@ -48,12 +48,20 @@ export class NavbarComponent implements OnInit {
 
   public deconnecteUser() {
     try {
-      console.log("ato");
-      this.AuthService.Logout().subscribe((response) => {
-        console.log(response);
-        this.session.removeToken();
-        this.route.navigate(["login"]);
-      });
+      setTimeout(() => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 3000);
+        console.log("ato");
+        this.AuthService.Logout().subscribe((response) => {
+          console.log(response);
+          clearTimeout(loadingTimeout);
+          this.loading = false;
+          this.session.removeToken();
+
+          this.route.navigate(["login"]);
+        });
+      }, 3000);
     } catch (error) {
       console.error(error);
     }
@@ -64,9 +72,18 @@ export class NavbarComponent implements OnInit {
     this.GetUserProfile();
 
     this.socketService.on("tokenExpired", (data) => {
-      console.log("Web socket User updated event received:", data);
-      localStorage.clear();
-      this.route.navigate(["/login"]);
+      this.loading = true;
+
+      setTimeout(() => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 3000);
+        console.log("Web socket User updated event received:", data);
+        localStorage.clear();
+        clearTimeout(loadingTimeout);
+        this.loading = false;
+        this.route.navigate(["/login"]);
+      }, 3000);
     });
   }
   getTitle() {

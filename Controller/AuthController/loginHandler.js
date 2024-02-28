@@ -11,7 +11,7 @@ async function loginUser(req, res) {
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    const expiresIn = 1 * 60;
+    const expiresIn = 60 * 60;
     const accessToken = jwt.sign(
       { id: user.id, email: user.email },
       "defaultSecret",
