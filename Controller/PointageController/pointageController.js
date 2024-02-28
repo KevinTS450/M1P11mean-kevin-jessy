@@ -1,4 +1,4 @@
-const PointageService = require("../../service/Pointage/pointage");
+const PointageService = require("../../service/pointage/pointage");
 const Pointage = require("../../model/pointage/pointage");
 const socketIo = require("../../socketio");
 
