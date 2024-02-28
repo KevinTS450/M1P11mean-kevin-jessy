@@ -1,6 +1,6 @@
 import { isDataSource } from "@angular/cdk/collections";
 import { Component, OnInit } from "@angular/core";
-import { RendezVous } from "src/app/Model/rendezVous/rendez-vous";
+import { RendezVous } from "src/app/Model/RendezVous/rendez-vous";
 import { User } from "src/app/Model/User/user";
 import { RendezVousService } from "src/app/Service/rendezVous/rendez-vous.service";
 import { UserService } from "src/app/Service/UserService/user.service";
