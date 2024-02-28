@@ -10,6 +10,7 @@ import { UserService } from "src/app/Service/UserService/user.service";
 import { User } from "src/app/Model/User/user";
 import { AuthService } from "src/app/Service/AuthService/auth.service";
 import { SessionService } from "src/app/pages/session/session.service";
+import { SocketService } from "src/app/socket/socket.service";
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -28,7 +29,8 @@ export class NavbarComponent implements OnInit {
     private userService: UserService,
     private AuthService: AuthService,
     private session: SessionService,
-    private route: Router
+    private route: Router,
+    private socketService: SocketService
   ) {
     this.location = location;
   }
@@ -60,6 +62,12 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.listTitles = ROUTES.filter((listTitle) => listTitle);
     this.GetUserProfile();
+
+    this.socketService.on("tokenExpired", (data) => {
+      console.log("Web socket User updated event received:", data);
+      localStorage.clear();
+      this.route.navigate(["/login"]);
+    });
   }
   getTitle() {
     var titlee = this.location.prepareExternalUrl(this.location.path());
