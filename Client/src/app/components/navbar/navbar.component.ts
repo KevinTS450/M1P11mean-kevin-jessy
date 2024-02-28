@@ -48,20 +48,22 @@ export class NavbarComponent implements OnInit {
 
   public deconnecteUser() {
     try {
+      this.loading = true;
       setTimeout(() => {
         const loadingTimeout = setTimeout(() => {
           this.loading = false;
-        }, 3000);
+        }, 2500);
         console.log("ato");
         this.AuthService.Logout().subscribe((response) => {
           console.log(response);
           clearTimeout(loadingTimeout);
           this.loading = false;
           this.session.removeToken();
+          localStorage.removeItem("exp");
 
           this.route.navigate(["login"]);
         });
-      }, 3000);
+      }, 2500);
     } catch (error) {
       console.error(error);
     }
