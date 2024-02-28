@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { User } from "src/app/Model/User/user";
+import { SessionService } from "src/app/pages/session/session.service";
+import { AuthService } from "src/app/Service/AuthService/auth.service";
 import { NotificationService } from "src/app/Service/notificationService/notification.service";
 import { UserService } from "src/app/Service/UserService/user.service";
 import { SocketService } from "src/app/socket/socket.service";
@@ -114,11 +116,15 @@ export class SidebarComponent implements OnInit {
   public isCollapsed = true;
   public UserProfile: User = new User();
   public countNotif: number;
+  loading: boolean = false;
   constructor(
     private router: Router,
     private user: UserService,
     private notificationService: NotificationService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private auhtService: AuthService,
+    private session: SessionService,
+    private route: Router
   ) {}
 
   ngOnInit() {
@@ -144,6 +150,29 @@ export class SidebarComponent implements OnInit {
         this.updateMenuItems();
         this.getNotificationCount(response.user._id);
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public deconnecteUser() {
+    try {
+      this.loading = true;
+      setTimeout(() => {
+        const loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 2500);
+        console.log("ato");
+        this.auhtService.Logout().subscribe((response) => {
+          console.log(response);
+          clearTimeout(loadingTimeout);
+          this.loading = false;
+          this.session.removeToken();
+          localStorage.removeItem("exp");
+
+          this.route.navigate(["login"]);
+        });
+      }, 2500);
     } catch (error) {
       console.error(error);
     }
