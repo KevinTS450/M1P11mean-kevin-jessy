@@ -34,7 +34,7 @@ async function CreateNotification(notif) {
         date: notif.date,
         isRead: false,
         serviceConcerne: notif.serviceConcerne,
-        destinataire: notif.destinataire,
+        destinataire: new ObjectId(notif.destinataire),
         envoyeur: notif.envoyeur,
       });
       return result;
@@ -48,7 +48,9 @@ async function CreateNotification(notif) {
 async function FindNotifByIdUser(id) {
   try {
     const collection = database.client.db("MEAN").collection("notification");
-    const getNotif = await collection.find({ destinataire: id }).toArray();
+    const getNotif = await collection
+      .find({ destinataire: new ObjectId(id) })
+      .toArray();
     return getNotif;
   } catch (error) {
     console.error(err);
