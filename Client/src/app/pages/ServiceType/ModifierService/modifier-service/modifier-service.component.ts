@@ -31,7 +31,7 @@ export class ModifierServiceComponent implements OnInit {
       console.error(error);
     }
   }
-
+  loading: boolean = false;
   userProfile: User = new User();
   ServiceForm: FormGroup;
   serviceCreated: boolean = false;
@@ -54,54 +54,73 @@ export class ModifierServiceComponent implements OnInit {
     }
   }
   public updateService(ServiceForm: FormGroup) {
-    const result = ServiceForm.value;
-    const newId = result.id;
-    const newNom = result.nom;
-    const newPrix = result.prix;
-    const newDurre = result.durre;
-    const newCom = result.commission;
+    this.loading = true;
+    setTimeout(() => {
+      const loadingTimeout = setTimeout(() => {
+        this.loading = false;
+      }, 3000);
 
-    if (
-      newId !== this.id ||
-      newNom !== this.initialNom ||
-      newPrix !== this.initialPrix ||
-      newDurre !== this.initialDurre ||
-      newCom !== this.initialCommission
-    ) {
-      const newService: ServieType = {
-        _id: newId !== "" ? newId : this.id,
-        nom: newNom !== "" ? newNom : this.initialNom,
-        prix: newPrix !== "" ? newPrix : this.initialPrix,
-        durre: newDurre !== "" ? newDurre : this.initialDurre,
-        commission: newCom !== "" ? newCom : this.initialCommission,
-        image: "",
-      };
-      ServiceForm.patchValue(newService);
+      const result = ServiceForm.value;
+      const newId = result.id;
+      const newNom = result.nom;
+      const newPrix = result.prix;
+      const newDurre = result.durre;
+      const newCom = result.commission;
 
-      if (this.file_query) {
-        this.upload.UploadImg(this.file_query).subscribe((uploadResponse) => {
-          console.log(uploadResponse);
-          newService.image = this.file_query.name;
-          console.log(newService.image);
+      if (
+        newId !== this.id ||
+        newNom !== this.initialNom ||
+        newPrix !== this.initialPrix ||
+        newDurre !== this.initialDurre ||
+        newCom !== this.initialCommission
+      ) {
+        const newService: ServieType = {
+          _id: newId !== "" ? newId : this.id,
+          nom: newNom !== "" ? newNom : this.initialNom,
+          prix: newPrix !== "" ? newPrix : this.initialPrix,
+          durre: newDurre !== "" ? newDurre : this.initialDurre,
+          commission: newCom !== "" ? newCom : this.initialCommission,
+          image: "",
+        };
+        ServiceForm.patchValue(newService);
+
+        if (this.file_query) {
+          this.upload.UploadImg(this.file_query).subscribe((uploadResponse) => {
+            console.log(uploadResponse);
+            newService.image = this.file_query.name;
+            console.log(newService.image);
+            clearTimeout(loadingTimeout);
+            this.loading = false;
+            this.serviceTypeService
+              .UpdateService(newService, this.id)
+              .subscribe((response: any) => {
+                console.log(response);
+                this.serviceUpdated = true;
+
+                setTimeout(() => {
+                  this.serviceUpdated = false;
+                }, 3000);
+              });
+          });
+        } else {
+          newService.image = this.initialImage;
           this.serviceTypeService
             .UpdateService(newService, this.id)
             .subscribe((response: any) => {
               console.log(response);
+              clearTimeout(loadingTimeout);
+              this.loading = false;
               this.serviceUpdated = true;
+
+              setTimeout(() => {
+                this.serviceUpdated = false;
+              }, 3000);
             });
-        });
+        }
       } else {
-        newService.image = this.initialImage;
-        this.serviceTypeService
-          .UpdateService(newService, this.id)
-          .subscribe((response: any) => {
-            console.log(response);
-            this.serviceUpdated = true;
-          });
+        console.log("Nothing to update");
       }
-    } else {
-      console.log("Nothing to update");
-    }
+    }, 3000);
   }
 
   public GetServiceBId() {

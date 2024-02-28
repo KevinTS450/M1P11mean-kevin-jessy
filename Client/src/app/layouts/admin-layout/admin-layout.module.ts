@@ -24,6 +24,8 @@ import { ListeEmployeComponent } from "src/app/pages/ListEmploye/liste-employe/l
 import { NgxPaginationModule } from "ngx-pagination";
 import { NotificationComponent } from "src/app/pages/Notification/notification/notification.component";
 import { PaiementsComponent } from "src/app/pages/Paiements/paiements/paiements.component";
+import { RendezVousComponent } from "src/app/pages/rendez-vous/rendez-vous.component";
+import { SoldeComponent } from "src/app/pages/solde/solde.component";
 @NgModule({
   imports: [
     CommonModule,
@@ -51,6 +53,8 @@ import { PaiementsComponent } from "src/app/pages/Paiements/paiements/paiements.
     ListeEmployeComponent,
     NotificationComponent,
     PaiementsComponent,
+    RendezVousComponent,
+    SoldeComponent,
   ],
 })
 export class AdminLayoutModule {}

@@ -24,6 +24,7 @@ export class RendezVousComponent implements OnInit {
   newRendezVous: RendezVous = new RendezVous();
   pagination: number = 1;
   totalLength: any;
+  loading: boolean = false;
 
   UserQuery: User = new User();
   listEmploye: User[];
@@ -208,24 +209,33 @@ export class RendezVousComponent implements OnInit {
   }
 
   createRDV() {
-    if (this.newRendezVous.start) {
-      this.newRendezVous.status = "en attente";
-      this.newRendezVous.client = {
-        idClient: this.UserQuery._id,
-        nomClient: this.UserQuery.name,
-      };
-      this.newRendezVous.isConfirmed = false;
-      this.newRendezVous.onGoing = false;
-      this.newRendezVous.isDone = false;
-      console.log(this.newRendezVous);
-      this.rendezVousService
-        .create(this.newRendezVous)
-        .subscribe((response: any) => {
-          this.page = "liste_rendez_vous";
-          this.getAllRendezVous();
-          this.newRendezVous = new RendezVous();
-        });
-    } else this.isEmployeeFreeBool = false;
+    this.loading = true;
+    setTimeout(() => {
+      const loadingTimeout = setTimeout(() => {
+        this.loading = false;
+      }, 3000);
+
+      if (this.newRendezVous.start) {
+        this.newRendezVous.status = "en attente";
+        this.newRendezVous.client = {
+          idClient: this.UserQuery._id,
+          nomClient: this.UserQuery.name,
+        };
+        this.newRendezVous.isConfirmed = false;
+        this.newRendezVous.onGoing = false;
+        this.newRendezVous.isDone = false;
+        console.log(this.newRendezVous);
+        this.rendezVousService
+          .create(this.newRendezVous)
+          .subscribe((response: any) => {
+            clearTimeout(loadingTimeout);
+            this.loading = false;
+            this.page = "liste_rendez_vous";
+            this.getAllRendezVous();
+            this.newRendezVous = new RendezVous();
+          });
+      } else this.isEmployeeFreeBool = false;
+    }, 3000);
   }
 
   updateRendezVous(rendezVous: RendezVous) {
@@ -283,128 +293,138 @@ export class RendezVousComponent implements OnInit {
   }
 
   payer() {
-    console.log("payer");
-    this.userService.findByRole("manager").subscribe((response: any) => {
-      const manager: User[] = response.Users;
-      console.log(manager[0]);
-      if (manager[0].email) {
-        let paiement = new Paiement();
-        paiement.rendezVous = {
-          idRendezVous: "",
-          start: "",
-        };
-        paiement.employe = {
-          idEmp: "",
-          nomEmp: "",
-        };
-        paiement.client = {
-          idClient: "",
-          nomClient: "",
-        };
-        paiement.service = {
-          idServ: "",
-          nomServ: "",
-          prixServ: 0,
-          commissionServ: 0,
-        };
+    this.loading = true;
+    setTimeout(() => {
+      const loadingTimeout = setTimeout(() => {
+        this.loading = false;
+      }, 3000);
 
-        paiement.rendezVous.idRendezVous = this.idRendezVousToPay;
-        paiement.rendezVous.start = this.StartRendezVoudToPay;
-        paiement.montant = this.factureValue;
-        paiement.employe.idEmp = this.idEmployeToPay;
-        paiement.employe.nomEmp = this.nomEmpToPay;
-        paiement.client.idClient = this.idClientToPay;
-        paiement.client.nomClient = this.nomClientToPay;
-        paiement.service.idServ = this.idServiceToPay;
-        paiement.service.nomServ = this.NomServiceToPay;
-        console.log(this.NomServiceToPay);
-        paiement.service.prixServ = this.prixServiceToPay;
-        paiement.service.commissionServ = this.commissionServiceToPay;
+      console.log("payer");
+      this.userService.findByRole("manager").subscribe((response: any) => {
+        const manager: User[] = response.Users;
+        console.log(manager[0]);
+        if (manager[0].email) {
+          let paiement = new Paiement();
+          paiement.rendezVous = {
+            idRendezVous: "",
+            start: "",
+          };
+          paiement.employe = {
+            idEmp: "",
+            nomEmp: "",
+          };
+          paiement.client = {
+            idClient: "",
+            nomClient: "",
+          };
+          paiement.service = {
+            idServ: "",
+            nomServ: "",
+            prixServ: 0,
+            commissionServ: 0,
+          };
 
-        "Paiement du rendez vous id = " + this.idRendezVousToPay + " .";
-        paiement.temp = new Date().toLocaleString();
+          paiement.rendezVous.idRendezVous = this.idRendezVousToPay;
+          paiement.rendezVous.start = this.StartRendezVoudToPay;
+          paiement.montant = this.factureValue;
+          paiement.employe.idEmp = this.idEmployeToPay;
+          paiement.employe.nomEmp = this.nomEmpToPay;
+          paiement.client.idClient = this.idClientToPay;
+          paiement.client.nomClient = this.nomClientToPay;
+          paiement.service.idServ = this.idServiceToPay;
+          paiement.service.nomServ = this.NomServiceToPay;
+          console.log(this.NomServiceToPay);
+          paiement.service.prixServ = this.prixServiceToPay;
+          paiement.service.commissionServ = this.commissionServiceToPay;
 
-        this.paiementService
-          .createPaiement(paiement)
-          .subscribe((response: any) => {
-            this.myMobileMoney.monnaie =
-              this.myMobileMoney.monnaie - this.factureValue;
-            this.myMobileMoney.user = this.UserQuery;
+          "Paiement du rendez vous id = " + this.idRendezVousToPay + " .";
+          paiement.temp = new Date().toLocaleString();
 
-            let notification: Notification = new Notification();
-            notification.destinataire = manager[0]._id;
-            notification.isRead = false;
-            notification.notification =
-              this.UserQuery.name +
-              " a effectué son paiement pour son rendez vous id = " +
-              this.idRendezVousToPay;
-            notification.date = new Date().toLocaleString();
-            this.notificationService
-              .createNotification(notification)
-              .subscribe((response: any) => {});
+          this.paiementService
+            .createPaiement(paiement)
+            .subscribe((response: any) => {
+              clearTimeout(loadingTimeout);
+              this.loading = false;
+              this.myMobileMoney.monnaie =
+                this.myMobileMoney.monnaie - this.factureValue;
+              this.myMobileMoney.user = this.UserQuery;
 
-            let notificationRappelEmp: Notification = new Notification();
-            notificationRappelEmp.destinataire =
-              this.rendezVousToPay.employee.idEmployee;
-            notificationRappelEmp.isRead = false;
-            notificationRappelEmp.notification =
-              "Vous avez un rendezVous dans 2 heures (à " +
-              this.rendezVousToPay.start +
-              ").";
-            notificationRappelEmp.date = this.getDateTimeTwoHoursBefore(
-              new Date(this.rendezVousToPay.start)
-            ).toLocaleString();
-            this.notificationService
-              .createNotification(notificationRappelEmp)
-              .subscribe((response: any) => {});
+              let notification: Notification = new Notification();
+              notification.destinataire = manager[0]._id;
+              notification.isRead = false;
+              notification.notification =
+                this.UserQuery.name +
+                " a effectué son paiement pour son rendez vous id = " +
+                this.idRendezVousToPay;
+              notification.date = new Date().toLocaleString();
+              this.notificationService
+                .createNotification(notification)
+                .subscribe((response: any) => {});
 
-            let notificationRappelCli: Notification = new Notification();
-            notificationRappelCli.destinataire =
-              this.rendezVousToPay.client.idClient;
-            notificationRappelCli.isRead = false;
-            notificationRappelCli.notification =
-              "Vous avez un rendezVous dans 2 heures (à " +
-              this.rendezVousToPay.start +
-              ").";
-            notificationRappelCli.date = this.getDateTimeTwoHoursBefore(
-              new Date(this.rendezVousToPay.start)
-            ).toLocaleString();
-            this.notificationService
-              .createNotification(notificationRappelCli)
-              .subscribe((response: any) => {});
+              let notificationRappelEmp: Notification = new Notification();
+              notificationRappelEmp.destinataire =
+                this.rendezVousToPay.employee.idEmployee;
+              notificationRappelEmp.isRead = false;
+              notificationRappelEmp.notification =
+                "Vous avez un rendezVous dans 2 heures (à " +
+                this.rendezVousToPay.start +
+                ").";
+              notificationRappelEmp.date = this.getDateTimeTwoHoursBefore(
+                new Date(this.rendezVousToPay.start)
+              ).toLocaleString();
+              this.notificationService
+                .createNotification(notificationRappelEmp)
+                .subscribe((response: any) => {});
 
-            this.mobileMoneyService
-              .updateMobileMoney(this.myMobileMoney)
-              .subscribe((response: any) => {
-                console.log("userMoney after =>");
-                console.log(response);
-                this.getMyMobileMoney();
-              });
+              let notificationRappelCli: Notification = new Notification();
+              notificationRappelCli.destinataire =
+                this.rendezVousToPay.client.idClient;
+              notificationRappelCli.isRead = false;
+              notificationRappelCli.notification =
+                "Vous avez un rendezVous dans 2 heures (à " +
+                this.rendezVousToPay.start +
+                ").";
+              notificationRappelCli.date = this.getDateTimeTwoHoursBefore(
+                new Date(this.rendezVousToPay.start)
+              ).toLocaleString();
+              this.notificationService
+                .createNotification(notificationRappelCli)
+                .subscribe((response: any) => {});
 
-            this.mobileMoneyService
-              .getMyMobileMoney(manager[0])
-              .subscribe((response: any) => {
-                let managerMoney: MobileMoney = response.mobileMoney;
-                console.log(managerMoney);
-                managerMoney.monnaie = managerMoney.monnaie + this.factureValue;
-                managerMoney.user = manager[0];
-                this.mobileMoneyService
-                  .updateMobileMoney(managerMoney)
-                  .subscribe((response: any) => {
-                    console.log("managerMoney after =>");
-                    console.log(response);
-                  });
-              });
+              this.mobileMoneyService
+                .updateMobileMoney(this.myMobileMoney)
+                .subscribe((response: any) => {
+                  console.log("userMoney after =>");
+                  console.log(response);
+                  this.getMyMobileMoney();
+                });
 
-            this.rendezVousToPay.status = "confirmer";
-            this.rendezVousService
-              .update(this.rendezVousToPay._id, this.rendezVousToPay)
-              .subscribe((response: any) => {
-                this.getAllRendezVous();
-              });
-          });
-      }
-    });
+              this.mobileMoneyService
+                .getMyMobileMoney(manager[0])
+                .subscribe((response: any) => {
+                  let managerMoney: MobileMoney = response.mobileMoney;
+                  console.log(managerMoney);
+                  managerMoney.monnaie =
+                    managerMoney.monnaie + this.factureValue;
+                  managerMoney.user = manager[0];
+                  this.mobileMoneyService
+                    .updateMobileMoney(managerMoney)
+                    .subscribe((response: any) => {
+                      console.log("managerMoney after =>");
+                      console.log(response);
+                    });
+                });
+
+              this.rendezVousToPay.status = "confirmer";
+              this.rendezVousService
+                .update(this.rendezVousToPay._id, this.rendezVousToPay)
+                .subscribe((response: any) => {
+                  this.getAllRendezVous();
+                });
+            });
+        }
+      });
+    }, 3000);
   }
 
   getDateTimeTwoHoursBefore(datetime: Date): Date {

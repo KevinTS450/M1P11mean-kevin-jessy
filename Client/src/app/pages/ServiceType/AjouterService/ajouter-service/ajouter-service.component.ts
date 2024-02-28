@@ -59,7 +59,7 @@ export class AjouterServiceComponent implements OnInit {
     this.file_query = file;
   }
 
-  public AddServie(ServiceForm) {
+  public AddServie(ServiceForm: FormGroup) {
     try {
       if (ServiceForm.valid) {
         this.loading = true;
@@ -80,7 +80,10 @@ export class AjouterServiceComponent implements OnInit {
                 clearTimeout(loadingTimeout);
                 this.loading = false;
                 this.serviceCreated = true;
-
+                setTimeout(() => {
+                  this.serviceCreated = false;
+                }, 3000);
+                this.ServiceForm.reset();
                 this.userService
                   .GetUserByToken()
                   .subscribe((responseUser: any) => {
@@ -90,8 +93,7 @@ export class AjouterServiceComponent implements OnInit {
                     const idServ = response.status.insertedId;
                     const nomServ = response.result.nom;
                     const prixServ = result.prix;
-                    const id_envoyeur = responseUser.user._id;
-                    const nom_envoyeur = responseUser.user.name;
+
                     this.createNotification(
                       notification,
                       remarque,
@@ -103,10 +105,6 @@ export class AjouterServiceComponent implements OnInit {
                       responseUser.user.image
                     );
                   });
-
-                setTimeout(() => {
-                  this.serviceCreated = false;
-                }, 4000);
               });
           });
         }, 3000);

@@ -13,7 +13,7 @@
   <div class="container-fluid d-flex align-items-center">
     <div class="row">
       <div class="col-lg-7 col-md-10">
-        <h1 class="display-2 text-white">Hello username</h1>
+        <h1 class="display-2 text-white">Hello {{ UserQuery.name }}</h1>
         <p class="text-white mt-0 mb-5">
           Vous pouvez créez un rendez-vous pour un service avec un employé de
           votre choix.
@@ -25,6 +25,10 @@
 
 <div class="container-fluid mt--7">
   <div class="row">
+    <ngx-loading
+      [show]="loading"
+      [config]="{ backdropBorderRadius: '8px' }"
+    ></ngx-loading>
     <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
       <div class="card card-profile shadow">
         <div class="row justify-content-center">

@@ -39,7 +39,7 @@ export class NotificationComponent implements OnInit {
       setTimeout(() => {
         const loadingTimeout = setTimeout(() => {
           this.loading = false;
-        }, 30000);
+        }, 3000);
 
         this.userService.GetUserByToken().subscribe((response: any) => {
           this.UserQuery = response.user;
