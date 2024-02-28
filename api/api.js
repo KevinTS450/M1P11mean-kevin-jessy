@@ -9,8 +9,8 @@ const rendezVousController = require("../Controller/RendezVousController/rendezV
 const UploadController = require("../Controller/UploadController/UploadController.js");
 const ThumbnailsController = require("../Controller/ThumbnailsController/thumbnailsController.js");
 const PointageController = require("../Controller/PointageController/pointageController.js");
-const ServiceController = require("../controller/ServiceTypeController/serviceController.js");
-const PreferenceController = require("../controller/preferenceController/preferenceController.js");
+const ServiceController = require("../Controller/ServiceTypeController/serviceController.js");
+const PreferenceController = require("../Controller/preferenceController/preferenceController.js");
 const PaiementController = require("../Controller/PaiementController/paiementCtrl.js");
 const NotificationController = require("../Controller/NotificationController/notificationController.js");
 
