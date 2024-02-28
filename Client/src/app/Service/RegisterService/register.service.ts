@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class RegisterService {
-  private baseUrl = "http://localhost:5000/api/user";
+  private baseUrl = "https://m1p11mean-kevin-jessy-1.onrender.com/api/user";
 
   constructor(private http: HttpClient) {}
 

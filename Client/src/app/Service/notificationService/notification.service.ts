@@ -8,7 +8,8 @@ import { Notification } from "src/app/Model/Notification/notification";
 })
 export class NotificationService {
   constructor(private http: HttpClient) {}
-  private baseUrl = "http://localhost:5000/api/notification";
+  private baseUrl =
+    "https://m1p11mean-kevin-jessy-1.onrender.com/api/notification";
 
   public createNotification(data: Notification): Observable<Notification> {
     return this.http.post<Notification>(`${this.baseUrl}/create`, data);

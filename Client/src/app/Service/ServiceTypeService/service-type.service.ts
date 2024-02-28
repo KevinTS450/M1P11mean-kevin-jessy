@@ -8,7 +8,7 @@ import { ServieType } from "src/app/Model/serviceType/servie-type";
 })
 export class ServiceTypeService {
   constructor(private http: HttpClient) {}
-  private baseUrl = "http://localhost:5000/api/service";
+  private baseUrl = "https://m1p11mean-kevin-jessy-1.onrender.com/api/service";
   public CreateService(service: FormData): Observable<string[]> {
     return this.http.post<string[]>(`${this.baseUrl}/create`, service);
   }

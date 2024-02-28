@@ -8,7 +8,7 @@ import { RendezVous } from "src/app/Model/rendezVous/rendez-vous";
   providedIn: "root",
 })
 export class RendezVousService {
-  projetUrl = "http://localhost:5000/api/rendezVous/";
+  projetUrl = "https://m1p11mean-kevin-jessy-1.onrender.com/api/rendezVous/";
 
   constructor(private httpClient: HttpClient) {}
 

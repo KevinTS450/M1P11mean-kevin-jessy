@@ -6,7 +6,7 @@ import { SessionService } from "src/app/pages/session/session.service";
   providedIn: "root",
 })
 export class AuthService {
-  private baseUrl = "http://localhost:5000/api/user";
+  private baseUrl = "https://m1p11mean-kevin-jessy-1.onrender.com/api/user";
 
   constructor(private http: HttpClient, private session: SessionService) {}
 

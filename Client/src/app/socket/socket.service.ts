@@ -9,7 +9,7 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io("http://localhost:5000"); // Change the URL to your server address
+    this.socket = io("https://m1p11mean-kevin-jessy-1.onrender.com"); // Change the URL to your server address
   }
 
   sendMessage(message: string): void {
