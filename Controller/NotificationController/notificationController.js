@@ -1,5 +1,5 @@
 const NotificationService = require("../../service/notification/notification");
-const notification_model = require("../../model/notification/notification");
+const notification_model = require("../../model/Notification/notification");
 const socketIo = require("../../socketio");
 
 async function CreateNotifController(req, res, next) {
