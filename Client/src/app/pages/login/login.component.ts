@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
                       clearTimeout(loadingTimeout);
                       if (responseAuth.accessToken) {
                         this.session.setToken(responseAuth.accessToken);
+                        localStorage.setItem("exp", responseAuth.expiresIn);
                         this.route.navigate(["user-profile"]);
                       }
                     },
