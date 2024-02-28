@@ -21,7 +21,7 @@
           Voici la liste de nos services.
         </p>
         <a
-          *ngIf="userProfile.role === 'employe'"
+          *ngIf="userProfile.role === 'manager'"
           (click)="toAddService()"
           class="btn btn-info"
           >Ajouter un service</a
@@ -153,12 +153,12 @@
               commission : {{ service_query.service.commSer }}
             </p>
             <a
-              *ngIf="userProfile.role === 'employe'"
+              *ngIf="userProfile.role === 'manager'"
               (click)="ToUpdate(service_query._id)"
               class="btn btn-primary"
               >Modifier</a
             >
-            <a *ngIf="userProfile.role === 'employe'" class="btn btn-danger">
+            <a *ngIf="userProfile.role === 'manager'" class="btn btn-danger">
               Supprimer
             </a>
             <a
@@ -206,13 +206,13 @@
             <p class="card-text">durree : {{ service_query.durre }}</p>
             <p class="card-text">commission : {{ service_query.commission }}</p>
             <a
-              *ngIf="userProfile.role === 'employe'"
+              *ngIf="userProfile.role === 'manager'"
               (click)="ToUpdate(service_query._id)"
               class="btn btn-primary"
               >Modifier</a
             >
             <a
-              *ngIf="userProfile.role === 'employe'"
+              *ngIf="userProfile.role === 'manager'"
               class="btn btn-danger"
               (click)="RemoveService(service_query._id)"
             >
