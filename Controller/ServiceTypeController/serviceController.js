@@ -1,4 +1,4 @@
-const ServiceTypeService = require("../../service/ServiceType/service");
+const ServiceTypeService = require("../../service/ServiceType/Service");
 const Service = require("../../model/Service/service");
 const socketIo = require("../../socketio");
 
