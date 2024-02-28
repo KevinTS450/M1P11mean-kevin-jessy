@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class UploadService {
-  private baseUrl = "http://localhost:5000/api";
+  private baseUrl = "https://m1p11mean-kevin-jessy-1.onrender.com/api";
 
   constructor(private http: HttpClient) {}
 

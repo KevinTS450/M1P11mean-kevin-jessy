@@ -8,7 +8,7 @@ import { User } from "src/app/Model/User/user";
   providedIn: "root",
 })
 export class UserService {
-  private baseUrl = "http://localhost:5000/api/user";
+  private baseUrl = "https://m1p11mean-kevin-jessy-1.onrender.com/api/user";
 
   constructor(private http: HttpClient, private session: SessionService) {}
 
@@ -35,7 +35,9 @@ export class UserService {
     return this.http.get<User[]>(`${this.baseUrl}/AllUser`);
   }
 
-  public findByRole(role:string): Observable<User[]> {
-    return this.http.get<User[]>(`${this.baseUrl}`+`/findByRole`+`/${role}`);
+  public findByRole(role: string): Observable<User[]> {
+    return this.http.get<User[]>(
+      `${this.baseUrl}` + `/findByRole` + `/${role}`
+    );
   }
 }

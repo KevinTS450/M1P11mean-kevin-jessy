@@ -8,7 +8,7 @@ import { Paiement } from "src/app/Model/paiement/paiement";
 })
 export class PaiementService {
   constructor(private http: HttpClient) {}
-  private baseUrl = "http://localhost:5000/api/Paiement";
+  private baseUrl = "https://m1p11mean-kevin-jessy-1.onrender.com/api/Paiement";
 
   public createPaiement(data: Paiement): Observable<Paiement> {
     return this.http.post<Paiement>(`${this.baseUrl}/create`, data);

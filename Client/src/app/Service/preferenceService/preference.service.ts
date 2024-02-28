@@ -9,7 +9,8 @@ import { Preference } from "src/app/Model/Preference/preference";
 export class PreferenceService {
   constructor(private http: HttpClient) {}
 
-  private baseUrl = "http://localhost:5000/api/preference";
+  private baseUrl =
+    "https://m1p11mean-kevin-jessy-1.onrender.com/api/preference";
 
   public AddPreference(data: Preference): Observable<Preference> {
     return this.http.post<Preference>(`${this.baseUrl}/add`, data);
