@@ -44,8 +44,9 @@ async function setupServer() {
     await database.connect();
 
     // Initialize Socket.IO and pass the Express server instance
+    const port = process.env.port;
     const server = await new Promise((resolve, reject) => {
-      const httpServer = app.listen(5000, () => {
+      const httpServer = app.listen(port, () => {
         console.log(`Server running on port 5000`);
         resolve(httpServer);
       });
