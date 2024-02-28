@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const secretKey = "defaultSecret";
 const database = require("../database.js");
-const socketIo = require("../../socketio");
+const socketIo = require("../socketio");
 
 const User = require("../model/Users/user");
 
