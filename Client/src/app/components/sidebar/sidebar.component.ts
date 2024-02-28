@@ -39,7 +39,7 @@ export const ROUTES: RouteInfo[] = [
     title: "service",
     icon: "ni-book-bookmark text-red",
     class: "",
-    hidden: userProfileClientEmp,
+    hidden: userProfileManger,
   },
   // {
   //   path: "/priseRendezVous",
