@@ -19,196 +19,402 @@
     <div class="row">
       <div class="col-lg-7 col-md-10">
         <h1 class="display-2 text-white">Hello {{ UserQuery.name }}</h1>
-        <p class="text-white mt-0 mb-5">
-          voici la liste des employer . ajouter a vos favoris les employer que
-          vous apprécier
-        </p>
+        <p class="text-white mt-0 mb-5">Gerer les personnel</p>
       </div>
     </div>
   </div>
 </div>
 
-<div class="col-xl-8 order-xl-1">
-  <div class="card bg-secondary shadow">
-    <div class="card-header bg-white border-0">
-      <div class="row align-items-center">
-        <div class="col-8">
-          <h3 class="mb-0">Employe</h3>
+<div class="row" cdkDropListGroup>
+  <div class="col-xl-6 order-xl-1 example">
+    <div class="card bg-secondary shadow">
+      <div class="card-header bg-white border-0">
+        <div class="row align-items-center">
+          <div class="col-8">
+            <h3 class="mb-0">Employe</h3>
+          </div>
         </div>
-        <div class="col-4 text-right">
-          <button
-            *ngIf="list_emp"
-            (click)="changeStatePreference()"
-            class="btn btn-sm btn-primary"
+        <div class="card-body">
+          <form
+            class="navbar-search form-inline mr-3 d-none d-md-flex ml-lg-auto"
           >
-            Liste des favoris <span class="badge badge-white">{{ count }}</span>
-          </button>
-          <button
-            *ngIf="list_preference"
-            (click)="changeStatePreferenceEmploye()"
-            class="btn btn-sm btn-primary"
-          >
-            Liste des employer
-          </button>
-        </div>
-      </div>
-      <div *ngIf="list_emp" class="card-body">
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Image</th>
-                <th scope="col">Nom</th>
-                <th scope="col">prenom</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="
-                  let users of employe
-                    | paginate
-                      : {
-                          itemsPerPage: 5,
-                          currentPage: pagination,
-                          totalItems: totalLength
-                        }
-                "
+            <div class="form-group mb-0" [ngClass]="{ focused: focus === true }">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="Entrer le name de l'employe que vous cherchez"
+                  type="text"
+                  [(ngModel)]="searchValue"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  (input)="searchEmploye()"
+                />
+              </div>
+            </div>
+          </form>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Image</th>
+                  <th scope="col">Nom</th>
+                  <th scope="col">prenom</th>
+                  <th scope="col">Email</th>
+                  <!-- <th scope="col"></th> -->
+                </tr>
+              </thead>
+              <tbody 
+                *ngIf="!searchValue"
+                cdkDropList
+                [cdkDropListData]="employe"
+                (cdkDropListDropped)="dropPreference($event)"
               >
-                <th scope="row">
-                  <div class="media align-items-center">
-                    <a href="#" class="avatar rounded-circle mr-3">
-                      <img
-                        alt="Image placeholder"
-                        src="assets/uploads/{{ users.image }}"
-                      />
-                    </a>
-                  </div>
-                </th>
-                <td>{{ users.name }}</td>
-                <td>
-                  {{ users.last_name }}
-                </td>
-                <td>
-                  {{ users.email }}
-                </td>
-                <td>
-                  {{ users.role }}
-                </td>
-
-                <td>
-                  <button
-                    *ngIf="!isServiceAddedToFavorites(users._id)"
-                    (click)="
-                      AddToPreference(
-                        users._id,
-                        users.name,
-                        users.last_name,
-                        users.image,
-                        users.email
-                      )
-                    "
-                    class="btn btn-sm btn-success"
-                  >
-                    Ajouter aux favoris
-                  </button>
-                  <button
-                    *ngIf="isServiceAddedToFavorites(users._id)"
-                    (click)="removePreference(UserQuery._id)"
-                    class="btn btn-sm btn-danger"
-                  >
-                    Retirer aux favoris
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="preference_add" class="alert alert-info" role="alert">
-            Employe ajouter au preference.
-          </div>
-          <div
-            *ngIf="preference_remove"
-            class="alert alert-danger"
-            role="alert"
-          >
-            Employe retirer au preference.
-          </div>
-          <div class="card-footer py-4">
-            <div class="pagination align-items-end">
-              <pagination-controls (pageChange)="pagination = $event">
-              </pagination-controls>
+                <tr
+                  *ngFor="
+                    let users of employe
+                      | paginate
+                        : {
+                            itemsPerPage: 5,
+                            currentPage: pagination,
+                            totalItems: totalLength
+                          }; let i = index
+                  "
+                  class="example-box" cdkDrag [cdkDragData]="users"
+                >                 
+                  <ng-container  *ngIf="i === 0 && isServiceAddedToFavorites(users._id)">
+                    <th style="cursor: initial;"></th>
+                    <td style="cursor: initial;"></td>
+                    <td style="cursor: initial;">Drop preference here for removing it</td>
+                    <td style="cursor: initial;"></td>
+                  </ng-container>
+                  <ng-container *ngIf="!isServiceAddedToFavorites(users._id)">
+                    <th scope="row">
+                      <div class="media align-items-center">
+                        <a href="#" class="avatar rounded-circle mr-3">
+                          <img
+                            alt="Image placeholder"
+                            src="assets/uploads/{{ users.image }}"
+                          />
+                        </a>
+                      </div>
+                    </th>
+                    <td>{{ users.name }}</td>
+                    <td>
+                      {{ users.last_name }}
+                    </td>
+                    <td>
+                      {{ users.email }}
+                    </td>
+    
+                    <!-- <td>
+                      <button
+                        *ngIf="!isServiceAddedToFavorites(users._id)"
+                        (click)="
+                          AddToPreference(
+                            users._id,
+                            users.name,
+                            users.last_name,
+                            users.image,
+                            users.email
+                          )
+                        "
+                        class="btn btn-sm btn-success"
+                      >
+                        Ajouter aux favoris
+                      </button>
+                      <button
+                        *ngIf="isServiceAddedToFavorites(users._id)"
+                        (click)="removePreference(UserQuery._id)"
+                        class="btn btn-sm btn-danger"
+                      >
+                        Retirer aux favoris
+                      </button>
+                    </td> -->
+                  </ng-container>
+                </tr>
+              </tbody>
+              <tbody 
+                *ngIf="searchValue"
+                cdkDropList
+                [cdkDropListData]="employeFiltered"
+                (cdkDropListDropped)="dropPreference($event)"
+                >
+                <tr
+                  *ngFor="
+                    let users of employeFiltered
+                      | paginate
+                        : {
+                            itemsPerPage: 5,
+                            currentPage: pagination,
+                            totalItems: totalLength
+                          }
+                  "
+                  class="example-box" cdkDrag [cdkDragData]="users"
+                >
+                  <ng-container *ngIf="!isServiceAddedToFavorites(users._id)">
+                    <th scope="row">
+                      <div class="media align-items-center">
+                        <a href="#" class="avatar rounded-circle mr-3">
+                          <img
+                            alt="Image placeholder"
+                            src="assets/uploads/{{ users.image }}"
+                          />
+                        </a>
+                      </div>
+                    </th>
+                    <td>{{ users.name }}</td>
+                    <td>
+                      {{ users.last_name }}
+                    </td>
+                    <td>
+                      {{ users.email }}
+                    </td>
+                    <td>
+                      {{ users.role }}
+                    </td>
+    
+                    <!-- <td>
+                      <button
+                        *ngIf="!isServiceAddedToFavorites(users._id)"
+                        (click)="
+                          AddToPreference(
+                            users._id,
+                            users.name,
+                            users.last_name,
+                            users.image,
+                            users.email
+                          )
+                        "
+                        class="btn btn-sm btn-success"
+                      >
+                        Ajouter aux favoris
+                      </button>
+                      <button
+                        *ngIf="isServiceAddedToFavorites(users._id)"
+                        (click)="removePreference(UserQuery._id)"
+                        class="btn btn-sm btn-danger"
+                      >
+                        Retirer aux favoris
+                      </button>
+                    </td> -->
+                  </ng-container>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="preference_add" class="alert alert-info" role="alert">
+              Employe ajouter au preference.
+            </div>
+            <div
+              *ngIf="preference_remove"
+              class="alert alert-danger"
+              role="alert"
+            >
+              Employe retirer au preference.
+            </div>
+            <div class="card-footer py-4">
+              <div class="pagination align-items-end">
+                <pagination-controls (pageChange)="pagination = $event">
+                </pagination-controls>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="list_preference" class="card-body">
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Image</th>
-                <th scope="col">Nom</th>
-                <th scope="col">prenom</th>
-                <th scope="col">Email</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="
-                  let users of List_preference_query
-                    | paginate
-                      : {
-                          itemsPerPage: 5,
-                          currentPage: pagination,
-                          totalItems: totalLength
-                        }
-                "
-              >
-                <th scope="row">
-                  <div class="media align-items-center">
-                    <a href="#" class="avatar rounded-circle mr-3">
-                      <img
-                        alt="Image placeholder"
-                        src="assets/uploads/{{ users.employe.imageEmploye }}"
-                      />
-                    </a>
-                  </div>
-                </th>
-                <td>{{ users.employe.nomEmploye }}</td>
-                <td>
-                  {{ users.employe.prenomEmploye }}
-                </td>
-                <td>
-                  {{ users.employe.emailEmploye }}
-                </td>
+    </div>
+  </div>
 
-                <td>
-                  <button
-                    (click)="removePreference(UserQuery._id)"
-                    class="btn btn-sm btn-danger"
-                  >
-                    Retirer aux favoris
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div
-            *ngIf="preference_remove"
-            class="alert alert-danger"
-            role="alert"
-          >
-            Employe retirer au preference.
+  <div class="col-xl-6 order-xl-1">
+    <div class="card bg-secondary shadow">
+      <div class="card-header bg-white border-0">
+        <div class="row align-items-center">
+          <div class="col-8">
+            <h3 class="mb-0">Preferences</h3>
           </div>
-          <div class="card-footer py-4">
-            <div class="pagination align-items-end">
-              <pagination-controls
-                (pageChange)="pagination = $event"
-              ></pagination-controls>
+        </div>
+        <div class="card-body">
+          <form
+            class="navbar-search form-inline mr-3 d-none d-md-flex ml-lg-auto"
+          >
+            <div class="form-group mb-0" [ngClass]="{ focused: focus === true }">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="Entrer le name de l'employe que vous cherchez"
+                  type="text"
+                  [(ngModel)]="searchValue_preference"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  (input)="searchEmploye_pref()"
+                />
+              </div>
+            </div>
+          </form>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Image</th>
+                  <th scope="col">Nom</th>
+                  <th scope="col">prenom</th>
+                  <th scope="col">Email</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody
+                *ngIf="!searchValue_preference"
+                cdkDropList
+                [cdkDropListData]="List_preference_query"
+                (cdkDropListDropped)="dropEmploye($event)"
+              >
+                <ng-container  *ngIf="List_preference_queryLength > 0">
+                  <tr
+                    *ngFor="
+                      let users of List_preference_query
+                        | paginate
+                          : {
+                              itemsPerPage: 5,
+                              currentPage: pagination,
+                              totalItems: totalLength
+                            }
+                    "
+                    class="example-box" cdkDrag [cdkDragData]="users"
+                  >
+                    <ng-container *ngIf="!isServiceAddedToFavorites(users._id)">
+                      <th scope="row">
+                        <div class="media align-items-center">
+                          <a href="#" class="avatar rounded-circle mr-3">
+                            <img
+                              alt="Image placeholder"
+                              src="assets/uploads/{{ users.employe.imageEmploye }}"
+                            />
+                          </a>
+                        </div>
+                      </th>
+                      <td>{{ users.employe.nomEmploye }}</td>
+                      <td>
+                        {{ users.employe.prenomEmploye }}
+                      </td>
+                      <td>
+                        {{ users.employe.emailEmploye }}
+                      </td>
+                    </ng-container>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="List_preference_queryLength === 0">
+                  <tr
+                    class="example-box"
+                  >
+                    <th></th>
+                    <th>Drop employe here for adding it to your preferences.</th>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </ng-container>
+              </tbody>
+              <tbody
+                *ngIf="searchValue_preference"
+                cdkDropList
+                [cdkDropListData]="List_preference_query"
+                (cdkDropListDropped)="dropEmploye($event)"
+              >
+                <ng-container  *ngIf="List_preference_queryLength > 0">
+                  <tr
+                    *ngFor="
+                      let users of List_preference_queryFiltered
+                        | paginate
+                          : {
+                              itemsPerPage: 5,
+                              currentPage: pagination,
+                              totalItems: totalLength
+                            }
+                    "
+                    class="example-box" cdkDrag [cdkDragData]="users"
+                  >
+                    <ng-container *ngIf="!isServiceAddedToFavorites(users._id)">
+                      <th scope="row">
+                        <div class="media align-items-center">
+                          <a href="#" class="avatar rounded-circle mr-3">
+                            <img
+                              alt="Image placeholder"
+                              src="assets/uploads/{{ users.employe.imageEmploye }}"
+                            />
+                          </a>
+                        </div>
+                      </th>
+                      <td>{{ users.employe.nomEmploye }}</td>
+                      <td>
+                        {{ users.employe.prenomEmploye }}
+                      </td>
+                      <td>
+                        {{ users.employe.emailEmploye }}
+                      </td>
+                    </ng-container>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="List_preference_queryLength === 0">
+                  <tr
+                    class="example-box"
+                  >
+                    <th></th>
+                    <th>Drop employe here for adding it to your preferences.</th>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </ng-container>
+                <!-- <tr
+                  *ngFor="
+                    let users of List_preference_queryFiltered
+                      | paginate
+                        : {
+                            itemsPerPage: 5,
+                            currentPage: pagination,
+                            totalItems: totalLength
+                          }
+                  "
+                  class="example-box" cdkDrag [cdkDragData]="users"
+                >
+                  <ng-container *ngIf="!isServiceAddedToFavorites(users._id)">
+                    <th scope="row">
+                      <div class="media align-items-center">
+                        <a href="#" class="avatar rounded-circle mr-3">
+                          <img
+                            alt="Image placeholder"
+                            src="assets/uploads/{{ users.employe.imageEmploye }}"
+                          />
+                        </a>
+                      </div>
+                    </th>
+                    <td>{{ users.employe.nomEmploye }}</td>
+                    <td>
+                      {{ users.employe.prenomEmploye }}
+                    </td>
+                    <td>
+                      {{ users.employe.emailEmploye }}
+                    </td>
+                  </ng-container>
+                </tr> -->
+              </tbody>
+            </table>
+  
+            <div
+              *ngIf="preference_remove"
+              class="alert alert-danger"
+              role="alert"
+            >
+              Employe retirer au preference.
+            </div>
+            <div class="card-footer py-4">
+              <div class="pagination align-items-end">
+                <pagination-controls
+                  (pageChange)="pagination = $event"
+                ></pagination-controls>
+              </div>
             </div>
           </div>
         </div>
