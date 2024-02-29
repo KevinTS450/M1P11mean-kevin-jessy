@@ -6,10 +6,10 @@ async function uploadImage(req, res) {
     upload.single("image")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.error("Multer error:", err);
-        return res.status(500).json({ message: "Multer error" });
+        return res.status(500).json({ message: "Multer error", error: err });
       } else if (err) {
         console.error("Unknown error:", err);
-        return res.status(500).json({ message: "Unknown error" });
+        return res.status(500).json({ message: "Unknown error", error: err });
       }
 
       if (!req.file) {
@@ -21,7 +21,9 @@ async function uploadImage(req, res) {
     });
   } catch (error) {
     console.error("Error uploading image:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error });
   }
 }
 
