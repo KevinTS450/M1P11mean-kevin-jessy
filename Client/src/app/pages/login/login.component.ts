@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit {
   Auth_form: FormGroup;
   error_auth: boolean = false;
   account_not_exist: boolean = false;
+  defaultLogin = '';
+  defaultPWD = '';
 
   ngOnInit(): void {
     this.Auth_form = this.formBuilder.group({
@@ -59,7 +61,6 @@ export class LoginComponent implements OnInit {
                       clearTimeout(loadingTimeout);
                       if (responseAuth.accessToken) {
                         this.session.setToken(responseAuth.accessToken);
-                        localStorage.setItem("exp", responseAuth.expiresIn);
                         this.route.navigate(["user-profile"]);
                       }
                     },
@@ -90,5 +91,20 @@ export class LoginComponent implements OnInit {
         }
       });
     }
+  }
+
+  defaultClient() {
+    this.defaultLogin = 'clientsb63@gmail.com';
+    this.defaultPWD = 'client';
+  }
+
+  defaultEmploye() {
+    this.defaultLogin = 'clientsalonbeaute@gmail.com';
+    this.defaultPWD = 'a';
+  }
+
+  defaultManager() {
+    this.defaultLogin = 'managersb48@gmail.com';
+    this.defaultPWD = 'manager';
   }
 }

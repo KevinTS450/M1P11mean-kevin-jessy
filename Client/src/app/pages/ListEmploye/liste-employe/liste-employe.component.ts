@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Component, OnInit } from "@angular/core";
 import { response } from "express";
 import { Preference } from "src/app/Model/Preference/preference";
@@ -12,18 +13,26 @@ import { SocketService } from "src/app/socket/socket.service";
   styleUrls: ["./liste-employe.component.scss"],
 })
 export class ListeEmployeComponent implements OnInit {
+
+  searchValue_preference: string;
+  List_preference_queryLength: number;
   constructor(
     private userService: UserService,
     private preferenceService: PreferenceService,
     private socketService: SocketService
   ) {}
   UserQuery: User = new User();
+  public focus;
   employe: User[];
+  employeFiltered:User[];
   loading: boolean = false;
   count: number;
   list_emp: boolean = true;
   list_preference: boolean = false;
   List_preference_query: Preference[];
+  List_preference_queryFiltered: Preference[];
+  searchValue:string;
+  isUsed = 0;
 
   preference_add: boolean = false;
   preference_remove: boolean = false;
@@ -39,6 +48,7 @@ export class ListeEmployeComponent implements OnInit {
   public removePreference(clientId: string) {
     try {
       this.loading = true;
+      this.GetPreference(this.UserQuery._id);
       setTimeout(async () => {
         const loadingTimeout = setTimeout(() => {
           this.loading = false;
@@ -55,6 +65,7 @@ export class ListeEmployeComponent implements OnInit {
             setTimeout(() => {
               this.preference_remove = false;
             }, 3000);
+            this.ngOnInit();
           });
       }, 3000);
     } catch (error) {
@@ -128,6 +139,7 @@ export class ListeEmployeComponent implements OnInit {
         this.userService.findByRole("employe").subscribe((response: any) => {
           console.log(response);
           this.employe = response.Users;
+          this.employeFiltered = response.Users;
           clearTimeout(loadingTimeout);
           this.loading = false;
         });
@@ -164,7 +176,7 @@ export class ListeEmployeComponent implements OnInit {
   ) {
     try {
       this.loading = true;
-
+      this.GetPreference(this.UserQuery._id);
       setTimeout(async () => {
         const loadingTimeout = setTimeout(() => {
           this.loading = false;
@@ -214,6 +226,7 @@ export class ListeEmployeComponent implements OnInit {
               setTimeout(() => {
                 this.preference_add = false;
               }, 3000);
+              this.ngOnInit();
             });
         }
       }, 3000);
@@ -248,11 +261,15 @@ export class ListeEmployeComponent implements OnInit {
         .subscribe((response: any) => {
           console.log(response);
           this.List_preference_query = response.preference;
+          this.List_preference_queryLength = this.List_preference_query.length;
+          this.List_preference_queryFiltered = this.List_preference_query;
+          console.log(this.List_preference_query);
         });
     } catch (error) {
       console.error(error);
     }
   }
+  
   public isServiceAddedToFavorites(empId: string): boolean {
     if (this.List_preference_query && this.List_preference_query.length > 0) {
       return this.List_preference_query.some(
@@ -278,4 +295,49 @@ export class ListeEmployeComponent implements OnInit {
       return false;
     }
   }
+
+  searchEmploye() {
+    console.log(this.searchValue);
+    this.employeFiltered = this.employe;
+    this.employeFiltered = this.employeFiltered.filter(resp => resp.name.startsWith(this.searchValue));
+  }
+
+  searchEmploye_pref() {
+    console.log(this.searchValue_preference)
+    this.List_preference_queryFiltered = this.List_preference_query;
+    this.List_preference_queryFiltered = this.List_preference_queryFiltered.filter(resp => resp.employe.nomEmploye.startsWith(this.searchValue_preference));
+  }
+
+  dropEmploye(event: CdkDragDrop<User[]>) {
+    console.log(event.item.data);
+    const userDragged:User = event.item.data;
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.employe, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+      this.AddToPreference(userDragged._id,userDragged.name,userDragged.last_name,userDragged.image,userDragged.email);
+    }
+  }
+
+  dropPreference(event: CdkDragDrop<Preference[]>) {
+    console.log(event.item.data);
+    const preferenceDragged:Preference = event.item.data;
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.List_preference_query, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+      this.removePreference(this.UserQuery._id)
+    }
+  }
+
 }
