@@ -146,7 +146,6 @@ export class SidebarComponent implements OnInit {
     try {
       this.user.GetUserByToken().subscribe((response: any) => {
         this.UserProfile = response.user;
-        // console.log(this.UserProfile);
         this.updateMenuItems();
         this.getNotificationCount(response.user._id);
       });
