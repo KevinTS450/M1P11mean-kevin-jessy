@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
       __dirname,
       "..",
       "..",
-      "Client/src/assets/uploads"
+      "/opt/render/project/src/"
     );
     cb(null, destinationPath);
   },
