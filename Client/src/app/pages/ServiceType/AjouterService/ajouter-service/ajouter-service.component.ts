@@ -130,7 +130,7 @@ export class AjouterServiceComponent implements OnInit {
         prix: ["", Validators.required],
         durre: ["", Validators.required],
         commission: ["", Validators.required],
-        image: ["", Validators.required],
+        image: [""],
       });
     } catch (error) {
       console.error(error);
