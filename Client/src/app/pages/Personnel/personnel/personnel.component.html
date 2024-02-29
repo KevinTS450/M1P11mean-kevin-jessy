@@ -64,8 +64,19 @@
           <div class="media align-items-center">
             <a href="#" class="avatar rounded-circle mr-3">
               <img
+                *ngIf="users.role === 'client'"
                 alt="Image placeholder"
-                src="assets/uploads/{{ users.image }}"
+                src="assets/uploads/client.png"
+              />
+              <img
+                *ngIf="users.role === 'employe'"
+                alt="Image placeholder"
+                src="assets/uploads/emp.png"
+              />
+              <img
+                *ngIf="users.role === 'manager'"
+                alt="Image placeholder"
+                src="assets/uploads/manager.png"
               />
             </a>
           </div>

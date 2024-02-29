@@ -146,7 +146,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label class="form-control-label" for="input-email"
                     >Image</label
                   >
@@ -157,18 +157,7 @@
                     formControlName="image"
                     (change)="onFileSelected($event)"
                   />
-                </div>
-                <div
-                  *ngIf="
-                    ServiceForm.get('image').invalid &&
-                    (ServiceForm.get('image').dirty ||
-                      ServiceForm.get('image').touched)
-                  "
-                  class="alert alert-danger"
-                  role="alert"
-                >
-                  Image is required.
-                </div>
+                </div> -->
               </div>
               <a (click)="updateService(ServiceForm)" class="btn btn-info"
                 >Modifier</a

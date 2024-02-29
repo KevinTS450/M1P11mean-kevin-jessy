@@ -68,8 +68,17 @@
                 >
                   <td>
                     <img
+                      *ngIf="notif.notification === 'service'"
                       alt="Image placeholder"
-                      src="assets/uploads/{{ notif.envoyeur.imageEnv }}"
+                      src="assets/uploads/service.png"
+                      class="avatar rounded-circle"
+                      height="50"
+                      width="50"
+                    />
+                    <img
+                      *ngIf="notif.notification === 'paiements'"
+                      alt="Image placeholder"
+                      src="assets/uploads/paiements.png"
                       class="avatar rounded-circle"
                       height="50"
                       width="50"

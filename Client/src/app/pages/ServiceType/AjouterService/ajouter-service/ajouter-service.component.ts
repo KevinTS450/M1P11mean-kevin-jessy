@@ -70,43 +70,39 @@ export class AjouterServiceComponent implements OnInit {
           this.loading = true;
 
           const result = ServiceForm.value;
-          this.upload.UploadImg(this.file_query).subscribe((responseFile) => {
-            console.log(responseFile);
-            result.image = this.file_query.name;
-            this.serviceTypeService
-              .CreateService(result)
-              .subscribe((response: any) => {
-                console.log(response);
-                clearTimeout(loadingTimeout);
-                this.loading = false;
-                this.serviceCreated = true;
-                setTimeout(() => {
-                  this.serviceCreated = false;
-                }, 3000);
-                this.ServiceForm.reset();
-                this.userService
-                  .GetUserByToken()
-                  .subscribe((responseUser: any) => {
-                    console.log(responseUser);
-                    const notification = "service";
-                    const remarque = "a ajouter un nouveau service :";
-                    const idServ = response.status.insertedId;
-                    const nomServ = response.result.nom;
-                    const prixServ = result.prix;
 
-                    this.createNotification(
-                      notification,
-                      remarque,
-                      idServ,
-                      nomServ,
-                      prixServ,
-                      responseUser.user._id,
-                      responseUser.user.name,
-                      responseUser.user.image
-                    );
-                  });
-              });
-          });
+          this.serviceTypeService
+            .CreateService(result)
+            .subscribe((response: any) => {
+              console.log(response);
+              clearTimeout(loadingTimeout);
+              this.loading = false;
+              this.serviceCreated = true;
+              setTimeout(() => {
+                this.serviceCreated = false;
+              }, 3000);
+              this.ServiceForm.reset();
+              this.userService
+                .GetUserByToken()
+                .subscribe((responseUser: any) => {
+                  console.log(responseUser);
+                  const notification = "service";
+                  const remarque = "a ajouter un nouveau service :";
+                  const idServ = response.status.insertedId;
+                  const nomServ = response.result.nom;
+                  const prixServ = result.prix;
+
+                  this.createNotification(
+                    notification,
+                    remarque,
+                    idServ,
+                    nomServ,
+                    prixServ,
+                    responseUser.user._id,
+                    responseUser.user.name
+                  );
+                });
+            });
         }, 3000);
       } else {
         ServiceForm.markAllAsTouched();
@@ -159,8 +155,7 @@ export class AjouterServiceComponent implements OnInit {
     nomServ: string,
     prixServ: string,
     idEnvoyeur: string,
-    nomEnvoyeur: string,
-    imageEnv: string
+    nomEnvoyeur: string
   ) {
     const date = new Date().toLocaleString();
     const notification_query = new Notification();
@@ -183,7 +178,6 @@ export class AjouterServiceComponent implements OnInit {
 
     notification_query.envoyeur.idEnv = idEnvoyeur;
     notification_query.envoyeur.nomEnv = nomEnvoyeur;
-    notification_query.envoyeur.imageEnv = imageEnv;
 
     this.notificationService
       .createNotification(notification_query)
