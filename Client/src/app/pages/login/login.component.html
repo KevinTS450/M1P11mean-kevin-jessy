@@ -50,17 +50,7 @@
                 />
               </div>
               <br />
-              <div
-                *ngIf="
-                  Auth_form.get('email').invalid &&
-                  (Auth_form.get('email').dirty ||
-                    Auth_form.get('email').touched)
-                "
-                class="alert alert-danger"
-                role="alert"
-              >
-                Email is required.
-              </div>
+            
             </div>
             <div class="form-group">
               <div class="input-group input-group-alternative">
@@ -79,17 +69,7 @@
               </div>
               <br />
 
-              <div
-                *ngIf="
-                  Auth_form.get('password').invalid &&
-                  (Auth_form.get('password').dirty ||
-                    Auth_form.get('password').touched)
-                "
-                class="alert alert-danger"
-                role="alert"
-              >
-                Password is required.
-              </div>
+            
               <div *ngIf="error_auth" class="alert alert-danger" role="alert">
                 Mot de passe ou email incorrecte.
               </div>
