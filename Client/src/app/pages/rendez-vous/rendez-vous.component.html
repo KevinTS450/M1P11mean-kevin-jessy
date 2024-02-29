@@ -35,7 +35,18 @@
           <div class="col-lg-3 order-lg-2">
             <div class="card-profile-image">
               <a href="javascript:void(0)">
-                <img src="../../../assets/uploads/{{ UserQuery.image }}" />
+                <img
+                  *ngIf="UserQuery.role === 'client'"
+                  src="assets/uploads/client.png"
+                />
+                <img
+                  *ngIf="UserQuery.role === 'employe'"
+                  src="assets/uploads/emp.png"
+                />
+                <img
+                  *ngIf="UserQuery.role === 'manager'"
+                  src="assets/uploads/manager.png"
+                />
               </a>
             </div>
           </div>

@@ -95,9 +95,9 @@
                       <div class="media align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
                           <img
-                            alt="Image placeholder"
-                            src="assets/uploads/{{ users.image }}"
-                          />
+                        alt="Image placeholder"
+                        src="assets/uploads/emp.png"
+                      />
                         </a>
                       </div>
                     </th>
@@ -158,10 +158,10 @@
                     <th scope="row">
                       <div class="media align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
-                          <img
-                            alt="Image placeholder"
-                            src="assets/uploads/{{ users.image }}"
-                          />
+                           <img
+                        alt="Image placeholder"
+                        src="assets/uploads/emp.png"
+                      />
                         </a>
                       </div>
                     </th>
@@ -223,6 +223,52 @@
           </div>
         </div>
       </div>
+      <div *ngIf="list_emp" class="card-body">
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Nom</th>
+                <th scope="col">prenom</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let users of employe
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: pagination,
+                          totalItems: totalLength
+                        }
+                "
+              >
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="#" class="avatar rounded-circle mr-3">
+                      <img
+                        alt="Image placeholder"
+                        src="assets/uploads/emp.png"
+                      />
+                    </a>
+                  </div>
+                </th>
+                <td>{{ users.name }}</td>
+                <td>
+                  {{ users.last_name }}
+                </td>
+                <td>
+                  {{ users.email }}
+                </td>
+                <td>
+                  {{ users.role }}
+                </td>
+=======
     </div>
   </div>
 
@@ -272,6 +318,28 @@
                 [cdkDropListData]="List_preference_query"
                 (cdkDropListDropped)="dropEmploye($event)"
               >
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="#" class="avatar rounded-circle mr-3">
+                      <img
+                        alt="Image placeholder"
+                        src="assets/uploads/emp.png"
+                      />
+                    </a>
+                  </div>
+                </th>
+                <td>{{ users.employe.nomEmploye }}</td>
+                <td>
+                  {{ users.employe.prenomEmploye }}
+                </td>
+                <td>
+                  {{ users.employe.emailEmploye }}
+                </td>
+
+                <td>
+                  <button
+                    (click)="removePreference(UserQuery._id)"
+                    class="btn btn-sm btn-danger"
                 <ng-container  *ngIf="List_preference_queryLength > 0">
                   <tr
                     *ngFor="
@@ -289,10 +357,10 @@
                       <th scope="row">
                         <div class="media align-items-center">
                           <a href="#" class="avatar rounded-circle mr-3">
-                            <img
-                              alt="Image placeholder"
-                              src="assets/uploads/{{ users.employe.imageEmploye }}"
-                            />
+                             <img
+                        alt="Image placeholder"
+                        src="assets/uploads/emp.png"
+                      />
                           </a>
                         </div>
                       </th>
@@ -340,10 +408,10 @@
                       <th scope="row">
                         <div class="media align-items-center">
                           <a href="#" class="avatar rounded-circle mr-3">
-                            <img
-                              alt="Image placeholder"
-                              src="assets/uploads/{{ users.employe.imageEmploye }}"
-                            />
+                              <img
+                        alt="Image placeholder"
+                        src="assets/uploads/emp.png"
+                      />
                           </a>
                         </div>
                       </th>
@@ -383,10 +451,10 @@
                     <th scope="row">
                       <div class="media align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
-                          <img
-                            alt="Image placeholder"
-                            src="assets/uploads/{{ users.employe.imageEmploye }}"
-                          />
+                           <img
+                        alt="Image placeholder"
+                        src="assets/uploads/emp.png"
+                      />
                         </a>
                       </div>
                     </th>
