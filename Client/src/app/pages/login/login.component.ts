@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
   }
 
   public Login(Auth_form: FormGroup) {
-    if (Auth_form.valid) {
       this.loading = true;
 
       setTimeout(() => {
@@ -83,14 +82,7 @@ export class LoginComponent implements OnInit {
           }
         });
       }, 3000);
-    } else {
-      Object.keys(this.Auth_form.controls).forEach((key) => {
-        const control = this.Auth_form.get(key);
-        if (control != null) {
-          control.markAsTouched();
-        }
-      });
-    }
+  
   }
 
   defaultClient() {
