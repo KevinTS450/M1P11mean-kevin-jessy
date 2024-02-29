@@ -38,8 +38,16 @@
           <div class="media align-items-center">
             <span class="avatar avatar-sm rounded-circle">
               <img
-                alt="Image placeholder"
-                src="../../../assets/uploads/{{ userProfile.image }}"
+                *ngIf="userProfile.role === 'client'"
+                src="assets/uploads/client.png"
+              />
+              <img
+                *ngIf="userProfile.role === 'employe'"
+                src="assets/uploads/emp.png"
+              />
+              <img
+                *ngIf="userProfile.role === 'manager'"
+                src="assets/uploads/manager.png"
               />
             </span>
             <div class="media-body ml-2 d-none d-lg-block">
