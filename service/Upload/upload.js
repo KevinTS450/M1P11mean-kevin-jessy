@@ -5,8 +5,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const destinationPath = path.join(
       __dirname,
-      "..",
-      "..",
+
       "/opt/render/project/src/"
     );
     cb(null, destinationPath);
